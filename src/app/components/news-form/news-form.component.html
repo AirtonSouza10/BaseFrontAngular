@@ -1,0 +1,20 @@
+<section class="form-section">
+  <div class="text">
+    <h3>Fique por dentro das nossas tendências</h3>
+    <p>Fique por dentro das nossas tendências. Fique por dentro das nossas tendências. Fique por dentro das nossas tendências.</p>
+  </div>
+
+  <form [formGroup]="newForm">
+    <label for="nome">Nome</label>
+    <input id="nome" formControlName="nome"/>
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" />
+    <btn-primary
+      btnText="Enviar"
+      variant="secondary"
+      (submit)="submit()"
+      [disabled]="!newForm.valid"
+      [loading]="loading()"
+      ></btn-primary>
+  </form>
+</section>

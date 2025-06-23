@@ -1,0 +1,27 @@
+.btn {
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.primary {
+    color: white;
+    background: black;
+    font-size: clamp(1rem, 2.5vw, 1.5rem); /* entre 16px e 24px */
+    font-weight: bold;
+    padding: clamp(0.75rem, 2vw, 1.25rem); /* entre 12px e 20px */
+  }
+
+  &.secondary {
+    color: purple;
+    background: white;
+    font-size: clamp(0.875rem, 2vw, 1.25rem); /* entre 14px e 20px */
+    font-weight: bold;
+    padding: clamp(0.75rem, 2vw, 1.25rem);
+  }
+}
