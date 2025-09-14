@@ -1,0 +1,98 @@
+<div class="main-container">
+  <aside class="sidebar" [class.closed]="isSidebarClosed">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span *ngIf="!isSidebarClosed">BRASILCASH</span>
+        <span *ngIf="isSidebarClosed">B</span>
+      </div>
+      <button class="menu-toggle" (click)="toggleSidebar()" type="button">
+        <span class="toggle-icon">{{ isSidebarClosed ? '➤' : '☰' }}</span>
+      </button>
+    </div>
+
+    <nav>
+      <ul>
+        <!-- Cadastro -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('cadastro')">
+            <span class="icon">📝</span>
+            <span class="label" *ngIf="!isSidebarClosed">Cadastro</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'cadastro' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'cadastro' && !isSidebarClosed" class="submenu">
+            <li><a routerLink="/empresas">Boletos</a></li>
+            <li><a routerLink="/empresas">Filiais</a></li>
+            <li><a routerLink="/fornecedores">Fornecedores</a></li>
+            <li><a routerLink="/formas-pagamento">Formas de Pagamento</a></li>
+            <li><a routerLink="/tipo-pagamento">Nota Fiscal</a></li>
+            <li><a routerLink="/tipo-pagamento">Status Conta</a></li>
+            <li><a routerLink="/tipo-pagamento">Tipo de Pagamento</a></li>
+            <li><a routerLink="/tipo-pagamento">Tipo de Nota</a></li>
+            <li><a routerLink="/usuarios">Usuários</a></li>
+          </ul>
+        </li>
+
+        <!-- Financeiro -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('financeiro')">
+            <span class="icon">💰</span>
+            <span class="label" *ngIf="!isSidebarClosed">Financeiro</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'financeiro' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'financeiro' && !isSidebarClosed" class="submenu">
+            <li><a routerLink="/contas-receber">Contas a Receber</a></li>
+            <li><a routerLink="/contas-pagar">Contas a Pagar</a></li>
+          </ul>
+        </li>
+
+        <!-- Documentos -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('documentos')">
+            <span class="icon">🧾</span>
+            <span class="label" *ngIf="!isSidebarClosed">Documentos</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'documentos' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'documentos' && !isSidebarClosed" class="submenu">
+            <li><a routerLink="/notas-fiscais">Nota Fiscal</a></li>
+          </ul>
+        </li>
+
+        <!-- Relatórios -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('relatorios')">
+            <span class="icon">📊</span>
+            <span class="label" *ngIf="!isSidebarClosed">Relatórios</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'relatorios' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'relatorios' && !isSidebarClosed" class="submenu">
+            <li><a routerLink="/relatorios">Relatórios</a></li>
+          </ul>
+        </li>
+
+        <!-- Segurança -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('seguranca')">
+            <span class="icon">🔑</span>
+            <span class="label" *ngIf="!isSidebarClosed">Segurança</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'seguranca' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'seguranca' && !isSidebarClosed" class="submenu">
+            <li><a routerLink="/recuperar-senha">Recuperação de Senha</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Logout -->
+    <div class="logout-container">
+      <a (click)="logout()">
+        <span class="icon">🚪</span>
+        <span class="label" *ngIf="!isSidebarClosed">Sair</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,26 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { MenuLateralComponent } from "../menu-lateral/menu-lateral.component";
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MenuLateralComponent],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
 export class AppMainComponent {
-  isSidebarClosed = false;
-
-  constructor(private router: Router) { }
-
-  toggleSidebar(): void {
-    this.isSidebarClosed = !this.isSidebarClosed;
-  }
-
-  logout(): void {
-    // Aqui você pode limpar tokens/localStorage, se necessário
-    // localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-  }
 }

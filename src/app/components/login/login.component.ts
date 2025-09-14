@@ -16,9 +16,9 @@ export class LoginComponent {
   errorMessage: string | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router // <-- injetar Router aqui
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -37,7 +37,7 @@ export class LoginComponent {
         next: (res) => {
           console.log('Login bem-sucedido', res);
           // salvar token, se houver
-          //localStorage.setItem('token', res.token);
+          localStorage.setItem('token', res.token);
 
           // redirecionar para a tela principal
           this.router.navigate(['/main']); // agora funciona

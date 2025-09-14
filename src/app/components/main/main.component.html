@@ -1,50 +1,5 @@
 <div class="main-container">
-  <aside class="sidebar" [class.closed]="isSidebarClosed">
-    <div class="sidebar-header">
-      <div class="logo">
-        <span *ngIf="!isSidebarClosed">BRASILCASH</span>
-        <span *ngIf="isSidebarClosed">BC</span>
-      </div>
-      <button class="menu-toggle" (click)="toggleSidebar()">
-        <span *ngIf="!isSidebarClosed">☰</span>
-        <span *ngIf="isSidebarClosed">➤</span>
-      </button>
-    </div>
-    <nav>
-      <ul>
-        <li>
-          <a routerLink="/dashboard">
-            <span class="icon">🏠</span>
-            <span class="label" *ngIf="!isSidebarClosed">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/notas">
-            <span class="icon">🧾</span>
-            <span class="label" *ngIf="!isSidebarClosed">Notas Fiscais</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/contas">
-            <span class="icon">💰</span>
-            <span class="label" *ngIf="!isSidebarClosed">Contas a Pagar/Receber</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/config">
-            <span class="icon">⚙️</span>
-            <span class="label" *ngIf="!isSidebarClosed">Configurações</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <div class="logout-container">
-      <a (click)="logout()">
-        <span class="icon">🚪</span>
-        <span class="label" *ngIf="!isSidebarClosed">Sair</span>
-      </a>
-    </div>
-  </aside>
+  <app-menu-lateral></app-menu-lateral>
   <main class="content">
     <router-outlet></router-outlet>
   </main>

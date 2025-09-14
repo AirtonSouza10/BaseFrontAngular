@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // Campos que o backend espera
 export interface AuthenticationDTO {
@@ -12,9 +13,9 @@ export interface AuthenticationDTO {
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/api';
+  private readonly baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   login(credentials: AuthenticationDTO): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, credentials);

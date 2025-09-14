@@ -1,0 +1,224 @@
+/* Container principal e body */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #1e3a8a;
+}
+
+.main-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #1e3a8a;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #1e3a8a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+/* Sidebar fechado */
+.sidebar.closed {
+  width: 60px;
+}
+
+/* Header do sidebar */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative; /* necessário para z-index do botão funcionar */
+  overflow: visible;  /* evita que o botão seja cortado */
+}
+
+.toggle-icon {
+  pointer-events: none; /* só visual, o clique é no botão */
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.menu-toggle {
+  background-color: #1e3a8a;
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative; /* z-index funciona */
+  z-index: 10;        /* garante que fique acima do BC */
+}
+
+/* Navegação */
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 10px;
+}
+
+/* Links do menu */
+.sidebar nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.sidebar nav ul li a .icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.sidebar nav ul li a .label {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Efeito hover nos links */
+.sidebar nav ul li a:hover {
+  color: #ffcc00;
+}
+
+/* Submenu */
+.submenu {
+  padding-left: 30px; /* afastamento da borda */
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-left: 2px solid rgba(255, 255, 255, 0.2); /* linha sutil */
+}
+
+.submenu li {
+  margin-bottom: 8px; /* espaço entre itens do submenu */
+}
+
+.submenu li a {
+  display: block;
+  padding: 5px 10px; /* espaço interno */
+  border-radius: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.submenu li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffcc00;
+}
+
+/* Menu expansível */
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 5px 0;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.menu-header:hover {
+  color: #ffcc00;
+}
+
+.arrow {
+  font-size: 0.8rem;
+}
+
+/* Botão logout */
+.logout-container {
+  margin-top: auto;
+}
+
+.logout-container a {
+  width: 100%;
+  background-color: transparent;
+  color: #fff;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 0;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.logout-container a .icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.logout-container a:hover {
+  color: #ff4d4d;
+}
+
+/* Conteúdo */
+.content {
+  flex: 1;
+  background-color: #1e3a8a;
+  padding: 30px;
+  transition: margin-left 0.3s ease;
+  color: #fff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .sidebar.closed {
+    width: 100%;
+  }
+
+  .sidebar.closed .menu-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* ocupa toda a largura do sidebar fechado */
+  }
+
+  .sidebar nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+  }
+
+  .content {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
