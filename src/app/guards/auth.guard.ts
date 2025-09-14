@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authToken'); // 👈 usar a mesma chave usada no login/interceptor
 
   if (!token) {
     // usuário não está logado → redireciona para login

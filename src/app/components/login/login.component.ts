@@ -36,11 +36,13 @@ export class LoginComponent {
       this.authService.login(credentials).subscribe({
         next: (res) => {
           console.log('Login bem-sucedido', res);
-          // salvar token, se houver
-          localStorage.setItem('token', res.token);
-
-          // redirecionar para a tela principal
-          this.router.navigate(['/main']); // agora funciona
+          const token = res?.resposta?.token;
+          if (token) {
+            localStorage.setItem('authToken', token); // 👈 salvar com a mesma chave usada no interceptor
+            this.router.navigate(['/main']);
+          } else {
+            this.errorMessage = 'Token não recebido';
+          }
         },
         error: (err) => {
           console.error('Erro de login', err);

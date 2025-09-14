@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +13,7 @@ export class MenuLateralComponent {
   isSidebarClosed = false;
   expandedMenu: string | null = null;
 
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute) {}
 
   toggleSidebar(): void {
     this.isSidebarClosed = !this.isSidebarClosed;

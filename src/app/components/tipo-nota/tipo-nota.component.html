@@ -1,0 +1,19 @@
+<div class="form-container">
+  <h2>Cadastrar Tipo de Nota</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="descricao">Descrição</label>
+    <input id="descricao" formControlName="descricao" type="text" required />
+
+    <button type="submit" [disabled]="form.invalid">Salvar</button>
+  </form>
+
+  <!-- Mensagem de sucesso -->
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">
+    {{ sucessoMsg }}
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="erroMsg" class="mensagem-erro">
+    {{ erroMsg }}
+  </div>
+</div>
