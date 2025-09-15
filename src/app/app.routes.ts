@@ -6,6 +6,7 @@ import { authGuard } from './guards/auth.guard';
 import { TipoNotaComponent } from './components/tipo-nota/tipo-nota.component';
 import { TipoPagamentoComponent } from './components/tipo-pagamento/tipo-pagamento.component';
 import { FormaPagamentoComponent } from './components/forma-pagamento/forma-pagamento.component';
+import { SituacaoComponent } from './components/situacao/situacao.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,10 @@ export const routes: Routes = [
       {
         path: 'forma-pagamento',
         component: FormaPagamentoComponent
+      },
+      {
+        path: 'situacao',
+        component: SituacaoComponent
       }
     ]
   }

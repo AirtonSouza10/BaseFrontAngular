@@ -1,0 +1,25 @@
+<div class="form-container">
+  <h2>Cadastrar Situação</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="descricao">Descrição</label>
+    <input id="descricao" formControlName="descricao" type="text" required />
+
+    <button type="submit" [disabled]="form.invalid">Salvar</button>
+  </form>
+
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+  <table class="tabela-tipos" *ngIf="tiposSituacao.length">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tp of tiposSituacao">
+        <td>{{ tp.descricao }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
