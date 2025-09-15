@@ -1,11 +1,14 @@
+/* Container principal */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background: linear-gradient(135deg, #4b6cb7, #182848);
+  padding: 1rem;
 }
 
+/* Card do login */
 .login-card {
   background: #fff;
   padding: 2rem;
@@ -14,66 +17,83 @@
   width: 100%;
   max-width: 400px;
   text-align: center;
+}
 
-  h1 {
-    margin-bottom: 1rem;
-    color: #182848;
-  }
+.login-card h1 {
+  margin-bottom: 1rem;
+  color: #182848;
+}
 
-  p {
-    margin-bottom: 2rem;
-    color: #555;
-  }
+.login-card p {
+  margin-bottom: 2rem;
+  color: #555;
+}
 
-  .form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
+/* Formulário */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
 
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
 
-      &:focus {
-        border-color: #4b6cb7;
-        outline: none;
-      }
-    }
-  }
+.form-group input:focus {
+  border-color: #4b6cb7;
+  outline: none;
+}
 
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 8px;
-    background-color: #4b6cb7;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
+/* Botão */
+button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #4b6cb7;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-    &:hover {
-      background-color: #3a549a;
-    }
+button:hover {
+  background-color: #3a549a;
+}
 
-    &:disabled {
-      background-color: #a0a0a0;
-      cursor: not-allowed;
-    }
-  }
+button:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
 
-  .forgot-password {
-    margin-top: 1rem;
-    font-size: 0.875rem;
-    color: #4b6cb7;
-    cursor: pointer;
-  }
+/* Esqueceu a senha */
+.forgot-password {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #4b6cb7;
+  cursor: pointer;
+}
+
+/* Logo */
+.logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-logo {
+  width: 50%;        /* se adapta à largura do card */
+  max-width: 120px;  /* tamanho máximo */
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
 }
