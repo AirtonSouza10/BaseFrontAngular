@@ -1,58 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { TipoNotaService } from '../../services/tipo-nota.service';
 import { CommonModule } from '@angular/common';
+import { TipoPagamentoService, TipoPagamentoDTO } from '../../services/tipo-pagamento.service';
 
 @Component({
-  selector: 'app-tipo-nota',
+  selector: 'app-tipo-pagamento',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './tipo-nota.component.html',
-  styleUrls: ['./tipo-nota.component.css']
+  templateUrl: './tipo-pagamento.component.html',
+  styleUrls: ['./tipo-pagamento.component.css']
 })
-export class TipoNotaComponent implements OnInit{
+export class TipoPagamentoComponent implements OnInit{
   form: FormGroup;
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
-  tiposNota: any[] = [];
+  tiposPagamento: TipoPagamentoDTO[] = [];
 
   private toastTimeout: any;
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly tipoNotaService: TipoNotaService
+    private readonly tipoPagamentoService: TipoPagamentoService
   ) {
     this.form = this.fb.group({
       descricao: ['', Validators.required],
     });
+    this.listarTiposPagamento();
   }
   ngOnInit(): void {
-    this.listarTiposNota();
+    this.listarTiposPagamento();
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.tipoNotaService.salvar(this.form.value).subscribe({
+      this.tipoPagamentoService.salvar(this.form.value).subscribe({
         next: (res: any) => {
-          // Mostra mensagem de sucesso e desaparece depois de 4 segundos
           this.showSuccess(res?.resposta?.msgSucesso?.[0] || 'Dados salvos com sucesso!');
           this.form.reset();
+          this.listarTiposPagamento();
         },
         error: (err) => {
-          // Mostra mensagem de erro e desaparece depois de 4 segundos
-          this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao cadastrar Tipo de Nota');
+          this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao cadastrar Tipo de Pagamento');
         }
       });
     }
   }
 
-  private listarTiposNota(): void {
-    this.tipoNotaService.listarTiposNota().subscribe({
+  private listarTiposPagamento(): void {
+    this.tipoPagamentoService.listarTiposPagamento().subscribe({
       next: (res: any) => {
-        this.tiposNota = res?.resposta || [];
+        this.tiposPagamento = res?.resposta || [];
       },
       error: (err) => {
-        console.error('Erro ao listar tipos de nota', err);
+        console.error('Erro ao listar tipos de pagamento', err);
       }
     });
   }
@@ -61,14 +61,14 @@ export class TipoNotaComponent implements OnInit{
     this.sucessoMsg = message;
     this.erroMsg = null;
     this.clearToast();
-    this.toastTimeout = setTimeout(() => this.sucessoMsg = null, 4000); // desaparece em 4s
+    this.toastTimeout = setTimeout(() => this.sucessoMsg = null, 4000);
   }
 
   private showError(message: string) {
     this.erroMsg = message;
     this.sucessoMsg = null;
     this.clearToast();
-    this.toastTimeout = setTimeout(() => this.erroMsg = null, 4000); // desaparece em 4s
+    this.toastTimeout = setTimeout(() => this.erroMsg = null, 4000);
   }
 
   private clearToast() {

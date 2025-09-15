@@ -1,0 +1,35 @@
+<div class="form-container">
+  <h2>Cadastrar Forma de Pagamento</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="descricao">Descrição</label>
+    <input id="descricao" formControlName="descricao" type="text" required />
+
+    <label for="qtdeParcelas">Qtd. Parcelas</label>
+    <input id="qtdeParcelas" formControlName="qtdeParcelas" type="number" min="1" required />
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid">Salvar</button>
+    </div>
+  </form>
+
+  <!-- Mensagens -->
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+  <!-- Tabela padronizada -->
+  <table class="tabela-tipos" *ngIf="formasPagamento.length">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Qtd. Parcelas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of formasPagamento">
+        <td>{{ f.descricao }}</td>
+        <td>{{ f.qtdeParcelas }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -98,7 +98,7 @@ button[type="submit"]:disabled {
 }
 
 /* ===============================
-   Tabela tipos de nota
+   Tabela tipos de pagamento
    =============================== */
 
 /* tabela básica */
@@ -129,5 +129,3 @@ button[type="submit"]:disabled {
 .tabela-tipos tbody tr:nth-child(even) {
   background-color: #fafafa;
 }
-
-

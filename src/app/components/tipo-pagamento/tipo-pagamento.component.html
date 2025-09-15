@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Cadastrar Tipo de Nota</h2>
+  <h2>Cadastrar Tipo de Pagamento</h2>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <label for="descricao">Descrição</label>
     <input id="descricao" formControlName="descricao" type="text" required />
@@ -18,18 +18,17 @@
   </div>
 
   <!-- Lista de tipos de pagamento (opcional) -->
-  <!-- Tabela com os tipos de nota -->
-  <table class="tabela-tipos" *ngIf="tiposNota.length">
+  <!-- Tabela com os tipos de pagamento -->
+  <table class="tabela-tipos" *ngIf="tiposPagamento.length">
     <thead>
       <tr>
         <th>Descrição</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let tp of tiposNota">
+      <tr *ngFor="let tp of tiposPagamento">
         <td>{{ tp.descricao }}</td>
       </tr>
     </tbody>
   </table>
-
 </div>

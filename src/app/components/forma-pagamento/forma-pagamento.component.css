@@ -98,7 +98,7 @@ button[type="submit"]:disabled {
 }
 
 /* ===============================
-   Tabela tipos de nota
+   Tabela tipos de pagamento
    =============================== */
 
 /* tabela básica */
@@ -130,4 +130,7 @@ button[type="submit"]:disabled {
   background-color: #fafafa;
 }
 
-
+.form-actions {
+  margin-top: 1rem; /* distância do último input */
+  text-align: left; /* ou center, se quiser centralizado */
+}
