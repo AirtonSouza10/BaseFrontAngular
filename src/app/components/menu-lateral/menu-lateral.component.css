@@ -23,13 +23,13 @@ html, body {
   padding: 20px;
   box-sizing: border-box;
   transition: width 0.3s ease;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Aumentei a fonte base */
   overflow: hidden;
 }
 
 /* Sidebar fechado */
 .sidebar.closed {
-  width: 60px;
+  width: 7%;
 }
 
 /* Header do sidebar */
@@ -38,16 +38,16 @@ html, body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  position: relative; /* necessário para z-index do botão funcionar */
-  overflow: visible;  /* evita que o botão seja cortado */
+  position: relative;
+  overflow: visible;
 }
 
 .toggle-icon {
-  pointer-events: none; /* só visual, o clique é no botão */
+  pointer-events: none;
 }
 
 .logo {
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Aumentei o logo */
   font-weight: bold;
 }
 
@@ -55,17 +55,15 @@ html, body {
   background-color: #1e3a8a;
   color: #fff;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.7rem; /* Aumentei um pouco o botão */
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  position: relative; /* z-index funciona */
-  z-index: 10;        /* garante que fique acima do BC */
+  position: relative;
+  z-index: 10;
 }
 
 /* Navegação */
@@ -82,7 +80,7 @@ html, body {
 .sidebar nav ul li a {
   color: #fff;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.15rem; /* Aumentei a fonte dos links */
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -93,7 +91,7 @@ html, body {
 }
 
 .sidebar nav ul li a .icon {
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Aumentei ícones */
   margin-right: 10px;
 }
 
@@ -109,20 +107,21 @@ html, body {
 
 /* Submenu */
 .submenu {
-  padding-left: 30px; /* afastamento da borda */
+  padding-left: 30px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-left: 2px solid rgba(255, 255, 255, 0.2); /* linha sutil */
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .submenu li {
-  margin-bottom: 8px; /* espaço entre itens do submenu */
+  margin-bottom: 8px;
 }
 
 .submenu li a {
   display: block;
-  padding: 5px 10px; /* espaço interno */
+  padding: 5px 10px;
   border-radius: 5px;
+  font-size: 1.05rem; /* Aumentei um pouco a fonte do submenu */
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -142,7 +141,7 @@ html, body {
   background: none;
   border: none;
   color: inherit;
-  font: inherit;
+  font-size: 1.15rem; /* Aumentei o menu header */
   text-align: left;
 }
 
@@ -151,7 +150,7 @@ html, body {
 }
 
 .arrow {
-  font-size: 0.8rem;
+  font-size: 0.95rem; /* Aumentei a seta */
 }
 
 /* Botão logout */
@@ -163,7 +162,7 @@ html, body {
   width: 100%;
   background-color: transparent;
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.15rem; /* Aumentei a fonte do logout */
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -173,7 +172,7 @@ html, body {
 }
 
 .logout-container a .icon {
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Aumentei o ícone */
   margin-right: 10px;
 }
 
@@ -209,7 +208,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%; /* ocupa toda a largura do sidebar fechado */
+    width: 100%;
   }
 
   .sidebar nav ul li {
