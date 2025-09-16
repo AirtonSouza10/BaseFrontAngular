@@ -1,0 +1,36 @@
+<div class="form-container">
+  <h2>Cadastrar Filial</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="nome">Nome</label>
+    <input id="nome" formControlName="nome" type="text" required />
+
+    <label for="identificacao">Identificação</label>
+    <input id="identificacao" formControlName="identificacao" type="text" required />
+
+    <label for="tpidentificacao">Tipo de Identificação</label>
+    <input id="tpidentificacao" formControlName="tpidentificacao" type="text" required />
+
+    <label for="email">E-mail</label>
+    <input id="email" formControlName="email" type="email" required />
+
+    <button type="submit" [disabled]="form.invalid">Salvar</button>
+  </form>
+
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+  <table class="tabela-tipos" *ngIf="filiais.length">
+    <thead>
+      <tr>
+        <th>Filial</th>
+        <th>Identificação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of filiais">
+        <td>{{ f.nome }}</td>
+        <td>{{ f.identificacao }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
