@@ -24,6 +24,7 @@ label {
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: #555;
+  font-weight: bold;
 }
 
 /* Inputs de texto */
@@ -61,6 +62,23 @@ button[type="submit"]:hover {
 button[type="submit"]:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* Inputs de texto e número com mesmo estilo */
+input[type="number"] {
+  width: 20%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: #0078d4;
+  outline: none;
 }
 
 /* ===============================

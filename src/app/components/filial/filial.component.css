@@ -23,6 +23,7 @@ label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  font-weight: bold;
   color: #555;
 }
 
@@ -53,9 +54,9 @@ textarea:focus {
 
 /* Botão de submit ocupa a linha inteira */
 button[type="submit"] {
-  display: block;          /* força ficar abaixo */
-  width: 100%;             /* largura total */
-  margin-top: 0.5rem;      /* espaçamento acima */
+  display: block;
+  width: 20%; /* largura total */
+  margin-top: 0.5rem;
   background-color: #0078d4;
   color: white;
   border: none;

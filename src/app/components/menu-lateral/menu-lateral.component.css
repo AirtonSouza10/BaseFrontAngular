@@ -3,20 +3,20 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #1e3a8a;
+  background-color: #1a1a1a;
 }
 
 .main-container {
   display: flex;
   min-height: 100vh;
   font-family: Arial, sans-serif;
-  background-color: #1e3a8a;
+  background-color: #1a1a1a;
 }
 
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background-color: #1e3a8a;
+  background-color: #1a1a1a;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -52,7 +52,7 @@ html, body {
 }
 
 .menu-toggle {
-  background-color: #1e3a8a;
+  background-color: #1a1a1a;
   color: #fff;
   border: none;
   font-size: 1.7rem; /* Aumentei um pouco o botão */
@@ -102,7 +102,7 @@ html, body {
 
 /* Efeito hover nos links */
 .sidebar nav ul li a:hover {
-  color: #ffcc00;
+  color: #fcfbf9;
 }
 
 /* Submenu */
@@ -127,7 +127,7 @@ html, body {
 
 .submenu li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  color: #ffcc00;
+  color: #fcfbf9;
 }
 
 /* Menu expansível */
@@ -146,7 +146,7 @@ html, body {
 }
 
 .menu-header:hover {
-  color: #ffcc00;
+  color: #fcfbf9;
 }
 
 .arrow {
@@ -183,7 +183,7 @@ html, body {
 /* Conteúdo */
 .content {
   flex: 1;
-  background-color: #1e3a8a;
+  background-color: #e0e0e0;
   padding: 30px;
   transition: margin-left 0.3s ease;
   color: #fff;

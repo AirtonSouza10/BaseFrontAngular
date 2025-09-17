@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Cadastrar Filial</h2>
+  <h2>Cadastro - Filial</h2>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <label for="nome">Nome</label>
     <input id="nome" formControlName="nome" type="text" required />
@@ -24,12 +24,16 @@
       <tr>
         <th>Filial</th>
         <th>Identificação</th>
+        <th>Tipo</th>
+        <th>E-mail</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let f of filiais">
         <td>{{ f.nome }}</td>
         <td>{{ f.identificacao }}</td>
+        <td>{{ f.tpidentificacao }}</td>
+        <td>{{ f.email }}</td>
       </tr>
     </tbody>
   </table>
