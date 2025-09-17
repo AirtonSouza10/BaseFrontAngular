@@ -1,0 +1,191 @@
+/* ================= FORMULÁRIO GERAL ================= */
+.form-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ================= TÍTULOS ================= */
+.form-container h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.form-section {
+  border: 1px solid #eee;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  background-color: #fafafa;
+}
+
+.form-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #0078d4;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 0.3rem;
+}
+
+/* ================= FORM ROW ================= */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+/* ================= FLEX ================= */
+.flex-1 { flex: 1 1 120px; }
+.flex-2 { flex: 2 1 200px; }
+.flex-3 { flex: 3 1 300px; }
+.flex-button { flex: 0 0 auto; display: flex; align-items: flex-end; }
+
+/* ================= INPUTS ================= */
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: #0078d4;
+  outline: none;
+}
+
+/* ================= ENDEREÇOS ================= */
+.endereco-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.endereco-card .divider {
+  border: none;
+  border-top: 1px dashed #ccc;
+  margin: 0.75rem 0 0;
+}
+
+.telefone-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* ================= BOTOES ================= */
+button {
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-submit {
+  background-color: #0078d4;
+  color: #fff;
+}
+
+.btn-submit:hover {
+  background-color: #005ea2;
+}
+
+.btn-add {
+  background-color: #28a745;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.btn-add:hover {
+  background-color: #1e7e34;
+}
+
+.btn-remove {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-remove:hover {
+  background-color: #a71d2a;
+}
+
+/* ================= ALERTAS ================= */
+.mensagem-sucesso,
+.mensagem-erro {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  min-width: 300px;
+  max-width: 500px;
+  opacity: 0.95;
+}
+
+.mensagem-sucesso { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.mensagem-erro { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+/* ================= TABELA ================= */
+.tabela-tipos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #000;
+}
+
+.tabela-tipos th {
+  background-color: #f2f2f2;
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 2px solid #ccc;
+}
+
+.tabela-tipos td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabela-tipos tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* ================= AÇÕES ================= */
+.form-actions {
+  margin-top: 1rem;
+  text-align: left;
+}

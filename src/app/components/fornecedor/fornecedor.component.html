@@ -1,0 +1,172 @@
+<div class="form-container">
+  <h2>Cadastro - Fornecedor</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- ===================== DADOS DO FORNECEDOR ===================== -->
+    <div class="form-section">
+      <h3>Dados do Fornecedor</h3>
+      <div class="form-row">
+        <div class="form-group flex-2">
+          <label for="nome">Nome</label>
+          <input id="nome" formControlName="nome" type="text" required />
+        </div>
+        <div class="form-group flex-1">
+          <label for="identificacao">Identificação</label>
+          <input id="identificacao" formControlName="identificacao" type="text" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="tpIdentificacao">Tipo de Identificação</label>
+          <input id="tpIdentificacao" formControlName="tpIdentificacao" type="text" required />
+        </div>
+        <div class="form-group flex-2">
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="text" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== TELEFONES ===================== -->
+    <div class="form-section">
+      <h3>Telefones</h3>
+      <div formArrayName="telefones">
+        <div *ngFor="let tel of telefones.controls; let i = index" [formGroupName]="i" class="telefone-card">
+          <div class="form-row">
+              <div class="form-group flex-2">
+                <label>Número</label>
+                <input type="text" formControlName="numero" placeholder="Número" required />
+              </div>
+              <div class="form-group flex-1">
+                <label>Tipo</label>
+                <select formControlName="tpTelefoneId">
+                  <option [ngValue]="null">Selecione o tipo</option>
+                  <option *ngFor="let tipo of tiposTelefone" [value]="tipo.id">{{tipo.descricao}}</option>
+                </select>
+              </div>
+          </div>
+          <div class="form-group flex-button">
+              <button type="button" class="btn-remove" (click)="removeTelefone(i)">Remover</button>
+          </div>
+        </div>
+        <button type="button" class="btn-add" (click)="addTelefone()">+ Telefone</button>
+      </div>
+    </div>
+
+    <!-- ===================== ENDEREÇOS ===================== -->
+    <div class="form-section">
+      <h3>Endereços</h3>
+      <div formArrayName="enderecos">
+        <div *ngFor="let end of enderecos.controls; let i = index" [formGroupName]="i" class="endereco-card">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>CEP</label>
+              <input type="text" formControlName="cep" placeholder="CEP" />
+            </div>
+            <div class="form-group flex-3">
+              <label>Logradouro</label>
+              <input type="text"  formControlName="logradouro" placeholder="Logradouro" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Número</label>
+              <input type="text"  formControlName="numero" placeholder="Número" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label>Complemento</label>
+              <input type="text" formControlName="complemento" placeholder="Complemento" />
+            </div>
+            <div class="form-group flex-2">
+              <label>Bairro</label>
+              <input type="text"  formControlName="bairro" placeholder="Bairro" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Cidade</label>
+              <input type="text"  type="text"  formControlName="cidade" placeholder="Cidade" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Estado</label>
+              <input type="text"  formControlName="estado" placeholder="Estado" />
+            </div>
+            <div class="form-group flex-1">
+              <label>UF</label>
+              <select formControlName="uf">
+                <option value="">Selecione</option>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Tipo</label>
+              <select formControlName="enderecoTipoId">
+                <option [ngValue]="null">Selecione</option>
+                <option *ngFor="let tipo of tiposEndereco" [value]="tipo.id">{{tipo.descricao}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group flex-button">
+              <button type="button" class="btn-remove" (click)="removeEndereco(i)">Remover</button>
+          </div>
+          <hr class="divider"/>
+        </div>
+        <button type="button" class="btn-add" (click)="addEndereco()">+ Endereço</button>
+      </div>
+    </div>
+
+    <!-- ===================== AÇÕES ===================== -->
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid" class="btn-submit">Salvar</button>
+    </div>
+  </form>
+
+  <!-- ===================== MENSAGENS ===================== -->
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+  <!-- ===================== TABELA ===================== -->
+  <table class="tabela-tipos" *ngIf="fornecedores.length">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Identificação</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of fornecedores">
+        <td>{{ f.nome }}</td>
+        <td>{{ f.identificacao }}</td>
+        <td>{{ f.email }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

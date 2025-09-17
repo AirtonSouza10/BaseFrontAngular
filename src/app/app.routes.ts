@@ -8,6 +8,7 @@ import { TipoPagamentoComponent } from './components/tipo-pagamento/tipo-pagamen
 import { FormaPagamentoComponent } from './components/forma-pagamento/forma-pagamento.component';
 import { SituacaoComponent } from './components/situacao/situacao.component';
 import { FilialComponent } from './components/filial/filial.component';
+import { FornecedorComponent } from './components/fornecedor/fornecedor.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,10 @@ export const routes: Routes = [
       {
         path: 'filial',
         component: FilialComponent
+      },
+      {
+        path: 'fornecedor',
+        component: FornecedorComponent
       }
     ]
   }
