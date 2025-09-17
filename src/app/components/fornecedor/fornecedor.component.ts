@@ -39,8 +39,14 @@ export class FornecedorComponent implements OnInit {
     this.listarFornecedores();
     this.tipoService.listarTiposTelefone().subscribe(res => this.tiposTelefone = res.resposta);
     this.tipoService.listarTiposEndereco().subscribe(res => this.tiposEndereco = res.resposta);
-    this.addTelefone();
-    this.addEndereco();
+
+    if (this.telefones.length === 0) {
+      this.addTelefone();
+    }
+
+    if (this.enderecos.length === 0) {
+      this.addEndereco();
+    }
   }
 
   get telefones(): FormArray {
@@ -88,8 +94,8 @@ export class FornecedorComponent implements OnInit {
           this.form.reset();
           this.telefones.clear();
           this.enderecos.clear();
-          this.addTelefone();
-          this.addEndereco();
+          if (this.telefones.length === 0) this.addTelefone();
+          if (this.enderecos.length === 0) this.addEndereco();
           this.listarFornecedores();
         },
         error: err => this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao salvar fornecedor')
@@ -118,4 +124,5 @@ export class FornecedorComponent implements OnInit {
   private clearToast() {
     if (this.toastTimeout) clearTimeout(this.toastTimeout);
   }
+
 }
