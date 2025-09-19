@@ -40,9 +40,9 @@
               </div>
               <div class="form-group flex-1">
                 <label>Tipo</label>
-                <select formControlName="tpTelefoneId">
+                <select formControlName="tpTelefone">
                   <option [ngValue]="null">Selecione o tipo</option>
-                  <option *ngFor="let tipo of tiposTelefone" [value]="tipo.id">{{tipo.descricao}}</option>
+                  <option *ngFor="let tipo of tiposTelefone" [ngValue]="tipo">{{tipo.descricao}}</option>
                 </select>
               </div>
           </div>
@@ -127,9 +127,9 @@
             </div>
             <div class="form-group flex-1">
               <label>Tipo</label>
-              <select formControlName="enderecoTipoId">
+              <select formControlName="tipoEndereco">
                 <option [ngValue]="null">Selecione</option>
-                <option *ngFor="let tipo of tiposEndereco" [value]="tipo.id">{{tipo.descricao}}</option>
+                <option *ngFor="let tipo of tiposEndereco" [ngValue]="tipo">{{tipo.descricao}}</option>
               </select>
             </div>
           </div>

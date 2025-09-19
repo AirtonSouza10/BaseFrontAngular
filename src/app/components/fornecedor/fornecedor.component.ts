@@ -60,7 +60,7 @@ export class FornecedorComponent implements OnInit {
   addTelefone(): void {
     this.telefones.push(this.fb.group({
       numero: ['', Validators.required],
-      tpTelefoneId: [null, Validators.required]
+      tpTelefone: [null, Validators.required]
     }));
   }
 
@@ -78,7 +78,7 @@ export class FornecedorComponent implements OnInit {
       estado: ['', Validators.required],
       uf: ['', Validators.required],
       cep: ['', Validators.required],
-      enderecoTipoId: [null, Validators.required]
+      tipoEndereco: [null, Validators.required]
     }));
   }
 
