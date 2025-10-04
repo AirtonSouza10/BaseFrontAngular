@@ -1,35 +1,57 @@
 <div class="form-container">
-  <h2>Cadastro - Tipo de Nota</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <label for="descricao">Descrição</label>
-    <input id="descricao" formControlName="descricao" type="text" required />
+  <h2>Tipo de Nota</h2>
 
-    <button type="submit" [disabled]="form.invalid">Salvar</button>
+  <!-- Mensagens -->
+  <div *ngIf="mensagemSucesso" class="sucesso-snackbar">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="erro-snackbar">{{ mensagemErro }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="descricao" required />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid"
+      class="botao-salvar"
+    >
+      {{ editandoId ? 'Atualizar' : 'Salvar' }}
+    </button>
   </form>
 
-  <!-- Mensagem de sucesso -->
-  <div *ngIf="sucessoMsg" class="mensagem-sucesso">
-    {{ sucessoMsg }}
-  </div>
+  <table mat-table [dataSource]="tiposNota" class="mat-elevation-z2 tabela-tipos" *ngIf="tiposNota.length">
 
-  <!-- Mensagem de erro -->
-  <div *ngIf="erroMsg" class="mensagem-erro">
-    {{ erroMsg }}
-  </div>
+    <!-- Coluna: Descrição -->
+    <ng-container matColumnDef="descricao">
+      <th mat-header-cell *matHeaderCellDef>Descrição</th>
+      <td mat-cell *matCellDef="let tp">{{ tp.descricao }}</td>
+    </ng-container>
 
-  <!-- Lista de tipos de pagamento (opcional) -->
-  <!-- Tabela com os tipos de nota -->
-  <table class="tabela-tipos" *ngIf="tiposNota.length">
-    <thead>
-      <tr>
-        <th>Descrição</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let tp of tiposNota">
-        <td>{{ tp.descricao }}</td>
-      </tr>
-    </tbody>
+    <!-- Coluna: Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef class="acoes-header">Ações</th>
+      <td mat-cell *matCellDef="let tp" class="acoes-cell">
+        <button
+          mat-icon-button
+          color="accent"
+          matTooltip="Editar"
+          (click)="editarTipoNota(tp.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="Excluir"
+          (click)="excluirTipoNota(tp.id, tp.descricao)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
 </div>

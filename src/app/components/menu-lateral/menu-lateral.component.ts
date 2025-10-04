@@ -24,7 +24,7 @@ export class MenuLateralComponent {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     this.router.navigate(['/login']);
   }
 }

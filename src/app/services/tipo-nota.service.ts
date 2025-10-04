@@ -14,8 +14,19 @@ export class TipoNotaService {
     return this.http.post(this.apiUrl, dto);
   }
 
-    // Listar todos os tipos de nota
+  buscarPorId(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  atualizar(id: number, dto: TipoNotaDTO): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, dto);
+  }
+
   listarTiposNota(): Observable<any> {
     return this.http.get(this.apiUrl);
+  }
+
+  excluir(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

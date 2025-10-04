@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
 import { AppMainComponent } from './components/main/main.component';
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
@@ -13,7 +12,7 @@ import { FornecedorComponent } from './components/fornecedor/fornecedor.componen
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: LoginComponent
   },
   {
     path: 'login',
@@ -23,6 +22,7 @@ export const routes: Routes = [
     path: 'main',
     component: AppMainComponent,
     canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       {
         path: 'tipo-nota',

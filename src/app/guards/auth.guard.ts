@@ -1,12 +1,12 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, CanActivateChildFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn & CanActivateChildFn = (route, state) => {
   const router = inject(Router);
-  const token = localStorage.getItem('authToken'); // 👈 usar a mesma chave usada no login/interceptor
+  const token = localStorage.getItem('authToken'); // mesma chave usada no login
 
   if (!token) {
-    // usuário não está logado → redireciona para login
+    // usuário não logado → redireciona para login
     router.navigate(['/login']);
     return false;
   }
