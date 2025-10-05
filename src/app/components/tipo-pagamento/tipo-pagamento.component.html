@@ -1,34 +1,63 @@
 <div class="form-container">
-  <h2>Cadastro - Tipo de Pagamento</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <label for="descricao">Descrição</label>
-    <input id="descricao" formControlName="descricao" type="text" required />
+  <h2>Tipo de Pagamento</h2>
 
-    <button type="submit" [disabled]="form.invalid">Salvar</button>
+  <div *ngIf="mensagemSucesso" class="sucesso-snackbar">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="erro-snackbar">{{ mensagemErro }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="descricao" required />
+    </mat-form-field>
+
+    <!-- Salvar / Atualizar -->
+    <button
+      mat-raised-button
+      type="submit"
+      [disabled]="form.invalid"
+      [ngClass]="{
+        'btn-invalido': form.invalid,
+        'btn-valido': form.valid
+      }"
+    >
+      {{ editandoId ? 'Atualizar' : 'Salvar' }}
+    </button>
+
+    <!-- Cancelar -->
+    <button
+      mat-stroked-button
+      type="button"
+      *ngIf="editandoId"
+      (click)="cancelEdit()"
+      class="btn-cancelar"
+    >
+      Cancelar
+    </button>
   </form>
 
-  <!-- Mensagem de sucesso -->
-  <div *ngIf="sucessoMsg" class="mensagem-sucesso">
-    {{ sucessoMsg }}
-  </div>
+  <!-- Tabela -->
+  <table mat-table [dataSource]="tiposPagamento" class="mat-elevation-z2 tabela-tipos" *ngIf="tiposPagamento.length">
 
-  <!-- Mensagem de erro -->
-  <div *ngIf="erroMsg" class="mensagem-erro">
-    {{ erroMsg }}
-  </div>
+    <!-- Coluna: Descrição -->
+    <ng-container matColumnDef="descricao">
+      <th mat-header-cell *matHeaderCellDef>Descrição</th>
+      <td mat-cell *matCellDef="let tp">{{ tp.descricao }}</td>
+    </ng-container>
 
-  <!-- Lista de tipos de pagamento (opcional) -->
-  <!-- Tabela com os tipos de pagamento -->
-  <table class="tabela-tipos" *ngIf="tiposPagamento.length">
-    <thead>
-      <tr>
-        <th>Descrição</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let tp of tiposPagamento">
-        <td>{{ tp.descricao }}</td>
-      </tr>
-    </tbody>
+    <!-- Coluna: Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef class="acoes-header">Ações</th>
+      <td mat-cell *matCellDef="let tp" class="acoes-cell">
+        <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarTipoPagamento(tp.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Excluir" (click)="excluirTipoPagamento(tp.id, tp.descricao)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>

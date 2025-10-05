@@ -11,17 +11,32 @@
       <input matInput formControlName="descricao" required />
     </mat-form-field>
 
+    <!-- Salvar / Atualizar -->
     <button
       mat-raised-button
-      color="primary"
       type="submit"
       [disabled]="form.invalid"
-      class="botao-salvar"
+      [ngClass]="{
+        'btn-invalido': form.invalid,
+        'btn-valido': form.valid
+      }"
     >
       {{ editandoId ? 'Atualizar' : 'Salvar' }}
     </button>
+
+    <!-- Cancelar -->
+    <button
+      mat-stroked-button
+      type="button"
+      *ngIf="editandoId"
+      (click)="cancelEdit()"
+      class="btn-cancelar"
+    >
+      Cancelar
+    </button>
   </form>
 
+  <!-- Tabela -->
   <table mat-table [dataSource]="tiposNota" class="mat-elevation-z2 tabela-tipos" *ngIf="tiposNota.length">
 
     <!-- Coluna: Descrição -->
@@ -34,18 +49,10 @@
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef class="acoes-header">Ações</th>
       <td mat-cell *matCellDef="let tp" class="acoes-cell">
-        <button
-          mat-icon-button
-          color="accent"
-          matTooltip="Editar"
-          (click)="editarTipoNota(tp.id)">
+        <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarTipoNota(tp.id)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button
-          mat-icon-button
-          color="warn"
-          matTooltip="Excluir"
-          (click)="excluirTipoNota(tp.id, tp.descricao)">
+        <button mat-icon-button color="warn" matTooltip="Excluir" (click)="excluirTipoNota(tp.id, tp.descricao)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

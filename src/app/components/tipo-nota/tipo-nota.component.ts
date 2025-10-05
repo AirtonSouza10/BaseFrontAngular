@@ -60,24 +60,15 @@ export class TipoNotaComponent implements OnInit {
             const msg = res.resposta?.msgSucesso?.[0] || 'Dados atualizados com sucesso!';
             this.mensagemSucesso = msg;
             this.mensagemErro = '';
-            this.form.reset();
-            this.editandoId = null;
+            this.cancelEdit();
             this.listarTiposNota();
-
-            this.snackBar.open(msg, 'Fechar', {
-              duration: 4000,
-              panelClass: ['sucesso-snackbar']
-            });
+            this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
           },
           error: (err) => {
             const msg = err?.error?.resposta?.msgErro?.[0] || 'Erro ao atualizar Tipo de Nota';
             this.mensagemErro = msg;
             this.mensagemSucesso = '';
-
-            this.snackBar.open(msg, 'Fechar', {
-              duration: 4000,
-              panelClass: ['erro-snackbar']
-            });
+            this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
           }
         });
       } else {
@@ -89,21 +80,13 @@ export class TipoNotaComponent implements OnInit {
             this.mensagemErro = '';
             this.form.reset();
             this.listarTiposNota();
-
-            this.snackBar.open(msg, 'Fechar', {
-              duration: 4000,
-              panelClass: ['sucesso-snackbar']
-            });
+            this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
           },
           error: (err) => {
             const msg = err?.error?.resposta?.msgErro?.[0] || 'Erro ao cadastrar Tipo de Nota';
             this.mensagemErro = msg;
             this.mensagemSucesso = '';
-
-            this.snackBar.open(msg, 'Fechar', {
-              duration: 4000,
-              panelClass: ['erro-snackbar']
-            });
+            this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
           }
         });
       }
@@ -112,12 +95,8 @@ export class TipoNotaComponent implements OnInit {
 
   private listarTiposNota(): void {
     this.tipoNotaService.listarTiposNota().subscribe({
-      next: (res: any) => {
-        this.tiposNota = res?.resposta || [];
-      },
-      error: (err) => {
-        console.error('Erro ao listar tipos de nota', err);
-      }
+      next: (res: any) => { this.tiposNota = res?.resposta || []; },
+      error: (err) => { console.error('Erro ao listar tipos de nota', err); }
     });
   }
 
@@ -129,22 +108,13 @@ export class TipoNotaComponent implements OnInit {
           this.mensagemSucesso = msg;
           this.mensagemErro = '';
           this.listarTiposNota();
-
-          this.snackBar.open(msg, 'Fechar', {
-            duration: 4000,
-            panelClass: ['sucesso-snackbar']
-          });
+          this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
         },
         error: (err) => {
-          const msg = err?.error?.resposta?.msgErro?.[0] ||
-                      'Não foi possível excluir. Verifique se existem arquivos vinculados.';
+          const msg = err?.error?.resposta?.msgErro?.[0] || 'Não foi possível excluir. Verifique se existem arquivos vinculados.';
           this.mensagemErro = msg;
           this.mensagemSucesso = '';
-
-          this.snackBar.open(msg, 'Fechar', {
-            duration: 4000,
-            panelClass: ['erro-snackbar']
-          });
+          this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
         }
       });
     }
@@ -161,12 +131,13 @@ export class TipoNotaComponent implements OnInit {
         const msg = err?.error?.resposta?.msgErro?.[0] || 'Erro ao carregar Tipo de Nota';
         this.mensagemErro = msg;
         this.mensagemSucesso = '';
-
-        this.snackBar.open(msg, 'Fechar', {
-          duration: 4000,
-          panelClass: ['erro-snackbar']
-        });
+        this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
       }
     });
+  }
+
+  cancelEdit(): void {
+    this.editandoId = null;
+    this.form.reset();
   }
 }
