@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Cadastro - Filial</h2>
+  <h2>Filial</h2>
 
   <!-- Mensagens -->
   <div *ngIf="mensagemSucesso" class="sucesso-snackbar">{{ mensagemSucesso }}</div>
@@ -26,18 +26,20 @@
 
     <!-- Botões -->
     <div class="button-group">
-      <button mat-raised-button
-              type="submit"
-              [disabled]="form.invalid"
-              [ngClass]="{'btn-invalido': form.invalid, 'btn-valido': form.valid}">
+      <button
+        mat-raised-button
+        type="submit"
+        [disabled]="form.invalid"
+        [ngClass]="{'btn-invalido': form.invalid, 'btn-valido': form.valid}">
         {{ editandoId ? 'Atualizar' : 'Salvar' }}
       </button>
 
-      <button mat-stroked-button
-              type="button"
-              *ngIf="editandoId"
-              (click)="cancelEdit()"
-              class="btn-cancelar">
+      <button
+        mat-stroked-button
+        type="button"
+        *ngIf="editandoId"
+        (click)="cancelEdit()"
+        class="btn-cancelar">
         Cancelar
       </button>
     </div>
@@ -68,7 +70,11 @@
       <!-- Status -->
       <ng-container matColumnDef="ativo">
         <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let f">{{ f.ativo ? 'Ativo' : 'Inativo' }}</td>
+        <td mat-cell *matCellDef="let f">
+          <span class="status-badge" [ngClass]="f.ativo ? 'ativo' : 'inativo'">
+            {{ f.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
       </ng-container>
 
       <!-- Ações -->
@@ -78,11 +84,12 @@
           <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarFilial(f)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button
-                  [color]="f.ativo ? 'warn' : 'primary'"
-                  matTooltip="{{ f.ativo ? 'Inativar' : 'Ativar' }}"
-                  (click)="toggleStatus(f.id!, !f.ativo)">
-            <mat-icon>{{ f.ativo ? 'toggle_off' : 'toggle_on' }}</mat-icon>
+          <button
+            mat-icon-button
+            matTooltip="{{ f.ativo ? 'Inativar' : 'Ativar' }}"
+            (click)="toggleStatus(f.id!, !f.ativo)"
+            [ngClass]="f.ativo ? 'btn-ativo' : 'btn-inativo'">
+            <mat-icon>{{ f.ativo ? 'toggle_on' : 'toggle_off' }}</mat-icon>
           </button>
         </td>
       </ng-container>
