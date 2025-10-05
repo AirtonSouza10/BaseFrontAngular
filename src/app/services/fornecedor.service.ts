@@ -4,12 +4,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface TelefoneDTO {
+  id?: number;
   tpTelefone: any;
   numero: string;
   tpTelefoneId: number;
 }
 
 export interface EnderecoDTO {
+  id?: number;
   tipoEndereco: any;
   logradouro: string;
   numero: string;

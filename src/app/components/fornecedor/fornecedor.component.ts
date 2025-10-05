@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
+import { FornecedorService, FornecedorDTO, TelefoneDTO, EnderecoDTO } from '../../services/fornecedor.service';
 import { TipoService } from '../../services/tipo.service';
 
 @Component({
@@ -18,6 +18,8 @@ export class FornecedorComponent implements OnInit {
   tiposEndereco: any[] = [];
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
+  editando: boolean = false;
+  fornecedorIdEdit?: number;
   private toastTimeout: any;
 
   constructor(
@@ -26,10 +28,11 @@ export class FornecedorComponent implements OnInit {
     private readonly tipoService: TipoService,
   ) {
     this.form = this.fb.group({
+      id: [null], // <-- id do fornecedor
       nome: ['', Validators.required],
       identificacao: ['', Validators.required],
-      tpIdentificacao: ['', Validators.required],
       email: [''],
+      ativo: [true],
       telefones: this.fb.array([]),
       enderecos: this.fb.array([])
     });
@@ -37,28 +40,21 @@ export class FornecedorComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarFornecedores();
-    this.tipoService.listarTiposTelefone().subscribe(res => this.tiposTelefone = res.resposta);
-    this.tipoService.listarTiposEndereco().subscribe(res => this.tiposEndereco = res.resposta);
+    this.tipoService.listarTiposTelefone().subscribe(res => this.tiposTelefone = res.resposta || []);
+    this.tipoService.listarTiposEndereco().subscribe(res => this.tiposEndereco = res.resposta || []);
 
-    if (this.telefones.length === 0) {
-      this.addTelefone();
-    }
-
-    if (this.enderecos.length === 0) {
-      this.addEndereco();
-    }
+    if (this.telefones.length === 0) this.addTelefone();
+    if (this.enderecos.length === 0) this.addEndereco();
   }
 
-  get telefones(): FormArray {
-    return this.form.get('telefones') as FormArray;
-  }
+  // ================= GETTERS =================
+  get telefones(): FormArray { return this.form.get('telefones') as FormArray; }
+  get enderecos(): FormArray { return this.form.get('enderecos') as FormArray; }
 
-  get enderecos(): FormArray {
-    return this.form.get('enderecos') as FormArray;
-  }
-
+  // ================= ADD / REMOVE =================
   addTelefone(): void {
     this.telefones.push(this.fb.group({
+      id: [null], // <-- id do telefone
       numero: ['', Validators.required],
       tpTelefone: [null, Validators.required]
     }));
@@ -70,6 +66,7 @@ export class FornecedorComponent implements OnInit {
 
   addEndereco(): void {
     this.enderecos.push(this.fb.group({
+      id: [null], // <-- id do endereço
       logradouro: ['', Validators.required],
       numero: ['', Validators.required],
       complemento: [''],
@@ -86,16 +83,28 @@ export class FornecedorComponent implements OnInit {
     this.enderecos.removeAt(index);
   }
 
+  // ================= SUBMIT =================
   onSubmit(): void {
-    if (this.form.valid) {
-      this.fornecedorService.salvar(this.form.value).subscribe({
+    if (!this.form.valid) return;
+
+    const fornecedorDTO = this.form.value;
+
+    if (this.editando && this.fornecedorIdEdit) {
+      // Atualizar fornecedor existente
+      this.fornecedorService.atualizar(this.fornecedorIdEdit, fornecedorDTO).subscribe({
+        next: () => {
+          this.showSuccess('Fornecedor atualizado com sucesso!');
+          this.cancelarEdicao();
+          this.listarFornecedores();
+        },
+        error: err => this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao atualizar fornecedor')
+      });
+    } else {
+      // Salvar novo fornecedor
+      this.fornecedorService.salvar(fornecedorDTO).subscribe({
         next: () => {
           this.showSuccess('Fornecedor salvo com sucesso!');
-          this.form.reset();
-          this.telefones.clear();
-          this.enderecos.clear();
-          if (this.telefones.length === 0) this.addTelefone();
-          if (this.enderecos.length === 0) this.addEndereco();
+          this.cancelarEdicao();
           this.listarFornecedores();
         },
         error: err => this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao salvar fornecedor')
@@ -103,10 +112,77 @@ export class FornecedorComponent implements OnInit {
     }
   }
 
+  // ================= LISTAR =================
   listarFornecedores(): void {
     this.fornecedorService.listar().subscribe(res => this.fornecedores = res.resposta || res || []);
   }
 
+  // ================= EDITAR =================
+editarFornecedor(fornecedor: FornecedorDTO): void {
+  if (!fornecedor.id) return;
+
+  this.fornecedorService.buscarPorId(fornecedor.id).subscribe(res => {
+    const f: FornecedorDTO = res.resposta;
+    this.editando = true;
+    this.fornecedorIdEdit = f.id;
+
+    // =================== FORM PRINCIPAL ===================
+    this.form.patchValue({
+      id: f.id,
+      nome: f.nome,
+      identificacao: f.identificacao,
+      email: f.email,
+      ativo: f.ativo
+    });
+
+    // =================== TELEFONES ===================
+    this.telefones.clear();
+    f.telefones?.forEach((tel: TelefoneDTO) => {
+      const tipo = this.tiposTelefone.find(t => t.id === tel.tpTelefone?.id) || null;
+      this.telefones.push(this.fb.group({
+        id: [tel.id || null],
+        numero: [tel.numero || '', Validators.required],
+        tpTelefone: [tipo, Validators.required]
+      }));
+    });
+    if (this.telefones.length === 0) this.addTelefone();
+
+    // =================== ENDEREÇOS ===================
+    this.enderecos.clear();
+    f.enderecos?.forEach((end: EnderecoDTO) => {
+      const tipoEnd = this.tiposEndereco.find(t => t.id === end.tipoEndereco?.id) || null;
+      this.enderecos.push(this.fb.group({
+        id: [end.id || null],
+        logradouro: [end.logradouro || '', Validators.required],
+        numero: [end.numero || '', Validators.required],
+        complemento: [end.complemento || ''],
+        bairro: [end.bairro || '', Validators.required],
+        cidade: [end.cidade || '', Validators.required],
+        estado: [end.estado || '', Validators.required],
+        uf: [end.uf?.trim().toUpperCase() || '', Validators.required], // garante match com <option>
+        cep: [end.cep || '', Validators.required],
+        tipoEndereco: [tipoEnd, Validators.required]
+      }));
+    });
+    if (this.enderecos.length === 0) this.addEndereco();
+
+    this.form.updateValueAndValidity();
+  });
+}
+
+
+  // ================= CANCELAR =================
+  cancelarEdicao(): void {
+    this.editando = false;
+    this.fornecedorIdEdit = undefined;
+    this.form.reset({ ativo: true });
+    this.telefones.clear();
+    this.enderecos.clear();
+    if (this.telefones.length === 0) this.addTelefone();
+    if (this.enderecos.length === 0) this.addEndereco();
+  }
+
+  // ================= MENSAGENS =================
   private showSuccess(message: string) {
     this.sucessoMsg = message;
     this.erroMsg = null;
@@ -125,4 +201,8 @@ export class FornecedorComponent implements OnInit {
     if (this.toastTimeout) clearTimeout(this.toastTimeout);
   }
 
+  // ================= COMPARE FUNCTION PARA SELECT =================
+  compareById(option: any, value: any): boolean {
+    return option && value ? option.id === value.id : option === value;
+  }
 }
