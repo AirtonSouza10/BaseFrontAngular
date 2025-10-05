@@ -1,35 +1,68 @@
 <div class="form-container">
   <h2>Cadastro - Forma de Pagamento</h2>
 
+  <!-- Mensagens -->
+  <div *ngIf="mensagemSucesso" class="sucesso-snackbar">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="erro-snackbar">{{ mensagemErro }}</div>
+
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <label for="descricao">Descrição</label>
-    <input id="descricao" formControlName="descricao" type="text" required />
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="descricao" required />
+    </mat-form-field>
 
-    <label for="qtdeParcelas">Qtd. Parcelas</label>
-    <input id="qtdeParcelas" formControlName="qtdeParcelas" type="number" min="1" required />
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Qtd. Parcelas</mat-label>
+      <input matInput type="number" min="1" formControlName="qtdeParcelas" required />
+    </mat-form-field>
 
-    <div class="form-actions">
-      <button type="submit" [disabled]="form.invalid">Salvar</button>
-    </div>
+    <button mat-raised-button
+            type="submit"
+            [disabled]="form.invalid"
+            [ngClass]="{'btn-invalido': form.invalid, 'btn-valido': form.valid}">
+      {{ editandoId ? 'Atualizar' : 'Salvar' }}
+    </button>
+
+    <button mat-stroked-button
+            type="button"
+            *ngIf="editandoId"
+            (click)="cancelEdit()"
+            class="btn-cancelar">
+      Cancelar
+    </button>
   </form>
 
-  <!-- Mensagens -->
-  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
-  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+  <!-- Tabela com MatTableDataSource -->
+  <table mat-table [dataSource]="formasPagamento" class="mat-elevation-z2 tabela-tipos" *ngIf="formasPagamento.data.length">
 
-  <!-- Tabela padronizada -->
-  <table class="tabela-tipos" *ngIf="formasPagamento.length">
-    <thead>
-      <tr>
-        <th>Descrição</th>
-        <th>Qtd. Parcelas</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let f of formasPagamento">
-        <td>{{ f.descricao }}</td>
-        <td>{{ f.qtdeParcelas }}</td>
-      </tr>
-    </tbody>
+    <!-- Descrição -->
+    <ng-container matColumnDef="descricao">
+      <th mat-header-cell *matHeaderCellDef>Descrição</th>
+      <td mat-cell *matCellDef="let f">{{ f.descricao }}</td>
+    </ng-container>
+
+    <!-- Qtd Parcelas -->
+    <ng-container matColumnDef="qtdeParcelas">
+      <th mat-header-cell *matHeaderCellDef>Qtd. Parcelas</th>
+      <td mat-cell *matCellDef="let f">{{ f.qtdeParcelas }}</td>
+    </ng-container>
+
+    <!-- Ações -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef class="acoes-header">Ações</th>
+      <td mat-cell *matCellDef="let f" class="acoes-cell">
+        <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarFormaPagamento(f.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Excluir" (click)="excluirFormaPagamento(f.id, f.descricao)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header e Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
 </div>
