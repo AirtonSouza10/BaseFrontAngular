@@ -7,15 +7,15 @@ export interface FilialDTO {
   id?: number;
   nome: string;
   identificacao: string;
-  tpidentificacao: string;
   email: string;
+  ativo?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class FilialService {
   private readonly apiUrl = `${environment.apiUrl}/filial`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   listarFiliais(): Observable<any> {
     return this.http.get(this.apiUrl);
@@ -23,5 +23,13 @@ export class FilialService {
 
   salvarFilial(dto: FilialDTO): Observable<any> {
     return this.http.post(this.apiUrl, dto);
+  }
+
+  atualizarFilial(id: number, dto: FilialDTO): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, dto);
+  }
+
+  atualizarStatusFilial(id: number, ativo: boolean): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/status`, ativo);
   }
 }
