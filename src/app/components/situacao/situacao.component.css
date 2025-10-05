@@ -1,134 +1,94 @@
-/* Container do formulário */
 .form-container {
   background-color: #fff;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   max-width: 600px;
   margin: 2rem auto;
   font-family: 'Segoe UI', sans-serif;
+  color: #333;
 }
 
-/* Título do formulário */
 .form-container h2 {
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.5rem;
+  font-size: 1.6rem;
 }
 
-/* Labels */
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #555;
-  font-weight: bold;
-}
-
-/* Inputs de texto */
-input[type="text"] {
+/* Campos full-width */
+.full-width {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  transition: border-color 0.3s;
+  margin-bottom: 1rem;
 }
 
-input[type="text"]:focus {
-  border-color: #0078d4;
-  outline: none;
+/* Botões */
+.btn-invalido {
+  background-color: #ccc !important;
+  color: #666 !important;
+}
+.btn-valido {
+  background-color: #0078d4 !important;
+  color: white !important;
+}
+.btn-valido:hover {
+  background-color: #005ea2 !important;
 }
 
-/* Botão de submit */
-button[type="submit"] {
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.btn-cancelar {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+.btn-cancelar:hover {
+  background-color: #b02a37 !important;
 }
 
-button[type="submit"]:hover {
-  background-color: #005ea2;
-}
-
-button[type="submit"]:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ===============================
-   Alertas centralizados na tela
-   =============================== */
-.mensagem-sucesso,
-.mensagem-erro {
-  position: fixed;           /* fixa na tela */
-  top: 20px;                 /* distância do topo */
-  left: 50%;                 /* centraliza horizontalmente */
-  transform: translateX(-50%); /* corrige o alinhamento */
-  z-index: 1000;             /* acima de outros elementos */
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  min-width: 300px;          /* largura mínima */
-  max-width: 500px;          /* largura máxima */
-  opacity: 0.95;
-}
-
-/* Alerta de sucesso */
-.mensagem-sucesso {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-/* Alerta de erro */
-.mensagem-erro {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-/* ===============================
-   Tabela tipos de nota
-   =============================== */
-
-/* tabela básica */
+/* Tabela */
 .tabela-tipos {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  font-family: 'Segoe UI', sans-serif;
-  color: #000; /* letras pretas */
+  margin-top: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* cabeçalho */
-.tabela-tipos th {
-  background-color: #f2f2f2;
-  text-align: left;
-  padding: 0.5rem;
-  border-bottom: 2px solid #ccc;
-  color: #000; /* letras pretas no cabeçalho também */
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 0.75rem;
 }
 
-/* linhas */
-.tabela-tipos td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #ddd;
+.mat-cell {
+  padding: 0.75rem;
 }
 
-/* zebra opcional */
-.tabela-tipos tbody tr:nth-child(even) {
+.mat-row:nth-child(even) {
   background-color: #fafafa;
 }
 
+.acoes-header {
+  text-align: center;
+}
 
+.acoes-cell {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Snackbars */
+.sucesso-snackbar {
+  background-color: #d4edda;
+  color: #155724;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.erro-snackbar {
+  background-color: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
