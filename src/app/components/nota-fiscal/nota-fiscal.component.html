@@ -1,0 +1,165 @@
+<div class="form-container">
+  <h2>Nota Fiscal</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- DADOS DA NOTA FISCAL -->
+    <div class="form-section">
+      <h3>Dados da Nota Fiscal</h3>
+      <div class="form-row">
+        <div class="form-group flex-2">
+          <label for="numero">Número</label>
+          <input id="numero" formControlName="numero" type="text" required />
+        </div>
+        <div class="form-group flex-1">
+          <label for="serie">Série</label>
+          <input id="serie" formControlName="serie" type="text" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-2">
+          <label for="chave">Chave</label>
+          <input id="chave" formControlName="chave" type="text" />
+        </div>
+        <div class="form-group flex-2">
+          <label for="descricaoObs">Observação</label>
+          <input id="descricaoObs" formControlName="descricaoObs" type="text" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="valorTotal">Valor Total</label>
+          <input id="valorTotal" formControlName="valorTotal" type="number" step="0.01" />
+        </div>
+        <div class="form-group flex-1">
+          <label for="valorDesconto">Desconto</label>
+          <input id="valorDesconto" formControlName="valorDesconto" type="number" step="0.01" />
+        </div>
+        <div class="form-group flex-1">
+          <label for="valorIcms">ICMS</label>
+          <input id="valorIcms" formControlName="valorIcms" type="number" step="0.01" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="valorJuros">Juros</label>
+          <input id="valorJuros" formControlName="valorJuros" type="number" step="0.01" />
+        </div>
+        <div class="form-group flex-1">
+          <label for="valorMulta">Multa</label>
+          <input id="valorMulta" formControlName="valorMulta" type="number" step="0.01" />
+        </div>
+        <div class="form-group flex-1">
+          <label for="dtCompra">Data de Compra</label>
+          <input id="dtCompra" formControlName="dtCompra" type="date" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label>Fornecedor</label>
+          <select formControlName="fornecedorId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let f of fornecedores" [ngValue]="f.id">{{ f.nome }}</option>
+          </select>
+        </div>
+        <div class="form-group flex-1">
+          <label>Tipo Nota</label>
+          <select formControlName="tipoNotaId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let t of tiposNota" [ngValue]="t.id">{{ t.descricao }}</option>
+          </select>
+        </div>
+        <div class="form-group flex-1">
+          <label>Filial</label>
+          <select formControlName="filialId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let f of filiais" [ngValue]="f.id">{{ f.nome }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PARCELAS -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label>Quantidade de Parcelas</label>
+          <input type="number" min="1" formControlName="quantidadeParcelas" />
+        </div>
+        <div class="form-group flex-1">
+          <label>Data Primeira Parcela</label>
+          <input type="date" formControlName="dtPrimeiraParcela" />
+        </div>
+        <div class="form-group flex-1">
+          <label>Intervalo (dias)</label>
+          <input type="number" min="1" formControlName="intervaloDias" />
+        </div>
+        <div class="form-group flex-1" style="align-self:flex-end;">
+          <button type="button" (click)="gerarParcelas()">Gerar Parcelas</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARCELAS PREVISTAS -->
+    <div class="form-section">
+      <h3>Parcelas Previstas</h3>
+      <div formArrayName="parcelasPrevistas">
+        <div *ngFor="let parc of parcelasPrevistas.controls; let i=index" [formGroupName]="i" class="parcela-card">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label>Data Vencimento</label>
+              <input type="date" formControlName="dtVencimentoPrevisto" />
+            </div>
+            <div class="form-group flex-2">
+              <label>Valor Previsto</label>
+              <input type="number" step="0.01" formControlName="valorPrevisto" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid" class="btn-submit">
+        {{ editando ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button *ngIf="editando" type="button" class="btn-remove" (click)="cancelarEdicao()">Cancelar</button>
+    </div>
+  </form>
+
+  <!-- MENSAGENS -->
+  <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+  <!-- TABELA -->
+  <table class="tabela-tipos" *ngIf="notasFiscais.length">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Série</th>
+        <th>Chave</th>
+        <th>Fornecedor</th>
+        <th>Filial</th>
+        <th>Valor Total</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let n of notasFiscais">
+        <td>{{ n.numero }}</td>
+        <td>{{ n.serie }}</td>
+        <td>{{ n.chave }}</td>
+        <td>{{ getFornecedorNome(n.fornecedorId) }}</td>
+        <td>{{ getFilialNome(n.filialId) }}</td>
+        <td>{{ n.valorTotal | currency:'BRL' }}</td>
+        <td>
+          <button type="button" class="btn-submit" (click)="editarNotaFiscal(n)">Editar</button>
+          <button type="button" class="btn-remove" (click)="excluirNotaFiscal(n.id)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
