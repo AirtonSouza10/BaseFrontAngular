@@ -105,8 +105,11 @@
     <!-- PARCELAS PREVISTAS -->
     <div class="form-section">
       <h3>Parcelas Previstas</h3>
-      <div formArrayName="parcelasPrevistas">
+      <div formArrayName="parcelasPrevistas" class="parcelas-grid">
         <div *ngFor="let parc of parcelasPrevistas.controls; let i=index" [formGroupName]="i" class="parcela-card">
+          <div class="parcela-header">
+            Parcela {{ i + 1 }} / {{ parcelasPrevistas.length }}
+          </div>
           <div class="form-row">
             <div class="form-group flex-2">
               <label>Data Vencimento</label>
