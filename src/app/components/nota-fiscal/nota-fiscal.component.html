@@ -159,8 +159,10 @@
         <td>{{ getFilialNome(n.filialId) }}</td>
         <td>{{ n.valorTotal | currency:'BRL' }}</td>
         <td>
-          <button type="button" class="btn-submit" (click)="editarNotaFiscal(n)">Editar</button>
-          <button type="button" class="btn-remove" (click)="excluirNotaFiscal(n.id)">Excluir</button>
+          <div class="acoes-tabela">
+            <button type="button" class="btn-submit" (click)="editarNotaFiscal(n)">Editar</button>
+            <button type="button" class="btn-remove" (click)="excluirNotaFiscal(n.id)">Excluir</button>
+          </div>
         </td>
       </tr>
     </tbody>

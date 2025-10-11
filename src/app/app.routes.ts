@@ -9,6 +9,7 @@ import { SituacaoComponent } from './components/situacao/situacao.component';
 import { FilialComponent } from './components/filial/filial.component';
 import { FornecedorComponent } from './components/fornecedor/fornecedor.component';
 import { NotaFiscalComponent } from './components/nota-fiscal/nota-fiscal.component';
+import { DuplicataComponent } from './components/duplicata/duplicata.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,10 @@ export const routes: Routes = [
       {
         path: 'nota-fiscal',
         component: NotaFiscalComponent
+      },
+      {
+        path: 'duplicata',
+        component: DuplicataComponent
       }
     ]
   }
