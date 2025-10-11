@@ -44,7 +44,9 @@ export class FormaPagamentoComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       descricao: ['', Validators.required],
-      qtdeParcelas: [1, [Validators.required, Validators.min(1)]]
+      qtdeParcelas: [1, [Validators.required, Validators.min(1)]],
+      prazoPrimeiraParcela: [1, [Validators.required, Validators.min(1)]],
+      intervaloParcelas: [1, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -111,7 +113,9 @@ excluirFormaPagamento(id: number, descricao: string): void {
     if (forma) {
       this.form.patchValue({
         descricao: forma.descricao,
-        qtdeParcelas: forma.qtdeParcelas
+        qtdeParcelas: forma.qtdeParcelas,
+        prazoPrimeiraParcela: forma.prazoPrimeiraParcela,
+        intervaloParcelas: forma.intervaloParcelas
       });
       this.editandoId = forma.id!;
     }

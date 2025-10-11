@@ -7,6 +7,8 @@ export interface FormaPagamentoDTO {
   id?: number;
   descricao: string;
   qtdeParcelas: number;
+  prazoPrimeiraParcela: number;
+  intervaloParcelas: number;
 }
 
 @Injectable({ providedIn: 'root' })

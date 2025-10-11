@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Cadastro - Forma de Pagamento</h2>
+  <h2>Forma de Pagamento</h2>
 
   <!-- Mensagens -->
   <div *ngIf="mensagemSucesso" class="sucesso-snackbar">{{ mensagemSucesso }}</div>
@@ -11,10 +11,22 @@
       <input matInput formControlName="descricao" required />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Qtd. Parcelas</mat-label>
-      <input matInput type="number" min="1" formControlName="qtdeParcelas" required />
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Qtd. Parcelas</mat-label>
+        <input matInput type="number" min="1" formControlName="qtdeParcelas" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Prazo 1ª Parcela</mat-label>
+        <input matInput type="number" min="1" formControlName="prazoPrimeiraParcela" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Intervalo Parcelas</mat-label>
+        <input matInput type="number" min="1" formControlName="intervaloParcelas" required />
+      </mat-form-field>
+    </div>
 
     <button mat-raised-button
             type="submit"
