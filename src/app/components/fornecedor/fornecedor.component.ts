@@ -1,8 +1,10 @@
+import { TipoService } from './../../services/tipo.service';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FornecedorService, FornecedorDTO, TelefoneDTO, EnderecoDTO } from '../../services/fornecedor.service';
-import { TipoService } from '../../services/tipo.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EnderecoService } from '../../services/endereco.service';
 
 @Component({
   selector: 'app-fornecedor',
@@ -25,6 +27,8 @@ export class FornecedorComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly fornecedorService: FornecedorService,
+    private readonly enderecoService: EnderecoService,
+    private readonly snackBar: MatSnackBar,
     private readonly tipoService: TipoService,
   ) {
     this.form = this.fb.group({
@@ -205,4 +209,28 @@ editarFornecedor(fornecedor: FornecedorDTO): void {
   compareById(option: any, value: any): boolean {
     return option && value ? option.id === value.id : option === value;
   }
+
+  onCepBlur(index: number): void {
+    const cepControl = this.enderecos.at(index).get('cep');
+    const cep = cepControl?.value?.replace(/\D/g, '');
+    if (!cep || cep.length !== 8) return;
+
+    this.enderecoService.buscarPorCep(cep).subscribe({
+      next: (endereco) => {
+        // Atualiza apenas os campos do endereço, mantendo tipo e número
+        this.enderecos.at(index).patchValue({
+          logradouro: endereco.logradouro,
+          bairro: endereco.bairro,
+          cidade: endereco.cidade,
+          estado: endereco.estado,
+          uf: endereco.uf
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao buscar CEP', err);
+        this.snackBar.open('Não foi possível buscar o CEP', 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
+      }
+    });
+  }
+
 }
