@@ -177,7 +177,7 @@ export class NotaFiscalComponent implements OnInit {
       quantidadeParcelas: nota.parcelasPrevistas?.length || 1,
       dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
       intervaloDias: 30,
-      gerarParcelasPrevistas: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto
+      gerarParcelasPrevistas: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto,
     });
 
     this.parcelasPrevistas.clear();

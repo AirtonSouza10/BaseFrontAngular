@@ -4,7 +4,7 @@
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  max-width: 1200px; /* aumentei largura */
+  max-width: 100%; /* aumentei largura */
   margin: 2rem auto;
   font-family: 'Segoe UI', sans-serif;
 }
@@ -190,4 +190,8 @@ button {
   margin-top: 1rem;
   display: flex;
   gap: 1rem;
+}
+
+.flex-0-5 {
+  flex: 0.5; /* metade da largura do flex-1 */
 }

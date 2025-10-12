@@ -19,6 +19,7 @@ export interface DuplicataDTO {
   valorTotal: number;
   dtCriacao?: string | Date;
   dtAtualizacao?: string | Date;
+  formaPagamentoId: number;
   parcelas?: ParcelaDTO[];
 }
 
