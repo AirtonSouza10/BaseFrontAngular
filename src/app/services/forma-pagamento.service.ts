@@ -33,8 +33,8 @@ export class FormaPagamentoService {
   }
 
   /** Busca forma de pagamento por ID */
-  buscarPorId(id: number): Observable<FormaPagamentoDTO> {
-    return this.http.get<FormaPagamentoDTO>(`${this.apiUrl}/${id}`);
+  buscarPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   /** Exclui forma de pagamento por ID */

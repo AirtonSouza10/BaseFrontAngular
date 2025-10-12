@@ -1,8 +1,9 @@
+import { FormaPagamentoService, FormaPagamentoDTO } from './../../services/forma-pagamento.service';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NotaFiscalService, NotaFiscalDTO, ParcelaPrevistaNotaDTO } from '../../services/nota-fiscal.service';
+import { NotaFiscalService, NotaFiscalDTO } from '../../services/nota-fiscal.service';
 import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
 import { TipoNotaService } from '../../services/tipo-nota.service';
 import { FilialService, FilialDTO } from '../../services/filial.service';
@@ -18,6 +19,7 @@ export class NotaFiscalComponent implements OnInit {
   form: FormGroup;
   notasFiscais: NotaFiscalDTO[] = [];
   fornecedores: FornecedorDTO[] = [];
+  formasPagamento: FormaPagamentoDTO[] = [];
   tiposNota: any[] = [];
   filiais: FilialDTO[] = [];
   sucessoMsg: string | null = null;
@@ -25,14 +27,14 @@ export class NotaFiscalComponent implements OnInit {
   editando: boolean = false;
   notaIdEdit?: number;
   private toastTimeout: any;
-  quantidadeParcelas: number | undefined;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly notaService: NotaFiscalService,
     private readonly fornecedorService: FornecedorService,
     private readonly tipoNotaService: TipoNotaService,
-    private readonly filialService: FilialService
+    private readonly filialService: FilialService,
+    private readonly formaPagamentoService: FormaPagamentoService,
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -48,11 +50,12 @@ export class NotaFiscalComponent implements OnInit {
       dtCompra: ['', Validators.required],
       fornecedorId: [null, Validators.required],
       tipoNotaId: [null, Validators.required],
+      formaPagamentoId: [null, Validators.required],
       filialId: [null, Validators.required],
       pessoaId: [null],
-      quantidadeParcelas: [1, [Validators.min(1)]],
+      quantidadeParcelas: [{ value: 1, disabled: true }, [Validators.min(1)]],
       dtPrimeiraParcela: [''],
-      intervaloDias: [30, [Validators.min(1)]],
+      intervaloDias: [{ value: 30, disabled: true }, [Validators.min(1)]],
       parcelasPrevistas: this.fb.array([])
     });
   }
@@ -62,12 +65,51 @@ export class NotaFiscalComponent implements OnInit {
     this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
     this.tipoNotaService.listarTiposNota().subscribe(res => this.tiposNota = res?.resposta || []);
     this.filialService.listarFiliais().subscribe(res => this.filiais = res?.resposta || []);
+    this.formaPagamentoService.listar().subscribe(res => this.formasPagamento = res?.resposta || []);
 
-    // Atualiza automaticamente as parcelas se o valor total mudar
+    this.configurarReacoesForm();
+
+  }
+
+  private configurarReacoesForm(): void {
+    this.form.get('formaPagamentoId')?.valueChanges.subscribe(formaId => {
+      console.log(formaId);
+      this.atualizarCamposFormaPagamento(formaId);
+    });
+
+    this.form.get('dtCompra')?.valueChanges.subscribe(() => {
+      const formaId = this.form.get('formaPagamentoId')?.value;
+      if (formaId) this.atualizarCamposFormaPagamento(formaId);
+    });
+
     this.form.get('valorTotal')?.valueChanges.subscribe(() => {
-      const quantidade = this.form.get('quantidadeParcelas')?.value;
-      const dtPrimeira = this.form.get('dtPrimeiraParcela')?.value;
-      if (quantidade > 0 && dtPrimeira) this.gerarParcelas();
+      if (this.form.get('quantidadeParcelas')?.value && this.form.get('dtPrimeiraParcela')?.value) {
+        this.gerarParcelas();
+      }
+    });
+  }
+
+  private atualizarCamposFormaPagamento(formaId: number | null): void {
+    if (!formaId) return;
+
+    this.formaPagamentoService.buscarPorId(formaId).subscribe(fp => {
+      const dados = fp.resposta;
+
+      if (!dados) return;
+
+      const dtCompraStr = this.form.get('dtCompra')?.value;
+      const dtCompra = dtCompraStr ? new Date(dtCompraStr) : new Date();
+
+      const dtPrimeira = new Date(dtCompra);
+      dtPrimeira.setDate(dtPrimeira.getDate() + (dados.prazoPrimeiraParcela || 0));
+
+      this.form.patchValue({
+        quantidadeParcelas: dados.qtdeParcelas || 1,
+        dtPrimeiraParcela: dtPrimeira.toISOString().substring(0, 10),
+        intervaloDias: dados.intervaloParcelas || 30
+      });
+
+      this.gerarParcelas();
     });
   }
 
@@ -100,6 +142,58 @@ export class NotaFiscalComponent implements OnInit {
     }
   }
 
+  editarNotaFiscal(nota: NotaFiscalDTO): void {
+    if (!nota) return;
+
+    this.editando = true;
+    this.notaIdEdit = nota.id;
+
+    this.form.patchValue({
+      id: nota.id,
+      numero: nota.numero,
+      serie: nota.serie,
+      chave: nota.chave,
+      descricaoObs: nota.descricaoObs,
+      valorTotal: nota.valorTotal,
+      valorDesconto: nota.valorDesconto,
+      valorIcms: nota.valorIcms,
+      valorJuros: nota.valorJuros,
+      valorMulta: nota.valorMulta,
+      dtCompra: nota.dtCompra,
+      fornecedorId: nota.fornecedorId,
+      tipoNotaId: nota.tipoNotaId,
+      filialId: nota.filialId,
+      pessoaId: nota.pessoaId,
+      formaPagamentoId: nota.formaPagamentoId,
+      quantidadeParcelas: nota.parcelasPrevistas?.length || 1,
+      dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
+      intervaloDias: 30
+    });
+
+    this.parcelasPrevistas.clear();
+    nota.parcelasPrevistas?.forEach(p => {
+      this.parcelasPrevistas.push(this.fb.group({
+        id: [p.id || null],
+        dtVencimentoPrevisto: [p.dtVencimentoPrevisto],
+        valorPrevisto: [p.valorPrevisto]
+      }));
+    });
+
+    if (nota.formaPagamentoId) {
+      this.formaPagamentoService.buscarPorId(nota.formaPagamentoId).subscribe(fp => {
+        const dtCompra = new Date(nota.dtCompra);
+        const dtPrimeira = new Date(dtCompra);
+        dtPrimeira.setDate(dtPrimeira.getDate() + (fp.prazoPrimeiraParcela || 0));
+
+        if (!this.form.get('intervaloDias')?.value) {
+          this.form.patchValue({ intervaloDias: fp.intervaloParcelas || 30 });
+        }
+
+        this.gerarParcelas();
+      });
+    }
+  }
+
   onSubmit(): void {
     if (!this.form.valid) return;
 
@@ -129,47 +223,6 @@ export class NotaFiscalComponent implements OnInit {
 
   listarNotasFiscais(): void {
     this.notaService.listar().subscribe(res => this.notasFiscais = res?.resposta || []);
-  }
-
-  editarNotaFiscal(nota: NotaFiscalDTO): void {
-    if (!nota) return;
-
-    this.editando = true;
-    this.notaIdEdit = nota.id;
-
-    // Preenche campos do formulário
-    this.form.patchValue({
-      id: nota.id,
-      numero: nota.numero,
-      serie: nota.serie,
-      chave: nota.chave,
-      descricaoObs: nota.descricaoObs,
-      valorTotal: nota.valorTotal,
-      valorDesconto: nota.valorDesconto,
-      valorIcms: nota.valorIcms,
-      valorJuros: nota.valorJuros,
-      valorMulta: nota.valorMulta,
-      dtCompra: nota.dtCompra,
-      fornecedorId: nota.fornecedorId,
-      tipoNotaId: nota.tipoNotaId,
-      filialId: nota.filialId,
-      pessoaId: nota.pessoaId,
-      dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
-      intervaloDias: 30
-    });
-
-    // Atualiza a quantidade de parcelas
-    this.quantidadeParcelas = nota.parcelasPrevistas?.length || 1;
-
-    // Limpa e preenche o FormArray de parcelas
-    this.parcelasPrevistas.clear();
-    nota.parcelasPrevistas?.forEach(p => {
-      this.parcelasPrevistas.push(this.fb.group({
-        id: [p.id || null],
-        dtVencimentoPrevisto: [p.dtVencimentoPrevisto],
-        valorPrevisto: [p.valorPrevisto]
-      }));
-    });
   }
 
   excluirNotaFiscal(id?: number): void {

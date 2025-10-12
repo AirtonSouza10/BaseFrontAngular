@@ -25,6 +25,7 @@ export interface NotaFiscalDTO {
   tipoNotaId: number;
   pessoaId?: number;
   filialId: number;
+  formaPagamentoId: number;
   parcelasPrevistas?: ParcelaPrevistaNotaDTO[];
 }
 
