@@ -209,6 +209,10 @@ export class NotaFiscalComponent implements OnInit {
 
     const notaDTO = this.form.value;
     if (this.parcelasPrevistas.length === 0) notaDTO.parcelasPrevistas = null;
+    if (!this.form.get('gerarParcelasPrevistas')?.value) {
+      notaDTO.formaPagamentoId = null;
+      notaDTO.parcelasPrevistas = [];
+    }
 
     if (this.editando && this.notaIdEdit) {
       this.notaService.atualizar(this.notaIdEdit, notaDTO).subscribe({
@@ -238,6 +242,9 @@ export class NotaFiscalComponent implements OnInit {
   excluirNotaFiscal(id?: number): void {
     if (!id) return;
 
+    const confirmar = confirm('Tem certeza que deseja excluir esta nota fiscal?');
+    if (!confirmar) return;
+
     this.notaService.excluir(id).subscribe({
       next: () => {
         this.showSuccess('Nota fiscal excluída com sucesso!');
@@ -246,6 +253,7 @@ export class NotaFiscalComponent implements OnInit {
       error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao excluir nota fiscal')
     });
   }
+
 
   cancelarEdicao(): void {
     this.editando = false;
@@ -273,7 +281,8 @@ export class NotaFiscalComponent implements OnInit {
       quantidadeParcelas: [{ value: 1, disabled: true }],
       dtPrimeiraParcela: [''],
       intervaloDias: [{ value: 30, disabled: true }],
-      parcelasPrevistas: this.fb.array([])
+      parcelasPrevistas: this.fb.array([]),
+      gerarParcelasPrevistas: [false]
     });
 
     // 🔹 Reconfigura as reações (pois recriou o form)
