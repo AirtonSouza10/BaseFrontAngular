@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { FornecedorService, FornecedorDTO, TelefoneDTO, EnderecoDTO } from '../../services/fornecedor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnderecoService } from '../../services/endereco.service';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-fornecedor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,NgxMaskDirective],
+  providers: [provideNgxMask()],
   templateUrl: './fornecedor.component.html',
   styleUrls: ['./fornecedor.component.css']
 })
@@ -101,7 +103,7 @@ export class FornecedorComponent implements OnInit {
           this.cancelarEdicao();
           this.listarFornecedores();
         },
-        error: err => this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao atualizar fornecedor')
+        error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao atualizar fornecedor')
       });
     } else {
       // Salvar novo fornecedor
@@ -111,7 +113,7 @@ export class FornecedorComponent implements OnInit {
           this.cancelarEdicao();
           this.listarFornecedores();
         },
-        error: err => this.showError(err?.error?.resposta?.msgErro?.[0] || 'Erro ao salvar fornecedor')
+        error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao salvar fornecedor')
       });
     }
   }
