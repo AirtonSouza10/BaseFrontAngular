@@ -19,6 +19,7 @@ export class NotaFiscalComponent implements OnInit {
   form: FormGroup;
   notasFiscais: NotaFiscalDTO[] = [];
   fornecedores: FornecedorDTO[] = [];
+  fornecedoresFiltrados: FornecedorDTO[] = [];
   formasPagamento: FormaPagamentoDTO[] = [];
   tiposNota: any[] = [];
   filiais: FilialDTO[] = [];
@@ -49,6 +50,7 @@ export class NotaFiscalComponent implements OnInit {
       valorMulta: [0.00],
       dtCompra: ['', Validators.required],
       fornecedorId: [null, Validators.required],
+      fornecedorInput: ['', Validators.required], // novo input
       tipoNotaId: [null, Validators.required],
       formaPagamentoId: [null, Validators.required],
       filialId: [null, Validators.required],
@@ -68,12 +70,10 @@ export class NotaFiscalComponent implements OnInit {
     this.formaPagamentoService.listar().subscribe(res => this.formasPagamento = res?.resposta || []);
 
     this.configurarReacoesForm();
-
   }
 
   private configurarReacoesForm(): void {
     this.form.get('formaPagamentoId')?.valueChanges.subscribe(formaId => {
-      console.log(formaId);
       this.atualizarCamposFormaPagamento(formaId);
     });
 
@@ -94,7 +94,6 @@ export class NotaFiscalComponent implements OnInit {
 
     this.formaPagamentoService.buscarPorId(formaId).subscribe(fp => {
       const dados = fp.resposta;
-
       if (!dados) return;
 
       const dtCompraStr = this.form.get('dtCompra')?.value;
@@ -161,6 +160,7 @@ export class NotaFiscalComponent implements OnInit {
       valorMulta: nota.valorMulta,
       dtCompra: nota.dtCompra,
       fornecedorId: nota.fornecedorId,
+      fornecedorInput: this.getFornecedorNome(nota.fornecedorId),
       tipoNotaId: nota.tipoNotaId,
       filialId: nota.filialId,
       pessoaId: nota.pessoaId,
@@ -268,5 +268,31 @@ export class NotaFiscalComponent implements OnInit {
 
   getFilialNome(id?: number): string {
     return this.filiais.find(f => f.id === id)?.nome || '';
+  }
+
+  /** AUTOCOMPLETE FORNECEDOR */
+  filtrarFornecedores(): void {
+    const val = this.form.get('fornecedorInput')?.value?.toLowerCase() || '';
+    this.fornecedoresFiltrados = this.fornecedores.filter(f =>
+      f.nome.toLowerCase().includes(val) || f.identificacao?.toLowerCase().includes(val)
+    );
+  }
+
+  abrirAutocomplete(): void {
+    this.fornecedoresFiltrados = this.fornecedores;
+  }
+
+  selecionarFornecedor(f: FornecedorDTO): void {
+    this.form.patchValue({ fornecedorId: f.id, fornecedorInput: f.nome });
+    this.fornecedoresFiltrados = [];
+  }
+
+  validarFornecedor(): void {
+    const inputVal = this.form.get('fornecedorInput')?.value;
+    const existe = this.fornecedores.some(f => f.nome === inputVal);
+    if (!existe) {
+      this.form.patchValue({ fornecedorId: null, fornecedorInput: '' });
+    }
+    this.fornecedoresFiltrados = [];
   }
 }

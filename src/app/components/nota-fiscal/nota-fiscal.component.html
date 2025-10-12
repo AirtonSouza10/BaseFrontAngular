@@ -6,6 +6,7 @@
     <!-- DADOS DA NOTA FISCAL -->
     <div class="form-section">
       <h3>Dados da Nota Fiscal</h3>
+
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="numero">Número</label>
@@ -59,13 +60,25 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group flex-1">
-          <label>Fornecedor</label>
-          <select formControlName="fornecedorId">
-            <option [ngValue]="null">Selecione</option>
-            <option *ngFor="let f of fornecedores" [ngValue]="f.id">{{ f.nome }}</option>
-          </select>
+        <!-- CAMPO FORNECEDOR COM AUTOCOMPLETE -->
+        <div class="form-group flex-1" style="position: relative;">
+          <label for="fornecedorInput">Fornecedor</label>
+          <input id="fornecedorInput"
+                 type="text"
+                 placeholder="Digite nome ou identificação"
+                 formControlName="fornecedorInput"
+                 (focus)="abrirAutocomplete()"
+                 (input)="filtrarFornecedores()"
+                 (blur)="validarFornecedor()"
+                 autocomplete="off" />
+
+          <ul *ngIf="fornecedoresFiltrados.length" class="autocomplete-list">
+            <li *ngFor="let f of fornecedoresFiltrados" (mousedown)="selecionarFornecedor(f)">
+              {{ f.nome }} - {{ f.identificacao }}
+            </li>
+          </ul>
         </div>
+
         <div class="form-group flex-1">
           <label>Tipo Nota</label>
           <select formControlName="tipoNotaId">
@@ -86,10 +99,10 @@
       <div class="form-row">
         <div class="form-group flex-2">
           <label>Forma de Pagamento</label>
-        <select formControlName="formaPagamentoId">
-          <option [ngValue]="null">Selecione</option>
-          <option *ngFor="let f of formasPagamento" [ngValue]="f.id">{{ f.descricao }}</option>
-        </select>
+          <select formControlName="formaPagamentoId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let f of formasPagamento" [ngValue]="f.id">{{ f.descricao }}</option>
+          </select>
         </div>
         <div class="form-group flex-1">
           <label>Quantidade de Parcelas</label>
