@@ -7,11 +7,12 @@ import { NotaFiscalService, NotaFiscalDTO } from '../../services/nota-fiscal.ser
 import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
 import { TipoNotaService } from '../../services/tipo-nota.service';
 import { FilialService, FilialDTO } from '../../services/filial.service';
+import { NgxCurrencyDirective } from 'ngx-currency';
 
 @Component({
   selector: 'app-nota-fiscal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgxCurrencyDirective],
   templateUrl: './nota-fiscal.component.html',
   styleUrls: ['./nota-fiscal.component.css']
 })
@@ -29,6 +30,13 @@ export class NotaFiscalComponent implements OnInit {
   notaIdEdit?: number;
   private toastTimeout: any;
 
+  currencyOptions = {
+    prefix: 'R$ ',
+    thousands: '.',
+    decimal: ',',
+    precision: 2
+  };
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly notaService: NotaFiscalService,
@@ -43,11 +51,11 @@ export class NotaFiscalComponent implements OnInit {
       serie: [''],
       chave: [''],
       descricaoObs: [''],
-      valorTotal: [0.00, Validators.required],
-      valorDesconto: [0.00],
-      valorIcms: [0.00],
-      valorJuros: [0.00],
-      valorMulta: [0.00],
+      valorTotal: [0, Validators.required],
+      valorDesconto: [0],
+      valorIcms: [0],
+      valorJuros: [0],
+      valorMulta: [0],
       dtCompra: ['', Validators.required],
       fornecedorId: [null, Validators.required],
       fornecedorInput: ['', Validators.required], // novo input
@@ -240,7 +248,36 @@ export class NotaFiscalComponent implements OnInit {
   cancelarEdicao(): void {
     this.editando = false;
     this.notaIdEdit = undefined;
-    this.form.reset({ quantidadeParcelas: 1, intervaloDias: 30 });
+
+    // 🔹 Recria completamente o formulário (limpa reações e valores anteriores)
+    this.form = this.fb.group({
+      id: [null],
+      numero: ['', Validators.required],
+      serie: [''],
+      chave: [''],
+      descricaoObs: [''],
+      valorTotal: [0, Validators.required],
+      valorDesconto: [0],
+      valorIcms: [0],
+      valorJuros: [0],
+      valorMulta: [0],
+      dtCompra: ['', Validators.required],
+      fornecedorId: [null, Validators.required],
+      fornecedorInput: ['', Validators.required],
+      tipoNotaId: [null, Validators.required],
+      formaPagamentoId: [null, Validators.required],
+      filialId: [null, Validators.required],
+      pessoaId: [null],
+      quantidadeParcelas: [{ value: 1, disabled: true }, [Validators.min(1)]],
+      dtPrimeiraParcela: [''],
+      intervaloDias: [{ value: 30, disabled: true }, [Validators.min(1)]],
+      parcelasPrevistas: this.fb.array([])
+    });
+
+    // 🔹 Reconfigura as reações (pois recriou o form)
+    this.configurarReacoesForm();
+
+    // 🔹 Limpa a lista de parcelas na memória
     this.parcelasPrevistas.clear();
   }
 

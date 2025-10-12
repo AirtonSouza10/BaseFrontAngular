@@ -10,48 +10,48 @@
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="numero">Número</label>
-          <input id="numero" formControlName="numero" type="text" required />
+          <input id="numero" formControlName="numero" type="text" maxlength="20" required />
         </div>
         <div class="form-group flex-1">
           <label for="serie">Série</label>
-          <input id="serie" formControlName="serie" type="text" />
+          <input id="serie" formControlName="serie" maxlength="5" type="text" />
         </div>
         <div class="form-group flex-3">
           <label for="chave">Chave</label>
-          <input id="chave" formControlName="chave" type="text" />
+          <input id="chave" formControlName="chave" type="text" maxlength="44" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group flex-2">
           <label for="descricaoObs">Observação</label>
-          <input id="descricaoObs" formControlName="descricaoObs" type="text" />
+          <input id="descricaoObs" formControlName="descricaoObs" type="text" maxlength="500" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="valorTotal">Valor Total</label>
-          <input id="valorTotal" formControlName="valorTotal" type="number" step="0.01" />
+          <input id="valorTotal" formControlName="valorTotal" type="text" step="0.01"   currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
           <label for="valorDesconto">Desconto</label>
-          <input id="valorDesconto" formControlName="valorDesconto" type="number" step="0.01" />
+          <input id="valorDesconto" formControlName="valorDesconto" type="text" step="0.01"  currencyMask [options]="currencyOptions"/>
         </div>
         <div class="form-group flex-1">
           <label for="valorIcms">ICMS</label>
-          <input id="valorIcms" formControlName="valorIcms" type="number" step="0.01" />
+          <input id="valorIcms" formControlName="valorIcms" type="text" step="0.01" currencyMask [options]="currencyOptions" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="valorJuros">Juros</label>
-          <input id="valorJuros" formControlName="valorJuros" type="number" step="0.01" />
+          <input id="valorJuros" formControlName="valorJuros" type="text" step="0.01" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
           <label for="valorMulta">Multa</label>
-          <input id="valorMulta" formControlName="valorMulta" type="number" step="0.01" />
+          <input id="valorMulta" formControlName="valorMulta" type="text" step="0.01" currencyMask [options]="currencyOptions"/>
         </div>
         <div class="form-group flex-1">
           <label for="dtCompra">Data de Compra</label>
@@ -137,7 +137,7 @@
             </div>
             <div class="form-group flex-2">
               <label>Valor Previsto</label>
-              <input type="number" step="0.01" formControlName="valorPrevisto" />
+              <input type="text" step="0.01" formControlName="valorPrevisto" currencyMask [options]="currencyOptions"/>
             </div>
           </div>
         </div>
