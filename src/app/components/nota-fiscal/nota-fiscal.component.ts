@@ -66,7 +66,8 @@ export class NotaFiscalComponent implements OnInit {
       quantidadeParcelas: [{ value: 1, disabled: true }],
       dtPrimeiraParcela: [''],
       intervaloDias: [{ value: 30, disabled: true }],
-      parcelasPrevistas: this.fb.array([])
+      parcelasPrevistas: this.fb.array([]),
+      gerarParcelasPrevistas: [false]
     });
   }
 
@@ -175,7 +176,8 @@ export class NotaFiscalComponent implements OnInit {
       formaPagamentoId: nota.formaPagamentoId,
       quantidadeParcelas: nota.parcelasPrevistas?.length || 1,
       dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
-      intervaloDias: 30
+      intervaloDias: 30,
+      gerarParcelasPrevistas: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto
     });
 
     this.parcelasPrevistas.clear();

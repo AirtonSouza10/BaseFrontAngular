@@ -95,8 +95,18 @@
         </div>
       </div>
 
-      <!-- PARCELAS -->
+      <!-- CHECKBOX GERAR PARCELAS PREVISTAS -->
       <div class="form-row">
+        <div class="form-group flex-1">
+          <label>
+            <input type="checkbox" formControlName="gerarParcelasPrevistas" />
+            Gerar Parcelas Previstas
+          </label>
+        </div>
+      </div>
+
+      <!-- PARCELAS -->
+      <div *ngIf="form.get('gerarParcelasPrevistas')?.value" class="form-row">
         <div class="form-group flex-2">
           <label>Forma de Pagamento</label>
           <select formControlName="formaPagamentoId">
@@ -123,7 +133,7 @@
     </div>
 
     <!-- PARCELAS PREVISTAS -->
-    <div class="form-section">
+    <div *ngIf="form.get('gerarParcelasPrevistas')?.value" class="form-section">
       <h3>Parcelas Previstas</h3>
       <div formArrayName="parcelasPrevistas" class="parcelas-grid">
         <div *ngFor="let parc of parcelasPrevistas.controls; let i=index" [formGroupName]="i" class="parcela-card">
