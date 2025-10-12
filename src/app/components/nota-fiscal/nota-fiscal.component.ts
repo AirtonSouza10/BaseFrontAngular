@@ -60,12 +60,12 @@ export class NotaFiscalComponent implements OnInit {
       fornecedorId: [null, Validators.required],
       fornecedorInput: ['', Validators.required], // novo input
       tipoNotaId: [null, Validators.required],
-      formaPagamentoId: [null, Validators.required],
+      formaPagamentoId: [null],
       filialId: [null, Validators.required],
       pessoaId: [null],
-      quantidadeParcelas: [{ value: 1, disabled: true }, [Validators.min(1)]],
+      quantidadeParcelas: [{ value: 1, disabled: true }],
       dtPrimeiraParcela: [''],
-      intervaloDias: [{ value: 30, disabled: true }, [Validators.min(1)]],
+      intervaloDias: [{ value: 30, disabled: true }],
       parcelasPrevistas: this.fb.array([])
     });
   }
@@ -265,12 +265,12 @@ export class NotaFiscalComponent implements OnInit {
       fornecedorId: [null, Validators.required],
       fornecedorInput: ['', Validators.required],
       tipoNotaId: [null, Validators.required],
-      formaPagamentoId: [null, Validators.required],
+      formaPagamentoId: [null],
       filialId: [null, Validators.required],
       pessoaId: [null],
-      quantidadeParcelas: [{ value: 1, disabled: true }, [Validators.min(1)]],
+      quantidadeParcelas: [{ value: 1, disabled: true }],
       dtPrimeiraParcela: [''],
-      intervaloDias: [{ value: 30, disabled: true }, [Validators.min(1)]],
+      intervaloDias: [{ value: 30, disabled: true }],
       parcelasPrevistas: this.fb.array([])
     });
 
