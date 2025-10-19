@@ -192,7 +192,7 @@ export class DuplicataComponent implements OnInit {
       this.parcelas.push(this.fb.group({
         id: [p.id],
         dtVencimento: [p.dtVencimento],
-        valorTotal: [{ value: p.valorTotal, disabled: true }]
+        valorTotal: [p.valorTotal, Validators.required]
       }));
     });
   }
