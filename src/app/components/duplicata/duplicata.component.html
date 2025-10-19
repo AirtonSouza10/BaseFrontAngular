@@ -76,6 +76,30 @@
       </div>
     </div>
 
+    <!-- NOTAS ASSOCIADAS -->
+    <div class="form-section" *ngIf="notasAssociadas.length" class="notas-associadas">
+      <h3>Notas associadas</h3>
+      <ul>
+        <li *ngFor="let nota of notasAssociadas; let i = index">
+          {{ nota.numero }} - {{ nota.fornecedorNome }} - {{ nota.valorTotal | currency:'BRL':'symbol':'1.2-2'}}
+          <button type="button" class="btn-remove" (click)="removerNota(i)">Remover</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- BOTÃO ADICIONAR NOTA FISCAL E VALOR RESTANTE -->
+    <div class="form-actions" style="display: flex; align-items: center; gap: 1rem;">
+      <button type="button" class="btn-submit" (click)="abrirModalNota()">Adicionar Nota Fiscal</button>
+
+      <div class="valor-restante-container">
+        <label>Valor restante para cobrir duplicata:</label>
+        <input type="text"
+              [value]="valorRestanteNotas | currency:'BRL':'symbol':'1.2-2'"
+              [ngClass]="{'faltando': valorRestanteNotas > 0, 'ok': valorRestanteNotas <= 0}"
+              readonly />
+      </div>
+    </div>
+
     <!-- AÇÕES -->
     <div class="form-actions">
       <button type="submit" class="btn-submit">{{ editando ? 'Atualizar' : 'Salvar' }}</button>
@@ -83,7 +107,49 @@
     </div>
   </form>
 
-  <!-- TABELA DE DUPLICATAS SALVAS -->
+  <!-- MODAL NOTA FISCAL -->
+  <div class="modal" *ngIf="modalNotaAberto">
+    <div class="modal-content">
+      <h3>Buscar Nota Fiscal</h3>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label>Número</label>
+          <input type="number" [(ngModel)]="numeroNota" />
+        </div>
+
+        <div class="form-group flex-2" style="position: relative;">
+          <label>Fornecedor</label>
+          <input type="text"
+                 placeholder="Digite nome ou identificação"
+                 [(ngModel)]="fornecedorInput"
+                 (focus)="abrirAutocomplete()"
+                 (input)="filtrarFornecedores()"
+                 (blur)="validarFornecedor()"
+                 autocomplete="off" />
+
+          <ul *ngIf="fornecedoresFiltrados.length" class="autocomplete-list">
+            <li *ngFor="let f of fornecedoresFiltrados" (mousedown)="selecionarFornecedor(f)">
+              {{ f.nome }} - {{ f.identificacao }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-group flex-1">
+          <button type="button" class="btn-submit" (click)="buscarNota()">Buscar</button>
+        </div>
+      </div>
+
+      <div *ngIf="notaEncontrada">
+        <p><strong>Nota encontrada:</strong> {{ notaEncontrada.numero }} - {{ notaEncontrada.chave }}</p>
+        <button type="button" class="btn-submit" (click)="adicionarNotaNaDuplicata()">Adicionar à Duplicata</button>
+      </div>
+
+      <button type="button" class="btn-remove" (click)="fecharModalNota()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- TABELA DE DUPLICATAS -->
   <table class="tabela-tipos" *ngIf="duplicatas.length">
     <thead>
       <tr>

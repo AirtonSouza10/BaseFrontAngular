@@ -5,11 +5,13 @@ import { DuplicataService, DuplicataDTO } from '../../services/duplicata.service
 import { FormsModule } from '@angular/forms';
 import { FormaPagamentoDTO, FormaPagamentoService } from '../../services/forma-pagamento.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
+import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
+import { NotaFiscalDTO, NotaFiscalService } from '../../services/nota-fiscal.service';
 
 @Component({
   selector: 'app-duplicata',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgxCurrencyDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxCurrencyDirective],
   templateUrl: './duplicata.component.html',
   styleUrls: ['./duplicata.component.css']
 })
@@ -23,6 +25,17 @@ export class DuplicataComponent implements OnInit {
   duplicataIdEdit?: number;
   private toastTimeout: any;
 
+  // --- Modal e busca de nota ---
+  modalNotaAberto: boolean = false;
+  numeroNota: number | null = null;
+  fornecedorInput: string = '';
+  fornecedoresFiltrados: FornecedorDTO[] = [];
+  fornecedorSelecionado?: FornecedorDTO;
+  notaEncontrada: NotaFiscalDTO | null = null;
+
+  // Lista de notas associadas à duplicata
+  notasAssociadas: NotaFiscalDTO[] = [];
+
   currencyOptions = {
     prefix: 'R$ ',
     thousands: '.',
@@ -33,7 +46,9 @@ export class DuplicataComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly duplicataService: DuplicataService,
-    private readonly formaPagamentoService: FormaPagamentoService
+    private readonly formaPagamentoService: FormaPagamentoService,
+    private readonly fornecedorService: FornecedorService,
+    private readonly notaFiscalService: NotaFiscalService
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -55,9 +70,8 @@ export class DuplicataComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarDuplicatas();
-    this.formaPagamentoService.listar().subscribe(res => this.formasPagamento = res?.resposta || []);
+    this.formaPagamentoService.listar().subscribe((res: any) => this.formasPagamento = res?.resposta || []);
 
-    // Atualiza valor total da duplicata automaticamente
     ['valor', 'desconto', 'multa', 'juros'].forEach(field => {
       this.form.get(field)!.valueChanges.subscribe(() => {
         this.atualizarValorTotalDuplicata();
@@ -65,14 +79,9 @@ export class DuplicataComponent implements OnInit {
       });
     });
 
-    // Atualiza parcelas se data da primeira parcela mudar
     this.form.get('dtPrimeiraParcela')!.valueChanges.subscribe(() => this.gerarParcelas());
-
-    // Atualiza quantidade de parcelas e intervalo ao mudar forma de pagamento
     this.form.get('formaPagamentoId')!.valueChanges.subscribe((formaId: number | null) => {
-      if (formaId != null) {
-        this.onFormaPagamentoChange(formaId);
-      }
+      if (formaId != null) this.onFormaPagamentoChange(formaId);
     });
   }
 
@@ -93,18 +102,15 @@ export class DuplicataComponent implements OnInit {
     const forma = this.formasPagamento.find(f => f.id === formaId);
     if (!forma) return;
 
-    // Atualiza quantidade de parcelas e intervalo
     this.form.get('quantidadeParcelas')!.setValue(forma.qtdeParcelas || 1);
     this.form.get('intervaloDias')!.setValue(forma.intervaloParcelas || 30);
 
-    // Calcula data da primeira parcela baseado no prazo da forma de pagamento
     const hoje = new Date();
     const prazo = forma.prazoPrimeiraParcela || 0;
     const primeiraParcela = new Date(hoje);
     primeiraParcela.setDate(primeiraParcela.getDate() + prazo);
     this.form.get('dtPrimeiraParcela')!.setValue(primeiraParcela.toISOString().substring(0, 10), { emitEvent: false });
 
-    // Gera as parcelas
     this.gerarParcelas();
   }
 
@@ -140,7 +146,7 @@ export class DuplicataComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.form.valid) return;
-    const dto: DuplicataDTO = { ...this.form.getRawValue() };
+    const dto: DuplicataDTO = { ...this.form.getRawValue(), notasFiscais: this.notasAssociadas };
 
     if (this.editando && this.duplicataIdEdit) {
       this.duplicataService.atualizar(this.duplicataIdEdit, dto).subscribe({
@@ -164,7 +170,7 @@ export class DuplicataComponent implements OnInit {
   }
 
   listarDuplicatas(): void {
-    this.duplicataService.listar().subscribe(res => this.duplicatas = res.resposta || []);
+    this.duplicataService.listar().subscribe((res: any) => this.duplicatas = res.resposta || []);
   }
 
   editarDuplicata(d: DuplicataDTO): void {
@@ -195,6 +201,9 @@ export class DuplicataComponent implements OnInit {
         valorTotal: [p.valorTotal, Validators.required]
       }));
     });
+
+    // Carrega notas diretamente da duplicata
+    this.notasAssociadas = d.notasFiscais || [];
   }
 
   excluirDuplicata(id?: number): void {
@@ -215,6 +224,7 @@ export class DuplicataComponent implements OnInit {
     this.duplicataIdEdit = undefined;
     this.form.reset({ quantidadeParcelas: 1, intervaloDias: 30 });
     this.parcelas.clear();
+    this.notasAssociadas = [];
   }
 
   private showSuccess(msg: string) {
@@ -233,5 +243,74 @@ export class DuplicataComponent implements OnInit {
 
   private clearToast() {
     if (this.toastTimeout) clearTimeout(this.toastTimeout);
+  }
+
+  // ================= MODAL NOTA FISCAL =================
+  abrirModalNota() {
+    this.modalNotaAberto = true;
+    this.numeroNota = null;
+    this.fornecedorInput = '';
+    this.fornecedoresFiltrados = [];
+    this.notaEncontrada = null;
+  }
+
+  fecharModalNota() {
+    this.modalNotaAberto = false;
+  }
+
+  abrirAutocomplete() {
+    this.fornecedorService.listar().subscribe((res: any) => this.fornecedoresFiltrados = res.resposta || []);
+  }
+
+  filtrarFornecedores() {
+    const term = this.fornecedorInput.toLowerCase();
+    this.fornecedoresFiltrados = this.fornecedoresFiltrados.filter(f =>
+      f.nome.toLowerCase().includes(term) || f.identificacao.includes(term)
+    );
+  }
+
+  selecionarFornecedor(f: FornecedorDTO) {
+    this.fornecedorSelecionado = f;
+    this.fornecedorInput = `${f.nome} - ${f.identificacao}`;
+    this.fornecedoresFiltrados = [];
+  }
+
+  validarFornecedor() {
+    if (!this.fornecedorSelecionado || this.fornecedorInput !== `${this.fornecedorSelecionado.nome} - ${this.fornecedorSelecionado.identificacao}`) {
+      this.fornecedorSelecionado = undefined;
+    }
+  }
+
+  buscarNota(): void {
+    if (!this.numeroNota || !this.fornecedorSelecionado) {
+      alert('Informe número da nota e selecione um fornecedor');
+      return;
+    }
+
+    this.notaFiscalService.buscarPorNumeroEFornecedor(this.numeroNota, this.fornecedorSelecionado.id!).subscribe({
+      next: res => this.notaEncontrada = res.resposta || null,
+      error: () => alert('Nota não encontrada')
+    });
+  }
+
+  adicionarNotaNaDuplicata(): void {
+    if (!this.notaEncontrada) return;
+
+    const jaIncluida = this.notasAssociadas.some(n => n.id === this.notaEncontrada!.id);
+    if (!jaIncluida) {
+      this.notasAssociadas.push(this.notaEncontrada);
+    }
+
+    this.fecharModalNota();
+  }
+
+  removerNota(index: number): void {
+    this.notasAssociadas.splice(index, 1);
+  }
+
+  get valorRestanteNotas(): number {
+    const valorDuplicata = parseFloat(this.form.get('valorTotal')?.value) || 0;
+    const totalNotas = this.notasAssociadas.reduce((acc, nota) => acc + (nota.valorTotal || 0), 0);
+    return valorDuplicata - totalNotas;
   }
 }

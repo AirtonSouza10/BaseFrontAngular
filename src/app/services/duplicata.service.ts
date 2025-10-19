@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { NotaFiscalDTO } from './nota-fiscal.service';
 
 export interface ParcelaDTO {
   id?: number;
@@ -21,6 +22,7 @@ export interface DuplicataDTO {
   dtAtualizacao?: string | Date;
   formaPagamentoId: number;
   parcelas?: ParcelaDTO[];
+  notasFiscais?: NotaFiscalDTO[];
 }
 
 @Injectable({

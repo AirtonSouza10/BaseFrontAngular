@@ -22,6 +22,7 @@ export interface NotaFiscalDTO {
   valorMulta?: number;
   dtCompra: string | Date;
   fornecedorId: number;
+  fornecedorNome: string;
   tipoNotaId: number;
   pessoaId?: number;
   filialId: number;
@@ -55,5 +56,11 @@ export class NotaFiscalService {
 
   excluir(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  buscarPorNumeroEFornecedor(numero: number, fornecedorId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/buscar`, {
+      params: { numero: numero.toString(), fornecedorId: fornecedorId.toString() }
+    });
   }
 }
