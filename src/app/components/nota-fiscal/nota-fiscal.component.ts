@@ -1,5 +1,5 @@
 import { FormaPagamentoService, FormaPagamentoDTO } from './../../services/forma-pagamento.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ import { NgxCurrencyDirective } from 'ngx-currency';
   styleUrls: ['./nota-fiscal.component.css']
 })
 export class NotaFiscalComponent implements OnInit {
+  @Output() notaCriada = new EventEmitter<NotaFiscalDTO>();
   form: FormGroup;
   notasFiscais: NotaFiscalDTO[] = [];
   fornecedores: FornecedorDTO[] = [];

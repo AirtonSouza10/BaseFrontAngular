@@ -7,11 +7,12 @@ import { FormaPagamentoDTO, FormaPagamentoService } from '../../services/forma-p
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
 import { NotaFiscalDTO, NotaFiscalService } from '../../services/nota-fiscal.service';
+import { NotaFiscalComponent } from "../nota-fiscal/nota-fiscal.component";
 
 @Component({
   selector: 'app-duplicata',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxCurrencyDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxCurrencyDirective, NotaFiscalComponent],
   templateUrl: './duplicata.component.html',
   styleUrls: ['./duplicata.component.css']
 })
@@ -27,6 +28,7 @@ export class DuplicataComponent implements OnInit {
 
   // --- Modal e busca de nota ---
   modalNotaAberto: boolean = false;
+  modalNovaNotaAberto: boolean = false;
   numeroNota: number | null = null;
   fornecedorInput: string = '';
   fornecedoresFiltrados: FornecedorDTO[] = [];
@@ -312,5 +314,21 @@ export class DuplicataComponent implements OnInit {
     const valorDuplicata = parseFloat(this.form.get('valorTotal')?.value) || 0;
     const totalNotas = this.notasAssociadas.reduce((acc, nota) => acc + (nota.valorTotal || 0), 0);
     return valorDuplicata - totalNotas;
+  }
+
+  // Abrir modal nova nota
+  abrirModalNovaNota() {
+    this.modalNovaNotaAberto = true;
+  }
+
+  // Fechar modal nova nota
+  fecharModalNovaNota() {
+    this.modalNovaNotaAberto = false;
+  }
+
+  // Receber nota criada do NotaFiscalComponent
+  adicionarNovaNota(nota: NotaFiscalDTO) {
+    this.notasAssociadas.push(nota);
+    this.fecharModalNovaNota();
   }
 }
