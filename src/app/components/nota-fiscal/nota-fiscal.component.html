@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Nota Fiscal</h2>
+  <h2 *ngIf="!isModal">Nota Fiscal</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
@@ -96,7 +96,7 @@
       </div>
 
       <!-- CHECKBOX GERAR PARCELAS PREVISTAS -->
-      <div class="form-row">
+      <div class="form-row" *ngIf="!isModal">
         <div class="form-group flex-1">
           <label>
             <input type="checkbox" formControlName="gerarParcelasPrevistas" />
@@ -168,7 +168,7 @@
   <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
 
   <!-- TABELA -->
-  <table class="tabela-tipos" *ngIf="notasFiscais.length">
+  <table class="tabela-tipos" *ngIf="notasFiscais.length  && !isModal">
     <thead>
       <tr>
         <th>Número</th>

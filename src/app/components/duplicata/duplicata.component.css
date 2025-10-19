@@ -412,3 +412,10 @@ button {
   background-color: #dc3545;
 }
 
+
+.btn-submit:disabled {
+  background-color: #666; /* cinza */
+  color: #f0f0f0; /* texto mais claro */
+  cursor: not-allowed; /* muda o cursor para indicar desabilitado */
+  opacity: 0.7; /* opcional, deixa visual mais “desativado” */
+}

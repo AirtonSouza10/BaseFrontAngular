@@ -89,7 +89,7 @@
 
     <!-- BOTÃO ADICIONAR NOTA FISCAL E VALOR RESTANTE -->
     <div class="form-actions" style="display: flex; align-items: center; gap: 1rem;">
-      <button type="button" class="btn-submit" (click)="abrirModalNota()">Adicionar Nota Fiscal</button>
+      <button type="button" class="btn-submit" (click)="abrirModalNota()">Vincular Nota Fiscal</button>
       <button type="button" class="btn-submit" (click)="abrirModalNovaNota()">Adicionar Nova Nota</button>
 
       <div class="valor-restante-container">
@@ -103,7 +103,7 @@
 
     <!-- AÇÕES -->
     <div class="form-actions">
-      <button type="submit" class="btn-submit">{{ editando ? 'Atualizar' : 'Salvar' }}</button>
+      <button type="submit" class="btn-submit"[disabled]="!form.valid">{{ editando ? 'Atualizar' : 'Salvar' }}</button>
       <button *ngIf="editando" type="button" class="btn-remove" (click)="cancelarEdicao()">Cancelar</button>
     </div>
   </form>
@@ -157,7 +157,7 @@
     <div class="modal-content">
       <h3>Adicionar Nova Nota Fiscal</h3>
 
-      <app-nota-fiscal (notaCriada)="adicionarNovaNota($event)"></app-nota-fiscal>
+      <app-nota-fiscal [isModal]="true" (notaCriada)="adicionarNovaNota($event)"></app-nota-fiscal>
 
       <button type="button" class="btn-remove" (click)="fecharModalNovaNota()">Fechar</button>
     </div>
