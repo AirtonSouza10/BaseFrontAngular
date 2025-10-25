@@ -33,7 +33,7 @@ export class DuplicataComponent implements OnInit {
   fornecedorInput: string = '';
   fornecedoresFiltrados: FornecedorDTO[] = [];
   fornecedorSelecionado?: FornecedorDTO;
-  notaEncontrada: NotaFiscalDTO | null = null;
+  notasEncontradas: NotaFiscalDTO[] = [];
 
   // Lista de notas associadas à duplicata
   notasAssociadas: NotaFiscalDTO[] = [];
@@ -255,7 +255,7 @@ export class DuplicataComponent implements OnInit {
     this.numeroNota = null;
     this.fornecedorInput = '';
     this.fornecedoresFiltrados = [];
-    this.notaEncontrada = null;
+     this.notasEncontradas = [];
   }
 
   fecharModalNota() {
@@ -292,20 +292,21 @@ export class DuplicataComponent implements OnInit {
     }
 
     this.notaFiscalService.buscarPorNumeroEFornecedor(this.numeroNota, this.fornecedorSelecionado.id!).subscribe({
-      next: res => this.notaEncontrada = res.resposta || null,
-      error: () => alert('Nota não encontrada')
+      next: res => this.notasEncontradas = res.resposta || [],
+      error: () => {
+        this.notasEncontradas = [];
+        alert('Nenhuma nota encontrada');
+      }
     });
   }
 
-  adicionarNotaNaDuplicata(): void {
-    if (!this.notaEncontrada) return;
+  adicionarNotaNaDuplicata(nota: NotaFiscalDTO): void {
+    if (!nota) return;
 
-    const jaIncluida = this.notasAssociadas.some(n => n.id === this.notaEncontrada!.id);
+    const jaIncluida = this.notasAssociadas.some(n => n.id === nota.id);
     if (!jaIncluida) {
-      this.notasAssociadas.push(this.notaEncontrada);
+      this.notasAssociadas.push(nota);
     }
-
-    this.fecharModalNota();
   }
 
   removerNota(index: number): void {

@@ -147,9 +147,14 @@
         </div>
       </div>
 
-      <div *ngIf="notaEncontrada">
-        <p><strong>Nota encontrada:</strong> {{ notaEncontrada.numero }} - {{ notaEncontrada.chave }}</p>
-        <button type="button" class="btn-submit" (click)="adicionarNotaNaDuplicata()">Adicionar à Duplicata</button>
+      <div *ngIf="notasEncontradas.length">
+        <p><strong>Notas encontradas:</strong></p>
+        <div class="notas-encontradas-list">
+          <div *ngFor="let nota of notasEncontradas" class="nota-item">
+            {{ nota.numero }} - {{ nota.serie }} - {{ nota.chave }}
+            <button type="button" class="btn-submit" (click)="adicionarNotaNaDuplicata(nota)">Adicionar</button>
+          </div>
+        </div>
       </div>
 
       <button type="button" class="btn-remove" (click)="fecharModalNota()">Fechar</button>

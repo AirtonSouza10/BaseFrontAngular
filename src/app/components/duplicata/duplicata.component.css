@@ -419,3 +419,40 @@ button {
   cursor: not-allowed; /* muda o cursor para indicar desabilitado */
   opacity: 0.7; /* opcional, deixa visual mais “desativado” */
 }
+
+.notas-encontradas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* espaço entre as notas */
+  margin-top: 0.5rem;
+}
+
+.nota-item {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notas-associadas ul {
+  list-style: none; /* remove os marcadores */
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* espaçamento entre itens */
+}
+
+.nota-item {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between; /* botão alinhado à direita */
+  align-items: center;
+}
+
