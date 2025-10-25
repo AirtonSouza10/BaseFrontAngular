@@ -140,6 +140,7 @@ export class DuplicataComponent implements OnInit {
 
       this.parcelas.push(this.fb.group({
         id: [null],
+        numeroParcela: [''],
         dtVencimento: [vencimento.toISOString().substring(0, 10)],
         valorTotal: [{ value: valor, disabled: true }]
       }));
@@ -199,6 +200,7 @@ export class DuplicataComponent implements OnInit {
     d.parcelas?.forEach(p => {
       this.parcelas.push(this.fb.group({
         id: [p.id],
+        numeroParcela: [p.numeroParcela || ''],
         dtVencimento: [p.dtVencimento],
         valorTotal: [p.valorTotal, Validators.required]
       }));

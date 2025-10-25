@@ -6,6 +6,7 @@ import { NotaFiscalDTO } from './nota-fiscal.service';
 
 export interface ParcelaDTO {
   id?: number;
+  numeroParcela?: string;
   valorTotal: number;
   dtVencimento: string | Date;
 }
