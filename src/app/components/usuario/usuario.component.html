@@ -1,0 +1,105 @@
+<div class="form-container">
+  <h2>Usuário</h2>
+
+  <!-- Mensagens -->
+  <div *ngIf="sucessoMsg" class="mensagem mensagem-sucesso">{{ sucessoMsg }}</div>
+  <div *ngIf="erroMsg" class="mensagem mensagem-erro">{{ erroMsg }}</div>
+
+  <!-- FORMULÁRIO -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- LINHA 1: Nome + Identificação -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" maxlength="200" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Identificação</mat-label>
+        <input matInput formControlName="identificacao" maxlength="14" required />
+      </mat-form-field>
+    </div>
+
+    <!-- LINHA 2: E-mail + Telefone + Senha -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" formControlName="senha" [required]="!editandoUsuarioId" />
+      </mat-form-field>
+    </div>
+
+    <!-- BOTOES -->
+    <div class="button-group">
+      <button mat-raised-button class="btn-salvar" type="submit" [disabled]="form.invalid">
+        {{ editandoUsuarioId ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button mat-stroked-button class="btn-cancelar" type="button" *ngIf="editandoUsuarioId" (click)="cancelarEdicao()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+  <!-- TABELA -->
+  <div class="table-container" *ngIf="usuarios.data.length > 0">
+    <table mat-table [dataSource]="usuarios" class="mat-elevation-z2">
+      <!-- Colunas -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let u">{{ u.nome }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="identificacao">
+        <th mat-header-cell *matHeaderCellDef>Identificação</th>
+        <td mat-cell *matCellDef="let u">{{ u.identificacao }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>E-mail</th>
+        <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let u">{{ u.telefone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let u">
+          <span class="status-badge" [ngClass]="u.ativo ? 'ativo' : 'inativo'">
+            {{ u.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let u">
+          <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarUsuario(u)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="{{ u.ativo ? 'Inativar' : 'Ativar' }}" (click)="toggleAtivo(u)">
+            <mat-icon>{{ u.ativo ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" matTooltip="Alterar Senha" (click)="abrirModalSenha(u)">
+            <mat-icon>lock</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
