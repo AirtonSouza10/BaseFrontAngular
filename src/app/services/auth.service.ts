@@ -21,8 +21,8 @@ export interface UsuarioDTO {
 }
 
 export interface AlterarSenhaDTO {
-  senhaAtual: string;
-  novaSenha: string;
+  senhaAntiga: string;
+  senhaNova: string;
 }
 
 @Injectable({

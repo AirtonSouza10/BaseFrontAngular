@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UsuarioDTO, AuthService, AlterarSenhaDTO } from '../../services/auth.service';
+import { UsuarioDTO, AlterarSenhaDTO, AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-usuario',
@@ -44,19 +44,18 @@ export class UsuarioComponent implements OnInit {
       identificacao: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required],
-      senha: ['', [Validators.minLength(6)]], // senha obrigatória apenas se cadastrar
+      senha: ['', [Validators.minLength(6)]],
     });
 
     this.senhaForm = this.fb.group({
+      senhaAntiga: ['', Validators.required], // <-- aqui
       novaSenha: ['', [Validators.required, Validators.minLength(6)]],
-      confirmarSenha: ['', Validators.required],
     });
 
     this.listarUsuarios();
   }
 
-  /** SUBMIT FORM */
-  public onSubmit(): void {
+  onSubmit(): void {
     if (this.form.invalid) return;
 
     const usuario: UsuarioDTO = this.form.value;
@@ -82,7 +81,6 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
-  /** LISTA USUÁRIOS */
   listarUsuarios(): void {
     this.authService.listarUsuarios().subscribe({
       next: res => {
@@ -93,7 +91,6 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  /** TOGGLE ATIVO */
   toggleAtivo(usuario: UsuarioDTO) {
     if (!usuario.id) return;
     this.authService.atualizarStatusUsuario(usuario.id, !usuario.ativo).subscribe({
@@ -105,7 +102,6 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  /** EDITAR */
   editarUsuario(usuario: UsuarioDTO) {
     this.editandoUsuarioId = usuario.id;
     this.form.patchValue({
@@ -117,13 +113,11 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  /** CANCELAR EDIÇÃO */
   cancelarEdicao() {
     this.editandoUsuarioId = undefined;
     this.form.reset();
   }
 
-  /** MODAL ALTERAR SENHA */
   abrirModalSenha(usuario: UsuarioDTO) {
     this.editandoUsuarioId = usuario.id;
     this.modalSenhaAberto = true;
@@ -137,10 +131,14 @@ export class UsuarioComponent implements OnInit {
 
   alterarSenha() {
     if (this.senhaForm.invalid) return;
-    const { novaSenha, confirmarSenha } = this.senhaForm.value;
-    if (novaSenha !== confirmarSenha) return;
 
-    const dto: AlterarSenhaDTO = { senhaAtual: '', novaSenha };
+    const { senhaAntiga, novaSenha } = this.senhaForm.value;
+
+    const dto: AlterarSenhaDTO = {
+      senhaAntiga: senhaAntiga,
+      senhaNova: novaSenha
+    };
+
     this.authService.alterarSenha(this.editandoUsuarioId!, dto).subscribe({
       next: () => {
         this.showSuccess('Senha alterada com sucesso!');
@@ -150,7 +148,7 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  /** MENSAGENS */
+
   private showSuccess(msg: string) {
     this.sucessoMsg = msg;
     this.erroMsg = '';

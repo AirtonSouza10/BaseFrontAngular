@@ -1,4 +1,4 @@
-/* ================= FORMULÁRIO ================= */
+/* FORMULÁRIO */
 .form-container {
   width: 100%;
   max-width: 1000px;
@@ -11,95 +11,54 @@
   color: #333;
 }
 
-/* Título */
-.form-container h2 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* LINHAS DO FORM */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; /* espaçamento horizontal e vertical */
+  gap: 20px;
   margin-bottom: 20px;
 }
 
+/* FORÇAR INPUTS A CRESCER */
 .form-row .mat-form-field {
-  flex: 1;             /* ocupa espaço proporcional */
-  min-width: 250px;    /* largura mínima */
+  flex: 1 1 auto !important;
+  min-width: 250px !important;
+  width: 100% !important;
 }
 
-/* Linha 1: Nome + Identificação */
-.form-row:first-child .mat-form-field:nth-child(1),
-.form-row:first-child .mat-form-field:nth-child(2) {
-  flex: 1 1 45%;  /* dois campos dividindo a linha */
+.mat-form-field-wrapper,
+.mat-form-field-infix,
+.mat-form-field-flex {
+  width: 100% !important;
 }
 
-/* Linha 2: E-mail + Telefone + Senha */
-.form-row:nth-child(2) .mat-form-field:nth-child(1) { flex: 2; } /* E-mail maior */
-.form-row:nth-child(2) .mat-form-field:nth-child(2),
-.form-row:nth-child(2) .mat-form-field:nth-child(3) { flex: 1; } /* Telefone e Senha menores */
-
-/* ================= INPUTS ANGULAR MATERIAL ================= */
-.mat-form-field-appearance-outline .mat-form-field-outline {
-  border-color: #ccc;
-  border-width: 1px;
-}
-
-.mat-form-field.mat-focused .mat-form-field-outline {
-  border-color: #28a745;
-}
-
-.mat-form-field-label {
-  color: #333;
-  font-weight: 500;
-}
-
-.mat-form-field.mat-focused .mat-form-field-label {
-  color: #28a745;
-}
-
-.mat-input-element {
-  color: #333;
-  background-color: white;
-  border-radius: 4px;
-  padding: 4px 10px;
-}
-
-.mat-input-element::placeholder {
-  color: #666;
-  opacity: 1;
-}
-
-/* ================= BOTÕES ================= */
+/* BOTÕES */
 .button-group {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
 
-/* Salvar / Atualizar azul */
+.btn-salvar,
 .button-group button.mat-raised-button {
   background-color: #007bff !important;
   color: white !important;
   font-weight: 500;
 }
 
-/* Botão azul desabilitado */
+.btn-salvar:disabled,
 .button-group button.mat-raised-button:disabled {
   background-color: #a5c8ff !important;
-  color: #fff !important;
 }
 
-/* Cancelar vermelho */
+.btn-cancelar,
 .button-group button.mat-stroked-button {
-  color: #dc3545 !important;
+  color: white !important;
   border-color: #dc3545 !important;
+  background-color: #dc3545 !important;
   font-weight: 500;
 }
 
-/* ================= BADGES ================= */
+/* BADGES */
 .status-badge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -113,9 +72,9 @@
 .status-badge.ativo { background-color: #28a745; }
 .status-badge.inativo { background-color: #dc3545; }
 
-/* ================= MENSAGENS ================= */
+/* MENSAGENS */
 .mensagem-sucesso {
-  background-color: #28a745;
+  background-color: #155724;
   color: white;
   padding: 10px;
   border-radius: 6px;
@@ -134,23 +93,18 @@
   text-align: center;
 }
 
-/* ================= TABELA ================= */
-.table-container {
-  margin-top: 30px;
-  width: 100%;
-}
+/* TABELA */
+.table-container { margin-top: 30px; width: 100%; }
 
 table.mat-elevation-z2 {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 8px;
-  font-family: 'Roboto', sans-serif;
 }
 
 th.mat-header-cell {
   background-color: #e0e0e0;
   font-weight: 600;
-  text-align: left;
   padding: 10px;
   border-radius: 6px 6px 0 0;
   color: #333;
@@ -163,40 +117,97 @@ td.mat-cell {
   color: #333;
 }
 
-.acoes-cell button {
-  margin-right: 5px;
-}
+.acoes-cell button { margin-right: 5px; }
 
-/* ================= RESPONSIVIDADE ================= */
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
   .form-container { padding: 15px; }
   .button-group { flex-direction: column; }
   .form-row { flex-direction: column; }
 }
+/* ================= MODAL ALTERAR SENHA ================= */
+.modal-senha {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.modal-content {
+  background-color: #fff;
+  color: #333;
+  padding: 40px;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+  font-family: 'Roboto', sans-serif;
+}
 
-/* Botão Salvar / Atualizar azul */
-.btn-salvar {
-  background-color: #007bff !important;
-  color: white !important;
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-size: 1.5rem;
   font-weight: 500;
 }
 
-.btn-salvar:disabled {
-  background-color: #a5c8ff !important;
-  color: white !important;
+/* Wrapper dos inputs */
+.modal-content .inputs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* espaçamento entre os campos */
 }
 
-/* Botão Cancelar vermelho */
-.btn-cancelar {
+/* Inputs do modal */
+.modal-content .mat-form-field {
+  width: 100%;
+}
+
+.modal-content .mat-input-element {
+  color: #333;
+  background-color: #fff;
+}
+
+.modal-content .mat-hint {
+  color: #666;
+}
+
+.modal-content .mat-error {
   color: #dc3545 !important;
-  border-color: #dc3545 !important;
+}
+
+/* Botões do modal */
+.modal-content .button-group {
+  display: flex;
+  gap: 20px;       /* espaço entre botões */
+  margin-top: 30px; /* espaço acima dos botões */
+}
+
+.modal-content .btn-alterar {
+  background-color: #007bff !important; /* azul */
+  color: white !important;
   font-weight: 500;
 }
 
-.btn-cancelar {
+.modal-content .btn-cancelar {
+  background-color: #dc3545 !important; /* vermelho */
   color: white !important;
-  border-color: #dc3545 !important;
-  background-color: #dc3545;
   font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    padding: 25px;
+  }
+  .modal-content .button-group {
+    flex-direction: column;
+  }
 }
