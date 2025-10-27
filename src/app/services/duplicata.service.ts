@@ -79,4 +79,14 @@ export class DuplicataService {
 
       return this.http.get(`${this.apiUrl}/por-numero`, { params });
   }
+
+  /**
+   * Busca duplicatas por descrição (sem paginação)
+   * @param descricao descrição a ser buscada
+   */
+    buscarPorDescricao(descricao: string): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/descricao`, {
+        params: { descricao }
+      });
+    }
 }

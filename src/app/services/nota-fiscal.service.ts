@@ -24,6 +24,8 @@ export interface NotaFiscalDTO {
   fornecedorId: number;
   fornecedorNome: string;
   tipoNotaId: number;
+  duplicataId: number;
+  dsDuplicata: string;
   pessoaId?: number;
   filialId: number;
   formaPagamentoId: number;

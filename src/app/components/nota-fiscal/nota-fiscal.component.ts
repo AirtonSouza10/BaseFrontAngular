@@ -8,6 +8,7 @@ import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.serv
 import { TipoNotaService } from '../../services/tipo-nota.service';
 import { FilialService, FilialDTO } from '../../services/filial.service';
 import { FormaPagamentoService, FormaPagamentoDTO } from '../../services/forma-pagamento.service';
+import { DuplicataDTO, DuplicataService } from '../../services/duplicata.service';
 
 @Component({
   selector: 'app-nota-fiscal',
@@ -27,6 +28,8 @@ export class NotaFiscalComponent implements OnInit {
   formasPagamento: FormaPagamentoDTO[] = [];
   tiposNota: any[] = [];
   filiais: FilialDTO[] = [];
+  duplicatasFiltradas: DuplicataDTO[] = [];
+  duplicatas: DuplicataDTO[] = [];
 
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
@@ -45,6 +48,11 @@ export class NotaFiscalComponent implements OnInit {
   filtroFornecedorId?: number;
   filtroFornecedor?: number;
 
+  //modal duplicatas
+  modalDuplicataAberto: boolean = false;
+  filtroModalDuplicata: string = '';
+  duplicatasFiltradasModal: DuplicataDTO[] = [];
+
   currencyOptions = {
     prefix: 'R$ ',
     thousands: '.',
@@ -58,7 +66,9 @@ export class NotaFiscalComponent implements OnInit {
     private readonly fornecedorService: FornecedorService,
     private readonly tipoNotaService: TipoNotaService,
     private readonly filialService: FilialService,
-    private readonly formaPagamentoService: FormaPagamentoService
+    private readonly formaPagamentoService: FormaPagamentoService,
+    private readonly duplicataService: DuplicataService,
+
   ) {
     this.form = this.criarForm();
   }
@@ -79,6 +89,8 @@ export class NotaFiscalComponent implements OnInit {
       serie: [''],
       chave: [''],
       descricaoObs: [''],
+      duplicataInput: [''],
+      duplicataId: [null],
       valorTotal: [0, Validators.required],
       valorDesconto: [0],
       valorIcms: [0],
@@ -172,6 +184,7 @@ export class NotaFiscalComponent implements OnInit {
     this.form.patchValue({
       ...nota,
       fornecedorInput: this.getFornecedorNome(nota.fornecedorId),
+      duplicataInput: nota.dsDuplicata || '',
       quantidadeParcelas: nota.parcelasPrevistas?.length || 1,
       dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
       intervaloDias: 30,
@@ -296,4 +309,39 @@ export class NotaFiscalComponent implements OnInit {
     if (!existe) this.form.patchValue({ fornecedorId: null, fornecedorInput: '' });
     this.fornecedoresFiltrados = [];
   }
+
+// ===================== Auto complete duplicata (agora modal) =====================
+// Abrir modal de duplicata
+abrirModalDuplicata(): void {
+  this.modalDuplicataAberto = true;
+  this.filtroModalDuplicata = '';
+  this.duplicatasFiltradasModal = []; // começa vazio
+}
+
+// Fechar modal
+fecharModalDuplicata(): void {
+  this.modalDuplicataAberto = false;
+  this.filtroModalDuplicata = '';
+  this.duplicatasFiltradasModal = [];
+}
+
+// Pesquisar duplicatas no backend
+pesquisarDuplicatas(): void {
+  const val = this.filtroModalDuplicata?.trim();
+  if (!val) {
+    this.duplicatasFiltradasModal = [];
+    return;
+  }
+
+  this.duplicataService.buscarPorDescricao(val).subscribe(res => {
+    this.duplicatasFiltradasModal = res?.resposta || [];
+  });
+}
+
+// Selecionar duplicata do modal
+selecionarDuplicataModal(d: DuplicataDTO): void {
+  this.form.patchValue({ duplicataId: d.id, duplicataInput: d.descricao });
+  this.fecharModalDuplicata();
+}
+
 }

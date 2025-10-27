@@ -27,6 +27,22 @@
           <label for="descricaoObs">Observação</label>
           <input id="descricaoObs" formControlName="descricaoObs" type="text" maxlength="500" />
         </div>
+        <div class="form-group flex-1" style="position: relative;">
+          <label for="duplicataInput">Duplicata</label>
+          <div style="display: flex; gap: 8px;">
+            <input
+              id="duplicataInput"
+              type="text"
+              placeholder="Selecione uma duplicata"
+              formControlName="duplicataInput"
+              readonly
+              autocomplete="off"
+            />
+            <button type="button" (click)="abrirModalDuplicata()" class="btn btn-secondary">
+              🔍
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="form-row">
@@ -166,6 +182,55 @@
   <!-- MENSAGENS -->
   <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
   <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
+
+<div class="modal-backdrop" *ngIf="modalDuplicataAberto">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Pesquisar Duplicata</h3>
+      <button type="button" (click)="fecharModalDuplicata()">✖</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="input-pesquisa">
+        <input
+          type="text"
+          placeholder="Digite descrição ou número"
+          [(ngModel)]="filtroModalDuplicata"
+        />
+        <button type="button" (click)="pesquisarDuplicatas()">🔍 Pesquisar</button>
+      </div>
+
+      <table *ngIf="duplicatasFiltradasModal.length">
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of duplicatasFiltradasModal">
+            <td>{{ d.descricao }}</td>
+            <td>{{ d.valor | currency:'BRL' }}</td>
+            <td>
+              <button type="button" (click)="selecionarDuplicataModal(d)">Selecionar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="duplicatasFiltradasModal.length === 0 && filtroModalDuplicata">
+        Nenhuma duplicata encontrada.
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" (click)="fecharModalDuplicata()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+
 
   <!-- FILTRO DE NOTAS -->
   <div class="filtro-tabela" style="margin: 20px 0; display:flex; gap:10px; align-items:center;">
