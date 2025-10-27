@@ -34,9 +34,14 @@ export class DuplicataComponent implements OnInit {
   fornecedoresFiltrados: FornecedorDTO[] = [];
   fornecedorSelecionado?: FornecedorDTO;
   notasEncontradas: NotaFiscalDTO[] = [];
-
-  // Lista de notas associadas à duplicata
   notasAssociadas: NotaFiscalDTO[] = [];
+
+  // --- Paginação e Filtro ---
+  filtroDescricao: string = '';
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
+  totalElements = 0;
 
   currencyOptions = {
     prefix: 'R$ ',
@@ -172,14 +177,43 @@ export class DuplicataComponent implements OnInit {
     }
   }
 
+  // ================== LISTAR COM PAGINAÇÃO ==================
   listarDuplicatas(): void {
-    this.duplicataService.listar().subscribe((res: any) => this.duplicatas = res.resposta || []);
+    if (this.filtroDescricao) {
+      this.duplicataService.listarPorNumero(this.currentPage, this.pageSize, this.filtroDescricao)
+        .subscribe((res: any) => this.atualizarTabela(res));
+    } else {
+      this.duplicataService.listarPaginadas(this.currentPage, this.pageSize)
+        .subscribe((res: any) => this.atualizarTabela(res));
+    }
+  }
+
+  private atualizarTabela(res: any): void {
+    this.duplicatas = res?.resposta?.content || [];
+    this.totalPages = res?.resposta?.totalPages || 0;
+    this.totalElements = res?.resposta?.totalElements || 0;
+  }
+
+  aplicarFiltro(): void {
+    this.currentPage = 0;
+    this.listarDuplicatas();
+  }
+
+  limparFiltro(): void {
+    this.filtroDescricao = '';
+    this.currentPage = 0;
+    this.listarDuplicatas();
+  }
+
+  mudarPagina(pagina: number): void {
+    if (pagina < 0 || pagina >= this.totalPages) return;
+    this.currentPage = pagina;
+    this.listarDuplicatas();
   }
 
   editarDuplicata(d: DuplicataDTO): void {
     this.editando = true;
     this.duplicataIdEdit = d.id;
-
     this.form.patchValue({
       id: d.id,
       descricao: d.descricao,
@@ -191,11 +225,9 @@ export class DuplicataComponent implements OnInit {
       dtPrimeiraParcela: d.parcelas?.[0]?.dtVencimento || '',
       formaPagamentoId: d.formaPagamentoId,
     });
-
     const forma = this.formasPagamento.find(f => f.id === d.formaPagamentoId);
     this.form.get('quantidadeParcelas')!.setValue(forma?.qtdeParcelas || d.parcelas?.length || 1);
     this.form.get('intervaloDias')!.setValue(forma?.intervaloParcelas || 30);
-
     this.parcelas.clear();
     d.parcelas?.forEach(p => {
       this.parcelas.push(this.fb.group({
@@ -205,8 +237,6 @@ export class DuplicataComponent implements OnInit {
         valorTotal: [p.valorTotal, Validators.required]
       }));
     });
-
-    // Carrega notas diretamente da duplicata
     this.notasAssociadas = d.notasFiscais || [];
   }
 
@@ -255,7 +285,7 @@ export class DuplicataComponent implements OnInit {
     this.numeroNota = null;
     this.fornecedorInput = '';
     this.fornecedoresFiltrados = [];
-     this.notasEncontradas = [];
+    this.notasEncontradas = [];
   }
 
   fecharModalNota() {
@@ -302,11 +332,8 @@ export class DuplicataComponent implements OnInit {
 
   adicionarNotaNaDuplicata(nota: NotaFiscalDTO): void {
     if (!nota) return;
-
     const jaIncluida = this.notasAssociadas.some(n => n.id === nota.id);
-    if (!jaIncluida) {
-      this.notasAssociadas.push(nota);
-    }
+    if (!jaIncluida) this.notasAssociadas.push(nota);
   }
 
   removerNota(index: number): void {
@@ -319,17 +346,14 @@ export class DuplicataComponent implements OnInit {
     return valorDuplicata - totalNotas;
   }
 
-  // Abrir modal nova nota
   abrirModalNovaNota() {
     this.modalNovaNotaAberto = true;
   }
 
-  // Fechar modal nova nota
   fecharModalNovaNota() {
     this.modalNovaNotaAberto = false;
   }
 
-  // Receber nota criada do NotaFiscalComponent
   adicionarNovaNota(nota: NotaFiscalDTO) {
     this.notasAssociadas.push(nota);
     this.fecharModalNovaNota();

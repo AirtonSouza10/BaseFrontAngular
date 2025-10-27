@@ -5,6 +5,15 @@
     <!-- DADOS DA DUPLICATA -->
     <div class="form-section">
       <h3>Dados da conta a pagar</h3>
+      <div class="toast-container">
+        <div *ngIf="sucessoMsg" class="toast toast-success">
+          {{ sucessoMsg }}
+        </div>
+
+        <div *ngIf="erroMsg" class="toast toast-error">
+          {{ erroMsg }}
+        </div>
+      </div>
 
       <div class="form-row">
         <div class="form-group flex-2">
@@ -172,6 +181,13 @@
     </div>
   </div>
 
+  <!-- FILTRO E PAGINAÇÃO -->
+  <div class="filtro-container" style="margin-top: 20px; display: flex; gap: 10px;">
+    <input type="text" [(ngModel)]="filtroDescricao" placeholder="Filtrar por descrição" />
+    <button type="button" class="btn-filter" (click)="aplicarFiltro()">Filtrar</button>
+    <button type="button" class="btn-limpar" (click)="limparFiltro()">Limpar</button>
+  </div>
+
   <!-- TABELA DE DUPLICATAS -->
   <table class="tabela-tipos" *ngIf="duplicatas.length">
     <thead>
@@ -194,4 +210,13 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- CONTROLES DE PAGINAÇÃO -->
+  <div class="paginacao" *ngIf="totalPages > 1">
+    <button type="button" (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">« Anterior</button>
+    <ng-container *ngFor="let i of [].constructor(totalPages); let idx = index">
+      <button type="button" [class.active]="idx === currentPage" (click)="mudarPagina(idx)">{{ idx + 1 }}</button>
+    </ng-container>
+    <button type="button" (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">Próxima »</button>
+  </div>
 </div>

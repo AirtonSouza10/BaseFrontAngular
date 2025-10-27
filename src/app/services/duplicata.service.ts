@@ -53,4 +53,30 @@ export class DuplicataService {
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // ================= NOVOS ENDPOINTS PAGINADOS =================
+
+  /**
+   * Lista duplicatas paginadas
+   * @param page página (0-based)
+   * @param size tamanho da página
+   */
+  listarPaginadas(page: number, size: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/paginadas`, {
+      params: { page: page.toString(), size: size.toString() }
+    });
+  }
+
+  /**
+   * Lista duplicatas filtradas por número ou descrição e paginadas
+   * @param page página (0-based)
+   * @param size tamanho da página
+   * @param numero número da duplicata (opcional)
+   */
+  listarPorNumero(page: number, size: number, numero?: string): Observable<any> {
+      const params: any = { page: page.toString(), size: size.toString() };
+      if (numero) params.numero = numero; // só envia número
+
+      return this.http.get(`${this.apiUrl}/por-numero`, { params });
+  }
 }

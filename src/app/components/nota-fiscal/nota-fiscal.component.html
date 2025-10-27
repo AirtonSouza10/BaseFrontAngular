@@ -210,9 +210,15 @@
   </table>
 
   <!-- PAGINAÇÃO -->
-  <div class="paginacao" *ngIf="totalPages > 1" style="margin-top:10px; display:flex; gap:10px; align-items:center;">
-    <button (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">Anterior</button>
-    <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
-    <button (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">Próxima</button>
+  <div class="paginacao" *ngIf="totalPages > 1" style="margin-top:10px; display:flex; gap:5px; align-items:center;">
+    <button type="button" (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">« Anterior</button>
+
+    <ng-container *ngFor="let i of [].constructor(totalPages); let idx = index">
+      <button type="button" [class.active]="idx === currentPage" (click)="mudarPagina(idx)">
+        {{ idx + 1 }}
+      </button>
+    </ng-container>
+
+    <button type="button" (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">Próxima »</button>
   </div>
 </div>
