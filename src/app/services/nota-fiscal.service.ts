@@ -63,4 +63,36 @@ export class NotaFiscalService {
       params: { numero: numero.toString(), fornecedorId: fornecedorId.toString() }
     });
   }
+
+  /**
+   * Lista notas fiscais paginadas filtrando por número e/ou fornecedor
+   * @param page número da página (0-based)
+   * @param size quantidade por página
+   * @param numero filtro por número da nota (opcional)
+   * @param fornecedorId filtro por fornecedor (opcional)
+   */
+  listarPaginadasByFornecedorAndNumero(page: number, size: number, numero?: string, fornecedorId?: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/por-numero-fornecedor`, {
+      params: {
+        page: page.toString(),
+        size: size.toString(),
+        ...(numero ? { numero } : {}),
+        ...(fornecedorId ? { fornecedorId: fornecedorId.toString() } : {})
+      }
+    });
+  }
+
+  /**
+ * Lista todas as notas fiscais paginadas
+ * @param page número da página (0-based)
+ * @param size quantidade por página
+ */
+  listarPaginadas(page: number, size: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/paginadas`, {
+      params: {
+        page: page.toString(),
+        size: size.toString()
+      }
+    });
+  }
 }

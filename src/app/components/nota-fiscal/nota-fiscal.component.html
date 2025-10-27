@@ -32,26 +32,26 @@
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="valorTotal">Valor Total</label>
-          <input id="valorTotal" formControlName="valorTotal" type="text" step="0.01"   currencyMask [options]="currencyOptions" />
+          <input id="valorTotal" formControlName="valorTotal" type="text" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
           <label for="valorDesconto">Desconto</label>
-          <input id="valorDesconto" formControlName="valorDesconto" type="text" step="0.01"  currencyMask [options]="currencyOptions"/>
+          <input id="valorDesconto" formControlName="valorDesconto" type="text" currencyMask [options]="currencyOptions"/>
         </div>
         <div class="form-group flex-1">
           <label for="valorIcms">ICMS</label>
-          <input id="valorIcms" formControlName="valorIcms" type="text" step="0.01" currencyMask [options]="currencyOptions" />
+          <input id="valorIcms" formControlName="valorIcms" type="text" currencyMask [options]="currencyOptions" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group flex-1">
           <label for="valorJuros">Juros</label>
-          <input id="valorJuros" formControlName="valorJuros" type="text" step="0.01" currencyMask [options]="currencyOptions" />
+          <input id="valorJuros" formControlName="valorJuros" type="text" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
           <label for="valorMulta">Multa</label>
-          <input id="valorMulta" formControlName="valorMulta" type="text" step="0.01" currencyMask [options]="currencyOptions"/>
+          <input id="valorMulta" formControlName="valorMulta" type="text" currencyMask [options]="currencyOptions"/>
         </div>
         <div class="form-group flex-1">
           <label for="dtCompra">Data de Compra</label>
@@ -167,8 +167,19 @@
   <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
   <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
 
-  <!-- TABELA -->
-  <table class="tabela-tipos" *ngIf="notasFiscais.length  && !isModal">
+  <!-- FILTRO DE NOTAS -->
+  <div class="filtro-tabela" style="margin: 20px 0; display:flex; gap:10px; align-items:center;">
+    <input type="text" placeholder="Número da Nota" [(ngModel)]="filtroNumero" name="filtroNumero" />
+    <select [(ngModel)]="filtroFornecedor" name="filtroFornecedor">
+      <option [ngValue]="null">Todos Fornecedores</option>
+      <option *ngFor="let f of fornecedores" [ngValue]="f.id">{{ f.nome }}</option>
+    </select>
+    <button type="button" (click)="aplicarFiltro()">Filtrar</button>
+    <button type="button" (click)="limparFiltro()">Limpar</button>
+  </div>
+
+  <!-- TABELA DE NOTAS -->
+  <table class="tabela-tipos" *ngIf="notasFiscais.length">
     <thead>
       <tr>
         <th>Número</th>
@@ -197,4 +208,11 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- PAGINAÇÃO -->
+  <div class="paginacao" *ngIf="totalPages > 1" style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+    <button (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">Anterior</button>
+    <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+    <button (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">Próxima</button>
+  </div>
 </div>

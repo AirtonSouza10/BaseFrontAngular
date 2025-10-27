@@ -1,24 +1,25 @@
-import { FormaPagamentoService, FormaPagamentoDTO } from './../../services/forma-pagamento.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NotaFiscalService, NotaFiscalDTO } from '../../services/nota-fiscal.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxCurrencyDirective } from 'ngx-currency';
+import { NotaFiscalService, NotaFiscalDTO, ParcelaPrevistaNotaDTO } from '../../services/nota-fiscal.service';
 import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
 import { TipoNotaService } from '../../services/tipo-nota.service';
 import { FilialService, FilialDTO } from '../../services/filial.service';
-import { NgxCurrencyDirective } from 'ngx-currency';
+import { FormaPagamentoService, FormaPagamentoDTO } from '../../services/forma-pagamento.service';
 
 @Component({
   selector: 'app-nota-fiscal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgxCurrencyDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxCurrencyDirective],
   templateUrl: './nota-fiscal.component.html',
   styleUrls: ['./nota-fiscal.component.css']
 })
 export class NotaFiscalComponent implements OnInit {
   @Output() notaCriada = new EventEmitter<NotaFiscalDTO>();
   @Input() isModal: boolean = false;
+
   form: FormGroup;
   notasFiscais: NotaFiscalDTO[] = [];
   fornecedores: FornecedorDTO[] = [];
@@ -26,11 +27,23 @@ export class NotaFiscalComponent implements OnInit {
   formasPagamento: FormaPagamentoDTO[] = [];
   tiposNota: any[] = [];
   filiais: FilialDTO[] = [];
+
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
   editando: boolean = false;
   notaIdEdit?: number;
   private toastTimeout: any;
+
+  // Paginação
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
+  totalElements = 0;
+
+  // Filtros
+  filtroNumero: string = '';
+  filtroFornecedorId?: number;
+  filtroFornecedor?: number;
 
   currencyOptions = {
     prefix: 'R$ ',
@@ -45,9 +58,22 @@ export class NotaFiscalComponent implements OnInit {
     private readonly fornecedorService: FornecedorService,
     private readonly tipoNotaService: TipoNotaService,
     private readonly filialService: FilialService,
-    private readonly formaPagamentoService: FormaPagamentoService,
+    private readonly formaPagamentoService: FormaPagamentoService
   ) {
-    this.form = this.fb.group({
+    this.form = this.criarForm();
+  }
+
+  ngOnInit(): void {
+    this.listarNotasFiscais();
+    this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
+    this.tipoNotaService.listarTiposNota().subscribe(res => this.tiposNota = res?.resposta || []);
+    this.filialService.listarFiliais().subscribe(res => this.filiais = res?.resposta || []);
+    this.formaPagamentoService.listar().subscribe(res => this.formasPagamento = res?.resposta || []);
+    this.configurarReacoesForm();
+  }
+
+  private criarForm(): FormGroup {
+    return this.fb.group({
       id: [null],
       numero: ['', Validators.required],
       serie: [''],
@@ -60,7 +86,7 @@ export class NotaFiscalComponent implements OnInit {
       valorMulta: [0],
       dtCompra: ['', Validators.required],
       fornecedorId: [null, Validators.required],
-      fornecedorInput: ['', Validators.required], // novo input
+      fornecedorInput: ['', Validators.required],
       tipoNotaId: [null, Validators.required],
       formaPagamentoId: [null],
       filialId: [null, Validators.required],
@@ -73,26 +99,12 @@ export class NotaFiscalComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.listarNotasFiscais();
-    this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
-    this.tipoNotaService.listarTiposNota().subscribe(res => this.tiposNota = res?.resposta || []);
-    this.filialService.listarFiliais().subscribe(res => this.filiais = res?.resposta || []);
-    this.formaPagamentoService.listar().subscribe(res => this.formasPagamento = res?.resposta || []);
-
-    this.configurarReacoesForm();
-  }
-
   private configurarReacoesForm(): void {
-    this.form.get('formaPagamentoId')?.valueChanges.subscribe(formaId => {
-      this.atualizarCamposFormaPagamento(formaId);
-    });
-
+    this.form.get('formaPagamentoId')?.valueChanges.subscribe(formaId => this.atualizarCamposFormaPagamento(formaId));
     this.form.get('dtCompra')?.valueChanges.subscribe(() => {
       const formaId = this.form.get('formaPagamentoId')?.value;
       if (formaId) this.atualizarCamposFormaPagamento(formaId);
     });
-
     this.form.get('valorTotal')?.valueChanges.subscribe(() => {
       if (this.form.get('quantidadeParcelas')?.value && this.form.get('dtPrimeiraParcela')?.value) {
         this.gerarParcelas();
@@ -102,7 +114,6 @@ export class NotaFiscalComponent implements OnInit {
 
   private atualizarCamposFormaPagamento(formaId: number | null): void {
     if (!formaId) return;
-
     this.formaPagamentoService.buscarPorId(formaId).subscribe(fp => {
       const dados = fp.resposta;
       if (!dados) return;
@@ -154,32 +165,17 @@ export class NotaFiscalComponent implements OnInit {
 
   editarNotaFiscal(nota: NotaFiscalDTO): void {
     if (!nota) return;
-
     this.editando = true;
     this.notaIdEdit = nota.id;
 
+    this.form = this.criarForm();
     this.form.patchValue({
-      id: nota.id,
-      numero: nota.numero,
-      serie: nota.serie,
-      chave: nota.chave,
-      descricaoObs: nota.descricaoObs,
-      valorTotal: nota.valorTotal,
-      valorDesconto: nota.valorDesconto,
-      valorIcms: nota.valorIcms,
-      valorJuros: nota.valorJuros,
-      valorMulta: nota.valorMulta,
-      dtCompra: nota.dtCompra,
-      fornecedorId: nota.fornecedorId,
+      ...nota,
       fornecedorInput: this.getFornecedorNome(nota.fornecedorId),
-      tipoNotaId: nota.tipoNotaId,
-      filialId: nota.filialId,
-      pessoaId: nota.pessoaId,
-      formaPagamentoId: nota.formaPagamentoId,
       quantidadeParcelas: nota.parcelasPrevistas?.length || 1,
       dtPrimeiraParcela: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto || '',
       intervaloDias: 30,
-      gerarParcelasPrevistas: nota.parcelasPrevistas?.[0]?.dtVencimentoPrevisto,
+      gerarParcelasPrevistas: !!nota.parcelasPrevistas?.length
     });
 
     this.parcelasPrevistas.clear();
@@ -191,136 +187,92 @@ export class NotaFiscalComponent implements OnInit {
       }));
     });
 
-    if (nota.formaPagamentoId) {
-      this.formaPagamentoService.buscarPorId(nota.formaPagamentoId).subscribe(fp => {
-        const dtCompra = new Date(nota.dtCompra);
-        const dtPrimeira = new Date(dtCompra);
-        dtPrimeira.setDate(dtPrimeira.getDate() + (fp.prazoPrimeiraParcela || 0));
-
-        if (!this.form.get('intervaloDias')?.value) {
-          this.form.patchValue({ intervaloDias: fp.intervaloParcelas || 30 });
-        }
-
-        this.gerarParcelas();
-      });
-    }
+    this.configurarReacoesForm();
   }
 
   onSubmit(): void {
     if (!this.form.valid) return;
 
     const notaDTO = this.form.value;
-    if (this.parcelasPrevistas.length === 0) notaDTO.parcelasPrevistas = null;
     if (!this.form.get('gerarParcelasPrevistas')?.value) {
       notaDTO.formaPagamentoId = null;
       notaDTO.parcelasPrevistas = [];
     }
 
-    if (this.editando && this.notaIdEdit) {
-      this.notaService.atualizar(this.notaIdEdit, notaDTO).subscribe({
-        next: () => {
-          this.showSuccess('Nota fiscal atualizada com sucesso!');
-          this.cancelarEdicao();
-          this.listarNotasFiscais();
-        },
-        error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao atualizar nota fiscal')
-      });
+    const action$ = this.editando && this.notaIdEdit
+      ? this.notaService.atualizar(this.notaIdEdit, notaDTO)
+      : this.notaService.salvar(notaDTO);
+
+    action$.subscribe({
+      next: () => {
+        this.showSuccess(this.editando ? 'Nota fiscal atualizada com sucesso!' : 'Nota fiscal salva com sucesso!');
+        this.cancelarEdicao();
+        this.listarNotasFiscais();
+      },
+      error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao salvar/atualizar nota fiscal')
+    });
+  }
+
+  /**
+   * Lista notas fiscais dependendo se existem filtros
+   */
+  listarNotasFiscais(): void {
+    if (this.filtroNumero || this.filtroFornecedorId) {
+      // Busca filtrada por número e/ou fornecedor
+      this.notaService
+        .listarPaginadasByFornecedorAndNumero(this.currentPage, this.pageSize, this.filtroNumero, this.filtroFornecedorId)
+        .subscribe(res => this.atualizarTabela(res));
     } else {
-      this.notaService.salvar(notaDTO).subscribe({
-        next: () => {
-          this.showSuccess('Nota fiscal salva com sucesso!');
-          this.cancelarEdicao();
-          this.listarNotasFiscais();
-        },
-        error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao salvar nota fiscal')
-      });
+      // Busca todas as notas
+      this.notaService
+        .listarPaginadas(this.currentPage, this.pageSize)
+        .subscribe(res => this.atualizarTabela(res));
     }
   }
 
-  listarNotasFiscais(): void {
-    this.notaService.listar().subscribe(res => this.notasFiscais = res?.resposta || []);
+  private atualizarTabela(res: any): void {
+    this.notasFiscais = res?.resposta?.content || [];
+    this.totalPages = res?.resposta?.totalPages || 0;
+    this.totalElements = res?.resposta?.totalElements || 0;
+  }
+
+  aplicarFiltro(): void {
+    this.filtroFornecedorId = this.filtroFornecedor || undefined;
+    this.currentPage = 0;
+    this.listarNotasFiscais();
+  }
+
+  mudarPagina(pagina: number): void {
+    if (pagina < 0 || pagina >= this.totalPages) return;
+    this.currentPage = pagina;
+    this.listarNotasFiscais();
   }
 
   excluirNotaFiscal(id?: number): void {
     if (!id) return;
-
-    const confirmar = confirm('Tem certeza que deseja excluir esta nota fiscal?');
-    if (!confirmar) return;
-
+    if (!confirm('Tem certeza que deseja excluir esta nota fiscal?')) return;
     this.notaService.excluir(id).subscribe({
-      next: () => {
-        this.showSuccess('Nota fiscal excluída com sucesso!');
-        this.listarNotasFiscais();
-      },
+      next: () => { this.showSuccess('Nota fiscal excluída com sucesso!'); this.listarNotasFiscais(); },
       error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao excluir nota fiscal')
     });
   }
 
-
   cancelarEdicao(): void {
     this.editando = false;
     this.notaIdEdit = undefined;
-
-    // 🔹 Recria completamente o formulário (limpa reações e valores anteriores)
-    this.form = this.fb.group({
-      id: [null],
-      numero: ['', Validators.required],
-      serie: [''],
-      chave: [''],
-      descricaoObs: [''],
-      valorTotal: [0, Validators.required],
-      valorDesconto: [0],
-      valorIcms: [0],
-      valorJuros: [0],
-      valorMulta: [0],
-      dtCompra: ['', Validators.required],
-      fornecedorId: [null, Validators.required],
-      fornecedorInput: ['', Validators.required],
-      tipoNotaId: [null, Validators.required],
-      formaPagamentoId: [null],
-      filialId: [null, Validators.required],
-      pessoaId: [null],
-      quantidadeParcelas: [{ value: 1, disabled: true }],
-      dtPrimeiraParcela: [''],
-      intervaloDias: [{ value: 30, disabled: true }],
-      parcelasPrevistas: this.fb.array([]),
-      gerarParcelasPrevistas: [false]
-    });
-
-    // 🔹 Reconfigura as reações (pois recriou o form)
+    this.form = this.criarForm();
     this.configurarReacoesForm();
-
-    // 🔹 Limpa a lista de parcelas na memória
     this.parcelasPrevistas.clear();
   }
 
-  private showSuccess(message: string) {
-    this.sucessoMsg = message;
-    this.erroMsg = null;
-    this.clearToast();
-    this.toastTimeout = setTimeout(() => (this.sucessoMsg = null), 4000);
-  }
+  private showSuccess(message: string) { this.sucessoMsg = message; this.erroMsg = null; this.clearToast(); this.toastTimeout = setTimeout(() => this.sucessoMsg = null, 4000); }
+  private showError(message: string) { this.erroMsg = message; this.sucessoMsg = null; this.clearToast(); this.toastTimeout = setTimeout(() => this.erroMsg = null, 4000); }
+  private clearToast() { if (this.toastTimeout) clearTimeout(this.toastTimeout); }
 
-  private showError(message: string) {
-    this.erroMsg = message;
-    this.sucessoMsg = null;
-    this.clearToast();
-    this.toastTimeout = setTimeout(() => (this.erroMsg = null), 4000);
-  }
+  getFornecedorNome(id?: number): string { return this.fornecedores.find(f => f.id === id)?.nome || ''; }
+  getFilialNome(id?: number): string { return this.filiais.find(f => f.id === id)?.nome || ''; }
 
-  private clearToast() {
-    if (this.toastTimeout) clearTimeout(this.toastTimeout);
-  }
-
-  getFornecedorNome(id?: number): string {
-    return this.fornecedores.find(f => f.id === id)?.nome || '';
-  }
-
-  getFilialNome(id?: number): string {
-    return this.filiais.find(f => f.id === id)?.nome || '';
-  }
-
-  /** AUTOCOMPLETE FORNECEDOR */
+  // Autocomplete fornecedor
   filtrarFornecedores(): void {
     const val = this.form.get('fornecedorInput')?.value?.toLowerCase() || '';
     this.fornecedoresFiltrados = this.fornecedores.filter(f =>
@@ -328,21 +280,20 @@ export class NotaFiscalComponent implements OnInit {
     );
   }
 
-  abrirAutocomplete(): void {
-    this.fornecedoresFiltrados = this.fornecedores;
+  limparFiltro(): void {
+    this.filtroNumero = '';
+    this.filtroFornecedor = undefined;
+    this.filtroFornecedorId = undefined;
+    this.currentPage = 0;
+    this.listarNotasFiscais();
   }
 
-  selecionarFornecedor(f: FornecedorDTO): void {
-    this.form.patchValue({ fornecedorId: f.id, fornecedorInput: f.nome });
-    this.fornecedoresFiltrados = [];
-  }
-
+  abrirAutocomplete(): void { this.fornecedoresFiltrados = this.fornecedores; }
+  selecionarFornecedor(f: FornecedorDTO): void { this.form.patchValue({ fornecedorId: f.id, fornecedorInput: f.nome }); this.fornecedoresFiltrados = []; }
   validarFornecedor(): void {
     const inputVal = this.form.get('fornecedorInput')?.value;
     const existe = this.fornecedores.some(f => f.nome === inputVal);
-    if (!existe) {
-      this.form.patchValue({ fornecedorId: null, fornecedorInput: '' });
-    }
+    if (!existe) this.form.patchValue({ fornecedorId: null, fornecedorInput: '' });
     this.fornecedoresFiltrados = [];
   }
 }
