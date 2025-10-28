@@ -64,4 +64,10 @@ export class FornecedorService {
   atualizarStatus(id: number, ativo: boolean): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/status`, ativo);
   }
+
+  /** Gera relatório de fornecedores (PDF) */
+  gerarRelatorio(): Observable<Blob> {
+    const url = `${this.apiUrl}/relatorio-fornecedores`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
 }

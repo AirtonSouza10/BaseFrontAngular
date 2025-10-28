@@ -235,4 +235,15 @@ editarFornecedor(fornecedor: FornecedorDTO): void {
     });
   }
 
+  // ================= RELATORIO FORNECEDORES  =================
+  abrirPDF() {
+    this.fornecedorService.gerarRelatorio().subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      },
+      error: (err) => console.error('Erro ao gerar PDF', err)
+    });
+  }
+
 }
