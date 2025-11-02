@@ -212,6 +212,7 @@
       <tr>
         <th>Descrição</th>
         <th>Valor Total</th>
+        <th>Fornecedor</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -219,6 +220,7 @@
       <tr *ngFor="let d of duplicatas">
         <td>{{ d.descricao }}</td>
         <td>{{ d.valorTotal | currency:'BRL' }}</td>
+        <td>{{ d.dsFornecedor }}</td>
         <td>
           <div class="acoes-tabela">
             <button type="button" class="btn-submit" (click)="editarDuplicata(d)">Editar</button>
