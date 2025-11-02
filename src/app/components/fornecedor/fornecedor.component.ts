@@ -36,6 +36,7 @@ export class FornecedorComponent implements OnInit {
     this.form = this.fb.group({
       id: [null], // <-- id do fornecedor
       nome: ['', Validators.required],
+      razao: [''],
       identificacao: ['', Validators.required],
       email: [''],
       ativo: [true],
@@ -136,6 +137,7 @@ editarFornecedor(fornecedor: FornecedorDTO): void {
     this.form.patchValue({
       id: f.id,
       nome: f.nome,
+      razao: f.razao,
       identificacao: f.identificacao,
       email: f.email,
       ativo: f.ativo

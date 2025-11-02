@@ -27,6 +27,7 @@ export interface EnderecoDTO {
 export interface FornecedorDTO {
   id?: number;
   nome: string;
+  razao: string;
   identificacao: string;
   email?: string;
   telefones: TelefoneDTO[];

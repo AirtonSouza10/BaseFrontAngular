@@ -20,6 +20,7 @@ export class DuplicataComponent implements OnInit {
   form: FormGroup;
   duplicatas: DuplicataDTO[] = [];
   formasPagamento: FormaPagamentoDTO[] = [];
+  fornecedores: FornecedorDTO[] = [];
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
   editando: boolean = false;
@@ -55,7 +56,7 @@ export class DuplicataComponent implements OnInit {
     private readonly duplicataService: DuplicataService,
     private readonly formaPagamentoService: FormaPagamentoService,
     private readonly fornecedorService: FornecedorService,
-    private readonly notaFiscalService: NotaFiscalService
+    private readonly notaFiscalService: NotaFiscalService,
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -70,12 +71,15 @@ export class DuplicataComponent implements OnInit {
       quantidadeParcelas: [1, [Validators.min(1)]],
       dtPrimeiraParcela: [''],
       formaPagamentoId: [null],
+      fornecedorId: [null, Validators.required],
+      fornecedorInput: [''],
       intervaloDias: [30, [Validators.min(1)]],
       parcelas: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
+    this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
     this.listarDuplicatas();
     this.formaPagamentoService.listar().subscribe((res: any) => this.formasPagamento = res?.resposta || []);
 
@@ -224,6 +228,8 @@ export class DuplicataComponent implements OnInit {
       valorTotal: d.valorTotal,
       dtPrimeiraParcela: d.parcelas?.[0]?.dtVencimento || '',
       formaPagamentoId: d.formaPagamentoId,
+      fornecedorId: [null, Validators.required],
+      fornecedorInput: this.getFornecedorNome(d.fornecedorId),
     });
     const forma = this.formasPagamento.find(f => f.id === d.formaPagamentoId);
     this.form.get('quantidadeParcelas')!.setValue(forma?.qtdeParcelas || d.parcelas?.length || 1);
@@ -278,7 +284,7 @@ export class DuplicataComponent implements OnInit {
   private clearToast() {
     if (this.toastTimeout) clearTimeout(this.toastTimeout);
   }
-
+  getFornecedorNome(id?: number): string { return this.fornecedores.find(f => f.id === id)?.nome || ''; }
   // ================= MODAL NOTA FISCAL =================
   abrirModalNota() {
     this.modalNotaAberto = true;
@@ -303,14 +309,35 @@ export class DuplicataComponent implements OnInit {
     );
   }
 
+  filtrarFornecedoresInput() {
+  const term = (this.form.get('fornecedorInput')!.value || '').toLowerCase();
+  this.fornecedoresFiltrados = this.fornecedoresFiltrados.filter(f =>
+    f.nome.toLowerCase().includes(term) || f.identificacao.includes(term)
+  );
+}
+
   selecionarFornecedor(f: FornecedorDTO) {
     this.fornecedorSelecionado = f;
     this.fornecedorInput = `${f.nome} - ${f.identificacao}`;
     this.fornecedoresFiltrados = [];
   }
 
+  selecionarFornecedorInput(f: FornecedorDTO) {
+    this.fornecedorSelecionado = f;
+    this.form.get('fornecedorInput')!.setValue(`${f.nome} - ${f.identificacao}`, { emitEvent: false });
+    this.form.get('fornecedorId')!.setValue(f.id); // <-- isso é crucial
+    this.fornecedoresFiltrados = [];
+  }
+
   validarFornecedor() {
     if (!this.fornecedorSelecionado || this.fornecedorInput !== `${this.fornecedorSelecionado.nome} - ${this.fornecedorSelecionado.identificacao}`) {
+      this.fornecedorSelecionado = undefined;
+    }
+  }
+
+  validarFornecedorInput() {
+    const valorInput = this.form.get('fornecedorInput')!.value;
+    if (!this.fornecedorSelecionado || valorInput !== `${this.fornecedorSelecionado.nome} - ${this.fornecedorSelecionado.identificacao}`) {
       this.fornecedorSelecionado = undefined;
     }
   }
