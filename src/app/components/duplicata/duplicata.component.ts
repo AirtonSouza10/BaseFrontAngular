@@ -8,6 +8,7 @@ import { NgxCurrencyDirective } from 'ngx-currency';
 import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.service';
 import { NotaFiscalDTO, NotaFiscalService } from '../../services/nota-fiscal.service';
 import { NotaFiscalComponent } from "../nota-fiscal/nota-fiscal.component";
+import { FilialDTO, FilialService } from '../../services/filial.service';
 
 @Component({
   selector: 'app-duplicata',
@@ -21,6 +22,7 @@ export class DuplicataComponent implements OnInit {
   duplicatas: DuplicataDTO[] = [];
   formasPagamento: FormaPagamentoDTO[] = [];
   fornecedores: FornecedorDTO[] = [];
+  filiais: FilialDTO[] = [];
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
   editando: boolean = false;
@@ -57,6 +59,7 @@ export class DuplicataComponent implements OnInit {
     private readonly formaPagamentoService: FormaPagamentoService,
     private readonly fornecedorService: FornecedorService,
     private readonly notaFiscalService: NotaFiscalService,
+    private readonly filialService: FilialService,
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -72,6 +75,7 @@ export class DuplicataComponent implements OnInit {
       dtPrimeiraParcela: [''],
       formaPagamentoId: [null],
       fornecedorId: [null, Validators.required],
+      filialId: [null, Validators.required],
       fornecedorInput: [''],
       intervaloDias: [30, [Validators.min(1)]],
       parcelas: this.fb.array([])
@@ -82,6 +86,7 @@ export class DuplicataComponent implements OnInit {
     this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
     this.listarDuplicatas();
     this.formaPagamentoService.listar().subscribe((res: any) => this.formasPagamento = res?.resposta || []);
+    this.filialService.listarFiliais().subscribe(res => this.filiais = res?.resposta || []);
 
     ['valor', 'desconto', 'multa', 'juros'].forEach(field => {
       this.form.get(field)!.valueChanges.subscribe(() => {
@@ -228,7 +233,8 @@ export class DuplicataComponent implements OnInit {
       valorTotal: d.valorTotal,
       dtPrimeiraParcela: d.parcelas?.[0]?.dtVencimento || '',
       formaPagamentoId: d.formaPagamentoId,
-      fornecedorId: [null, Validators.required],
+      filialId: d.filialId,
+      fornecedorId: d.fornecedorId,
       fornecedorInput: this.getFornecedorNome(d.fornecedorId),
     });
     const forma = this.formasPagamento.find(f => f.id === d.formaPagamentoId);

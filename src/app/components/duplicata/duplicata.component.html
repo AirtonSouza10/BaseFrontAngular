@@ -17,11 +17,11 @@
 
       <div class="form-row">
         <div class="form-group flex-2">
-          <label>Descrição</label>
+          <label>Descrição<span class="text-danger">*</span></label>
           <input type="text" formControlName="descricao" required />
         </div>
         <div class="form-group flex-1">
-          <label>Valor</label>
+          <label>Valor<span class="text-danger">*</span></label>
           <input type="text" formControlName="valor" step="0.01" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
@@ -37,15 +37,15 @@
           <input type="text" formControlName="juros" step="0.01" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
-          <label>Valor Total</label>
+          <label>Valor Total<span class="text-danger">*</span></label>
           <input type="text" formControlName="valorTotal" step="0.01" currencyMask [options]="currencyOptions" readonly />
         </div>
       </div>
 
       <div class="form-row">
         <!-- CAMPO FORNECEDOR COM AUTOCOMPLETE -->
-        <div class="form-group flex-1" style="position: relative;">
-          <label for="fornecedorInput">Fornecedor</label>
+        <div class="form-group flex-2" style="position: relative;">
+          <label for="fornecedorInput">Fornecedor<span class="text-danger">*</span></label>
           <input id="fornecedorInput"
                  type="text"
                  placeholder="Digite nome ou identificação"
@@ -61,19 +61,26 @@
             </li>
           </ul>
         </div>
+        <div class="form-group flex-2">
+          <label>Filial<span class="text-danger">*</span></label>
+          <select formControlName="filialId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let f of filiais" [ngValue]="f.id">{{ f.nome }}</option>
+          </select>
+        </div>
         <div class="form-group flex-1">
-          <label>Forma de Pagamento</label>
+          <label>Forma de PGTO <span class="text-danger">*</span></label>
           <select formControlName="formaPagamentoId" (change)="onFormaPagamentoChange($any($event.target).value)">
             <option [ngValue]="null">Selecione</option>
             <option *ngFor="let f of formasPagamento" [ngValue]="f.id">{{ f.descricao }}</option>
           </select>
         </div>
         <div class="form-group flex-1">
-          <label>Quantidade de Parcelas</label>
+          <label>QTDE de Parcelas</label>
           <input type="number" formControlName="quantidadeParcelas" readonly />
         </div>
         <div class="form-group flex-1">
-          <label>Data Primeira Parcela</label>
+          <label>Data 1º Parcela<span class="text-danger">*</span></label>
           <input type="date" formControlName="dtPrimeiraParcela" />
         </div>
         <div class="form-group flex-1">
@@ -210,6 +217,7 @@
   <table class="tabela-tipos" *ngIf="duplicatas.length">
     <thead>
       <tr>
+        <th>Filial</th>
         <th>Descrição</th>
         <th>Valor Total</th>
         <th>Fornecedor</th>
@@ -218,6 +226,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let d of duplicatas">
+        <td>{{ d.dsFilial }}</td>
         <td>{{ d.descricao }}</td>
         <td>{{ d.valorTotal | currency:'BRL' }}</td>
         <td>{{ d.dsFornecedor }}</td>

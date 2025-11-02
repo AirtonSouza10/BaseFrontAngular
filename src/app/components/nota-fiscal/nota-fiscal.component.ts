@@ -170,7 +170,8 @@ export class NotaFiscalComponent implements OnInit {
       this.parcelasPrevistas.push(this.fb.group({
         id: [null],
         dtVencimentoPrevisto: [vencimento.toISOString().substring(0, 10)],
-        valorPrevisto: [valorParcela]
+        valorPrevisto: [valorParcela],
+        numeroParcela: [`${i + 1}/${quantidadeParcelas}`]
       }));
     }
   }

@@ -22,7 +22,9 @@ export interface DuplicataDTO {
   dtCriacao?: string | Date;
   dtAtualizacao?: string | Date;
   fornecedorId: number;
+  filialId: number;
   dsFornecedor: string;
+  dsFilial: string;
   formaPagamentoId: number;
   parcelas?: ParcelaDTO[];
   notasFiscais?: NotaFiscalDTO[];

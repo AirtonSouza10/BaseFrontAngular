@@ -9,15 +9,15 @@
 
       <div class="form-row">
         <div class="form-group flex-1">
-          <label for="numero">Número</label>
+          <label for="numero">Número<span class="text-danger">*</span></label>
           <input id="numero" formControlName="numero" type="text" maxlength="20" required />
         </div>
         <div class="form-group flex-1">
-          <label for="serie">Série</label>
+          <label for="serie">Série<span class="text-danger">*</span></label>
           <input id="serie" formControlName="serie" maxlength="5" type="text" />
         </div>
         <div class="form-group flex-3">
-          <label for="chave">Chave</label>
+          <label for="chave">Chave<span class="text-danger">*</span></label>
           <input id="chave" formControlName="chave" type="text" maxlength="44" />
         </div>
       </div>
@@ -47,7 +47,7 @@
 
       <div class="form-row">
         <div class="form-group flex-1">
-          <label for="valorTotal">Valor Total</label>
+          <label for="valorTotal">Valor Total<span class="text-danger">*</span></label>
           <input id="valorTotal" formControlName="valorTotal" type="text" currencyMask [options]="currencyOptions" />
         </div>
         <div class="form-group flex-1">
@@ -70,7 +70,7 @@
           <input id="valorMulta" formControlName="valorMulta" type="text" currencyMask [options]="currencyOptions"/>
         </div>
         <div class="form-group flex-1">
-          <label for="dtCompra">Data de Compra</label>
+          <label for="dtCompra">Data de Compra<span class="text-danger">*</span></label>
           <input id="dtCompra" formControlName="dtCompra" type="date" />
         </div>
       </div>
@@ -78,7 +78,7 @@
       <div class="form-row">
         <!-- CAMPO FORNECEDOR COM AUTOCOMPLETE -->
         <div class="form-group flex-1" style="position: relative;">
-          <label for="fornecedorInput">Fornecedor</label>
+          <label for="fornecedorInput">Fornecedor<span class="text-danger">*</span></label>
           <input id="fornecedorInput"
                  type="text"
                  placeholder="Digite nome ou identificação"
@@ -96,14 +96,14 @@
         </div>
 
         <div class="form-group flex-1">
-          <label>Tipo Nota</label>
+          <label>Tipo Nota<span class="text-danger">*</span></label>
           <select formControlName="tipoNotaId">
             <option [ngValue]="null">Selecione</option>
             <option *ngFor="let t of tiposNota" [ngValue]="t.id">{{ t.descricao }}</option>
           </select>
         </div>
         <div class="form-group flex-1">
-          <label>Filial</label>
+          <label>Filial<span class="text-danger">*</span></label>
           <select formControlName="filialId">
             <option [ngValue]="null">Selecione</option>
             <option *ngFor="let f of filiais" [ngValue]="f.id">{{ f.nome }}</option>
