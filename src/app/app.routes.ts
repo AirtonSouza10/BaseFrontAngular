@@ -11,6 +11,7 @@ import { FornecedorComponent } from './components/fornecedor/fornecedor.componen
 import { NotaFiscalComponent } from './components/nota-fiscal/nota-fiscal.component';
 import { DuplicataComponent } from './components/duplicata/duplicata.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import { RelatorioDiaComponent } from './components/relatorio-dia/relatorio-dia.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,10 @@ export const routes: Routes = [
       {
         path: 'usuarios',
         component: UsuarioComponent
+      },
+      {
+        path: 'relatorio-dia',
+        component: RelatorioDiaComponent
       }
     ]
   }

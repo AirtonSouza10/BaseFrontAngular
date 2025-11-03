@@ -1,0 +1,60 @@
+/* Fundo branco para todo o relatório */
+.relatorio-dia {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+/* Títulos do relatório */
+.relatorio-dia h2 {
+  font-weight: bold;
+  background-color: #e0e0e0; /* cinza claro */
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+/* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Cabeçalho das tabelas */
+table thead th {
+  font-weight: bold;
+  background-color: #e0e0e0; /* cinza claro */
+  padding: 8px;
+  text-align: left;
+}
+
+/* Linhas da tabela */
+table tbody td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Tabela de vencidas em vermelho */
+.tabela-vencidas tbody tr td {
+  color: #d32f2f; /* vermelho */
+}
+
+/* Carregando e mensagens */
+.carregando {
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.mensagem-vazia {
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.erro-msg {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-top: 10px;
+}

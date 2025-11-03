@@ -30,6 +30,19 @@ export interface DuplicataDTO {
   notasFiscais?: NotaFiscalDTO[];
 }
 
+export interface DuplicataDiaResponseDTO {
+  id?: number;
+  filial?: string;
+  descricao?: string;
+  fornecedor?: string;
+  identificacaoFornecedor?: string;
+  valor?: number;
+  valorFormatado?: string;
+  situacao?: string;
+  dtVencimento?: string | Date;
+  dtVendimentoFormatada?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,6 +69,14 @@ export class DuplicataService {
 
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  obterContasPagarDia(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dia`);
+  }
+
+  obterContasPagarVencida(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/vencida`);
   }
 
   // ================= NOVOS ENDPOINTS PAGINADOS =================
@@ -92,5 +113,11 @@ export class DuplicataService {
       return this.http.get<any>(`${this.apiUrl}/descricao`, {
         params: { descricao }
       });
+    }
+
+    /** Gera relatório de fornecedores (PDF) */
+    gerarRelatorioDia(): Observable<Blob> {
+      const url = `${this.apiUrl}/relatorio-dia`;
+      return this.http.get(url, { responseType: 'blob' });
     }
 }
