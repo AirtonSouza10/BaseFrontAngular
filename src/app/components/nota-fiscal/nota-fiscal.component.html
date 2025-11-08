@@ -131,11 +131,11 @@
           </select>
         </div>
         <div class="form-group flex-1">
-          <label>Quantidade de Parcelas</label>
+          <label>Qtde Parcelas</label>
           <input type="number" min="1" formControlName="quantidadeParcelas" />
         </div>
         <div class="form-group flex-1">
-          <label>Data Primeira Parcela</label>
+          <label>Dt 1º Parcela</label>
           <input type="date" formControlName="dtPrimeiraParcela" />
         </div>
         <div class="form-group flex-1">
@@ -249,7 +249,6 @@
       <tr>
         <th>Número</th>
         <th>Série</th>
-        <th>Chave</th>
         <th>Fornecedor</th>
         <th>Filial</th>
         <th>Valor Total</th>
@@ -260,7 +259,6 @@
       <tr *ngFor="let n of notasFiscais">
         <td>{{ n.numero }}</td>
         <td>{{ n.serie }}</td>
-        <td>{{ n.chave }}</td>
         <td>{{ getFornecedorNome(n.fornecedorId) }}</td>
         <td>{{ getFilialNome(n.filialId) }}</td>
         <td>{{ n.valorTotal | currency:'BRL' }}</td>
