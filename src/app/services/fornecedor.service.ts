@@ -77,10 +77,4 @@ export class FornecedorService {
     const url = `${this.apiUrl}/paginados?page=${page}&size=${size}`;
     return this.http.get(url);
   }
-
-  /** Busca fornecedores por nome ou CNPJ com paginação */
-  buscarPorNomeOuCnpj(termo: string, page: number = 0, size: number = 10): Observable<any> {
-    const url = `${this.apiUrl}/buscar?termo=${encodeURIComponent(termo)}&page=${page}&size=${size}`;
-    return this.http.get(url);
-  }
 }

@@ -1,6 +1,6 @@
 import { TipoService } from './../../services/tipo.service';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FornecedorService, FornecedorDTO, TelefoneDTO, EnderecoDTO } from '../../services/fornecedor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,7 +10,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 @Component({
   selector: 'app-fornecedor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule,NgxMaskDirective,FormsModule,],
   providers: [provideNgxMask()],
   templateUrl: './fornecedor.component.html',
   styleUrls: ['./fornecedor.component.css']
@@ -18,6 +18,9 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 export class FornecedorComponent implements OnInit {
   form: FormGroup;
   fornecedores: FornecedorDTO[] = [];
+
+  buscaFornecedor: string = '';
+  fornecedoresFiltrados: FornecedorDTO[] = [];
 
   currentPage = 0;
   totalPages = 0;
@@ -282,5 +285,47 @@ editarFornecedor(fornecedor: FornecedorDTO): void {
       error: (err) => console.error('Erro ao gerar PDF', err)
     });
   }
+
+  // ================= AUTOCOMPLETE FORNECEDOR =================
+  abrirAutocomplete(): void {
+    this.fornecedoresFiltrados = this.fornecedores;
+  }
+
+  filtrarFornecedores(): void {
+    const val = this.buscaFornecedor.toLowerCase().trim();
+    if (!val) {
+      this.fornecedoresFiltrados = [];
+      return;
+    }
+
+    this.fornecedoresFiltrados = this.fornecedores.filter(f =>
+      f.nome.toLowerCase().includes(val) ||
+      f.identificacao?.toLowerCase().includes(val)
+    );
+  }
+
+  selecionarFornecedor(f: FornecedorDTO): void {
+    this.buscaFornecedor = `${f.nome}`;
+    this.fornecedoresFiltrados = [];
+    // Mostra apenas o fornecedor selecionado na tabela
+    this.fornecedores = [f];
+  }
+
+  validarFornecedor(): void {
+    const existe = this.fornecedores.some(f => f.nome === this.buscaFornecedor);
+    if (!existe) {
+      this.buscaFornecedor = '';
+      this.listarFornecedoresPaginado(); // volta lista completa se limpar o campo
+    }
+    this.fornecedoresFiltrados = [];
+  }
+
+  limparBusca(): void {
+    this.buscaFornecedor = '';
+    this.fornecedoresFiltrados = [];
+    this.currentPage = 0;
+    this.listarFornecedoresPaginado();
+  }
+
 
 }

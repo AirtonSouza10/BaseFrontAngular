@@ -147,6 +147,35 @@
   <div *ngIf="sucessoMsg" class="mensagem-sucesso">{{ sucessoMsg }}</div>
   <div *ngIf="erroMsg" class="mensagem-erro">{{ erroMsg }}</div>
 
+
+  <!-- ===================== BUSCA DE FORNECEDOR ===================== -->
+  <div class="form-row" style="margin-top: 20px;">
+    <div class="form-group flex-2" style="position: relative;">
+      <label for="fornecedorInput">Buscar Fornecedor</label>
+      <input id="fornecedorInput"
+            type="text"
+            placeholder="Digite nome ou identificação"
+            [(ngModel)]="buscaFornecedor"
+            name="buscaFornecedor"
+            (focus)="abrirAutocomplete()"
+            (input)="filtrarFornecedores()"
+            (blur)="validarFornecedor()"
+            autocomplete="off" />
+
+      <!-- Lista de sugestões -->
+      <ul *ngIf="fornecedoresFiltrados.length" class="autocomplete-list">
+        <li *ngFor="let f of fornecedoresFiltrados" (mousedown)="selecionarFornecedor(f)">
+          {{ f.nome }} - {{ f.identificacao }}
+        </li>
+      </ul>
+    </div>
+    <!-- Botão Limpar -->
+    <div class="flex-button">
+      <button type="button" class="btn-remove" (click)="limparBusca()">Limpar</button>
+    </div>
+  </div>
+
+
   <!-- ===================== TABELA ===================== -->
   <table class="tabela-tipos" *ngIf="fornecedores.length">
     <thead>
