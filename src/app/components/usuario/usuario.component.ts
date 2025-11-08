@@ -29,7 +29,7 @@ export class UsuarioComponent implements OnInit {
   form!: FormGroup;
   senhaForm!: FormGroup;
   usuarios = new MatTableDataSource<UsuarioDTO>();
-  displayedColumns = ['nome', 'identificacao', 'email', 'telefone', 'ativo', 'acoes'];
+  displayedColumns = ['nome', 'identificacao', 'ativo', 'acoes'];
   sucessoMsg: string = '';
   erroMsg: string = '';
   editandoUsuarioId?: number;
