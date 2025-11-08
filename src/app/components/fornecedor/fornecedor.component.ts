@@ -18,6 +18,11 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 export class FornecedorComponent implements OnInit {
   form: FormGroup;
   fornecedores: FornecedorDTO[] = [];
+
+  currentPage = 0;
+  totalPages = 0;
+  pageSize = 10;
+
   tiposTelefone: any[] = [];
   tiposEndereco: any[] = [];
   sucessoMsg: string | null = null;
@@ -46,7 +51,7 @@ export class FornecedorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listarFornecedores();
+    this.listarFornecedoresPaginado();
     this.tipoService.listarTiposTelefone().subscribe(res => this.tiposTelefone = res.resposta || []);
     this.tipoService.listarTiposEndereco().subscribe(res => this.tiposEndereco = res.resposta || []);
 
@@ -102,7 +107,7 @@ export class FornecedorComponent implements OnInit {
         next: () => {
           this.showSuccess('Fornecedor atualizado com sucesso!');
           this.cancelarEdicao();
-          this.listarFornecedores();
+          this.listarFornecedoresPaginado();
         },
         error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao atualizar fornecedor')
       });
@@ -112,7 +117,7 @@ export class FornecedorComponent implements OnInit {
         next: () => {
           this.showSuccess('Fornecedor salvo com sucesso!');
           this.cancelarEdicao();
-          this.listarFornecedores();
+          this.listarFornecedoresPaginado();
         },
         error: err => this.showError(err?.error?.msgErro?.[0] || 'Erro ao salvar fornecedor')
       });
@@ -122,6 +127,36 @@ export class FornecedorComponent implements OnInit {
   // ================= LISTAR =================
   listarFornecedores(): void {
     this.fornecedorService.listar().subscribe(res => this.fornecedores = res.resposta || res || []);
+  }
+
+  listarFornecedoresPaginado(): void {
+    this.fornecedorService.listarPaginados(this.currentPage, this.pageSize)
+      .subscribe({
+        next: (res) => {
+          const pagina = res.resposta;
+          this.fornecedores = pagina.content;
+          this.totalPages = pagina.totalPages;
+          this.currentPage = pagina.number;
+        },
+        error: (err) => console.error('Erro ao listar fornecedores:', err)
+      });
+  }
+
+  mudarPagina(pagina: number): void {
+    if (pagina < 0 || pagina >= this.totalPages) return;
+    this.currentPage = pagina;
+    this.listarFornecedoresPaginado();
+  }
+
+  getPaginasVisiveis(): number[] {
+    const paginas: number[] = [];
+    const inicio = Math.max(0, this.currentPage - 2);
+    const fim = Math.min(this.totalPages - 1, this.currentPage + 2);
+
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+    return paginas;
   }
 
   // ================= EDITAR =================

@@ -31,7 +31,7 @@ export class FilialComponent implements OnInit {
 
   form: FormGroup;
   filiaisData = new MatTableDataSource<FilialDTO>();
-  displayedColumns: string[] = ['nome', 'identificacao', 'email', 'ativo', 'acoes']; // removido tipoIdentificacao
+  displayedColumns: string[] = ['nome', 'identificacao', 'ativo', 'acoes']; // removido tipoIdentificacao
   mensagemSucesso: string = '';
   mensagemErro: string = '';
   editandoId: number | null = null;

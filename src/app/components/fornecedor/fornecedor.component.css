@@ -197,3 +197,41 @@ button {
   cursor: not-allowed; /* muda o cursor para indicar desabilitado */
   opacity: 0.7; /* opcional, deixa visual mais “desativado” */
 }
+
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;          /* evita scroll horizontal */
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.paginacao button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  cursor: pointer;
+  border-radius: 4px;
+  min-width: 32px;
+}
+
+.paginacao button:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.paginacao button.active {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.paginacao button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.paginacao span {
+  padding: 0 4px;
+}
+
