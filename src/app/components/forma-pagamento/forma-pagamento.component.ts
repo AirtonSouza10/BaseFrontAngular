@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormaPagamentoService, FormaPagamentoDTO } from '../../services/forma-pagamento.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-forma-pagamento',
@@ -23,7 +24,9 @@ import { MatTableDataSource } from '@angular/material/table';
     MatTableModule,
     MatSnackBarModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatPaginator,
+    MatPaginatorModule,
   ],
   templateUrl: './forma-pagamento.component.html',
   styleUrls: ['./forma-pagamento.component.css']
@@ -32,6 +35,11 @@ export class FormaPagamentoComponent implements OnInit {
   form: FormGroup;
   formasPagamento = new MatTableDataSource<FormaPagamentoDTO>();
   displayedColumns: string[] = ['descricao', 'qtdeParcelas', 'acoes'];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  totalItems: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
 
   mensagemSucesso: string = '';
   mensagemErro: string = '';
@@ -51,7 +59,7 @@ export class FormaPagamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listarFormasPagamento();
+    this.listarFormasPagamentoPaginado();
   }
 
   onSubmit(): void {
@@ -66,7 +74,7 @@ export class FormaPagamentoComponent implements OnInit {
         this.mensagemErro = '';
         this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
         this.cancelEdit();
-        this.listarFormasPagamento();
+        this.listarFormasPagamentoPaginado();
       },
       error: (err) => {
         const msg = err?.error?.resposta?.msgErro?.[0] || 'Erro ao salvar';
@@ -86,27 +94,46 @@ export class FormaPagamentoComponent implements OnInit {
     });
   }
 
-excluirFormaPagamento(id: number, descricao: string): void {
-  if (confirm(`Tem certeza que deseja excluir a forma de pagamento "${descricao}"?`)) {
-    this.formaPagamentoService.excluir(id).subscribe({
+  private listarFormasPagamentoPaginado(page: number = 0, size: number = 10): void {
+    this.formaPagamentoService.listarPaginados(page, size).subscribe({
       next: (res: any) => {
-        const msg = res?.resposta?.msgSucesso?.[0] || 'Excluído com sucesso!';
-        this.mensagemSucesso = msg;
-        this.mensagemErro = '';
-
-        this.listarFormasPagamento();
-
-        this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
+        const pagina = res?.resposta;
+        this.formasPagamento.data = pagina?.content || [];
+        this.totalItems = pagina?.totalElements || 0;
+        this.pageSize = pagina?.size || 10;
+        this.currentPage = pagina?.number || 0;
       },
       error: (err) => {
-        const msg = err?.error?.resposta?.msgErro?.[0] || 'Não foi possível excluir.';
-        this.mensagemErro = msg;
-        this.mensagemSucesso = '';
-        this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
+        console.error('Erro ao listar formas de pagamento paginadas', err);
       }
     });
   }
-}
+
+  onPageChange(event: any): void {
+    this.listarFormasPagamentoPaginado(event.pageIndex, event.pageSize);
+  }
+
+  excluirFormaPagamento(id: number, descricao: string): void {
+    if (confirm(`Tem certeza que deseja excluir a forma de pagamento "${descricao}"?`)) {
+      this.formaPagamentoService.excluir(id).subscribe({
+        next: (res: any) => {
+          const msg = res?.resposta?.msgSucesso?.[0] || 'Excluído com sucesso!';
+          this.mensagemSucesso = msg;
+          this.mensagemErro = '';
+
+          this.listarFormasPagamentoPaginado();
+
+          this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['sucesso-snackbar'] });
+        },
+        error: (err) => {
+          const msg = err?.error?.resposta?.msgErro?.[0] || 'Não foi possível excluir.';
+          this.mensagemErro = msg;
+          this.mensagemSucesso = '';
+          this.snackBar.open(msg, 'Fechar', { duration: 4000, panelClass: ['erro-snackbar'] });
+        }
+      });
+    }
+  }
 
   editarFormaPagamento(id: number): void {
     const forma = this.formasPagamento.data.find(f => f.id === id);

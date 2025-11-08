@@ -41,4 +41,9 @@ export class FormaPagamentoService {
   excluir(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  listarPaginados(page: number = 0, size: number = 10): Observable<any> {
+    const url = `${this.apiUrl}/paginados?page=${page}&size=${size}`;
+    return this.http.get(url);
+  }
 }
