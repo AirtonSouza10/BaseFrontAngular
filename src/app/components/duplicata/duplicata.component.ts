@@ -220,6 +220,17 @@ export class DuplicataComponent implements OnInit {
     this.listarDuplicatas();
   }
 
+  getPaginasVisiveis(): number[] {
+    const paginas: number[] = [];
+    const inicio = Math.max(0, this.currentPage - 2);
+    const fim = Math.min(this.totalPages - 1, this.currentPage + 2);
+
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+    return paginas;
+  }
+
   editarDuplicata(d: DuplicataDTO): void {
     this.editando = true;
     this.duplicataIdEdit = d.id;

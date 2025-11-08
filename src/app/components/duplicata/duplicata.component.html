@@ -240,12 +240,33 @@
     </tbody>
   </table>
 
-  <!-- CONTROLES DE PAGINAÇÃO -->
-  <div class="paginacao" *ngIf="totalPages > 1">
-    <button type="button" (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">« Anterior</button>
-    <ng-container *ngFor="let i of [].constructor(totalPages); let idx = index">
-      <button type="button" [class.active]="idx === currentPage" (click)="mudarPagina(idx)">{{ idx + 1 }}</button>
+<!-- ===================== PAGINAÇÃO ===================== -->
+<div class="paginacao" *ngIf="totalPages > 1">
+    <button (click)="mudarPagina(currentPage - 1)" [disabled]="currentPage === 0">
+      « Anterior
+    </button>
+
+    <!-- Primeira página -->
+    <button *ngIf="currentPage > 2" (click)="mudarPagina(0)">1</button>
+    <span *ngIf="currentPage > 3">...</span>
+
+    <!-- Páginas próximas -->
+    <ng-container *ngFor="let p of getPaginasVisiveis()">
+      <button [class.active]="p === currentPage" (click)="mudarPagina(p)">
+        {{ p + 1 }}
+      </button>
     </ng-container>
-    <button type="button" (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">Próxima »</button>
+
+    <span *ngIf="currentPage < totalPages - 4">...</span>
+
+    <!-- Última página -->
+    <button *ngIf="currentPage < totalPages - 2" (click)="mudarPagina(totalPages - 1)">
+      {{ totalPages }}
+    </button>
+
+    <button (click)="mudarPagina(currentPage + 1)" [disabled]="currentPage + 1 >= totalPages">
+      Próxima »
+    </button>
   </div>
+
 </div>

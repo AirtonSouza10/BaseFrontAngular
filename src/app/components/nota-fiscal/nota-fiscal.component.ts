@@ -262,6 +262,17 @@ export class NotaFiscalComponent implements OnInit {
     this.listarNotasFiscais();
   }
 
+  getPaginasVisiveis(): number[] {
+    const paginas: number[] = [];
+    const inicio = Math.max(0, this.currentPage - 2);
+    const fim = Math.min(this.totalPages - 1, this.currentPage + 2);
+
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+    return paginas;
+  }
+
   excluirNotaFiscal(id?: number): void {
     if (!id) return;
     if (!confirm('Tem certeza que deseja excluir esta nota fiscal?')) return;
