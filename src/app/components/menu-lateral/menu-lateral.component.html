@@ -65,7 +65,8 @@
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'relatorios' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'relatorios' && !isSidebarClosed" class="submenu">
-            <li><a [routerLink]="['relatorio-dia']" routerLinkActive="active">Relatório dia</a></li>
+            <li><a [routerLink]="['relatorio-dia']" routerLinkActive="active">Diário</a></li>
+            <li><a [routerLink]="['relatorio-filial']" routerLinkActive="active">Contas a Pagar - Filial</a></li>
             <li><a routerLink="/relatorios">Relatórios</a></li>
           </ul>
         </li>

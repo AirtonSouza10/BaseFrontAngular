@@ -12,6 +12,7 @@ import { NotaFiscalComponent } from './components/nota-fiscal/nota-fiscal.compon
 import { DuplicataComponent } from './components/duplicata/duplicata.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { RelatorioDiaComponent } from './components/relatorio-dia/relatorio-dia.component';
+import { RelatorioFilialComponent } from './components/relatorio-filial/relatorio-filial.component';
 
 export const routes: Routes = [
   {
@@ -67,6 +68,10 @@ export const routes: Routes = [
       {
         path: 'relatorio-dia',
         component: RelatorioDiaComponent
+      },
+      {
+        path: 'relatorio-filial',
+        component: RelatorioFilialComponent
       }
     ]
   }

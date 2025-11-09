@@ -120,4 +120,19 @@ export class DuplicataService {
       const url = `${this.apiUrl}/relatorio-dia`;
       return this.http.get(url, { responseType: 'blob' });
     }
+
+      /**
+   * Obtém o relatório de contas a pagar em aberto por filial (JSON)
+   */
+    obterRelatorioContasEmAbertoPorFilial(idFilial: number): Observable<any> {
+      const url = `${this.apiUrl}/relatorio-aberto-filial/${idFilial}`;
+      return this.http.get<any>(url);
+    }
+    /**
+     * Gera o relatório de contas a pagar em aberto por filial (PDF)
+     */
+    gerarRelatorioContasEmAbertoPorFilialPDF(idFilial: number): Observable<Blob> {
+      const url = `${this.apiUrl}/relatorio-contas-pagar-filial/${idFilial}`;
+      return this.http.get(url, { responseType: 'blob' });
+    }
 }
