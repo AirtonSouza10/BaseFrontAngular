@@ -20,15 +20,12 @@
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'cadastro' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'cadastro' && !isSidebarClosed" class="submenu">
-            <li><a [routerLink]="['duplicata']" routerLinkActive="active">Conta a Pagar</a></li>
             <li><a [routerLink]="['filial']" routerLinkActive="active">Filial</a></li>
             <li><a [routerLink]="['fornecedor']" routerLinkActive="active">Fornecedor</a></li>
             <li><a [routerLink]="['forma-pagamento']" routerLinkActive="active">Formas de Pagamento</a></li>
-            <li><a [routerLink]="['nota-fiscal']" routerLinkActive="active">Nota Fiscal</a></li>
             <li><a [routerLink]="['situacao']" routerLinkActive="active">Status Conta</a></li>
             <li><a [routerLink]="['tipo-pagamento']" routerLinkActive="active">Tipo de Pagamento</a></li>
             <li><a [routerLink]="['tipo-nota']" routerLinkActive="active">Tipo de Nota</a></li>
-            <li><a [routerLink]="['usuarios']" routerLinkActive="active">Usuários</a></li>
           </ul>
         </li>
 
@@ -40,8 +37,7 @@
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'financeiro' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'financeiro' && !isSidebarClosed" class="submenu">
-            <li><a routerLink="/contas-receber">Contas a Receber</a></li>
-            <li><a routerLink="/contas-pagar">Contas a Pagar</a></li>
+            <li><a [routerLink]="['duplicata']" routerLinkActive="active">Conta a Pagar</a></li>
           </ul>
         </li>
 
@@ -53,7 +49,7 @@
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'documentos' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'documentos' && !isSidebarClosed" class="submenu">
-            <li><a routerLink="/notas-fiscais">Nota Fiscal</a></li>
+            <li><a [routerLink]="['nota-fiscal']" routerLinkActive="active">Nota Fiscal</a></li>
           </ul>
         </li>
 
@@ -79,7 +75,7 @@
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'seguranca' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'seguranca' && !isSidebarClosed" class="submenu">
-            <li><a routerLink="/recuperar-senha">Recuperação de Senha</a></li>
+            <li><a [routerLink]="['usuarios']" routerLinkActive="active">Usuários</a></li>
           </ul>
         </li>
       </ul>
