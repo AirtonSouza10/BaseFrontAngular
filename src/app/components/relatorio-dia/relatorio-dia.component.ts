@@ -63,6 +63,8 @@ export class RelatorioDiaComponent implements OnInit {
 
   fecharBaixa(): void {
     this.duplicataSelecionada = null;
+    this.carregarDuplicatasDia();
+    this.carregarDuplicatasVencidas();
   }
 
     // ================= RELATORIO FORNECEDORES  =================
