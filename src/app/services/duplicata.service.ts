@@ -41,6 +41,15 @@ export interface DuplicataDiaResponseDTO {
   situacao?: string;
   dtVencimento?: string | Date;
   dtVendimentoFormatada?: string;
+  prevista?: boolean;
+}
+
+export interface BaixaParcelaRequestDTO {
+  id?: number;
+  dtPagamento: string | Date;
+  valorPago: number;
+  observacao?: string;
+  tipoPagamentoId?: number;
 }
 
 @Injectable({
@@ -134,5 +143,24 @@ export class DuplicataService {
     gerarRelatorioContasEmAbertoPorFilialPDF(idFilial: number): Observable<Blob> {
       const url = `${this.apiUrl}/relatorio-contas-pagar-filial/${idFilial}`;
       return this.http.get(url, { responseType: 'blob' });
+    }
+
+    /**
+     * Realiza a baixa (pagamento) de uma parcela
+     * @param id ID da parcela
+     * @param dto dados da baixa (pagamento)
+     */
+    baixarParcela(id: number, dto: BaixaParcelaRequestDTO): Observable<any> {
+      const url = `${this.apiUrl}/baixa`;
+      return this.http.put<any>(url, dto);
+    }
+
+    /**
+     * Busca uma parcela pelo ID
+     * @param id ID da parcela
+     */
+    buscarParcelaPorId(id: number): Observable<any> {
+      const url = `${this.apiUrl}/buscar-parcela/${id}`;
+      return this.http.get<any>(url);
     }
 }

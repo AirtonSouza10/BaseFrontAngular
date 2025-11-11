@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { DuplicataService, DuplicataDiaResponseDTO } from '../../services/duplicata.service';
 import { NgForOf } from '@angular/common';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { BaixarParcelaComponent } from "../baixar-parcela/baixar-parcela.component";
 
 @Component({
   selector: 'app-relatorio-dia',
   standalone: true,
-  imports: [CommonModule, NgForOf, DecimalPipe, DatePipe],
+  imports: [CommonModule, NgForOf, DecimalPipe, DatePipe, BaixarParcelaComponent],
   templateUrl: './relatorio-dia.component.html',
   styleUrls: ['./relatorio-dia.component.css']
 })
@@ -17,8 +18,9 @@ export class RelatorioDiaComponent implements OnInit {
   carregandoDia = true;
   carregandoVencidas = true;
   erroMsg: string | null = null;
+  duplicataSelecionada: any = null;
 
-  constructor(private duplicataService: DuplicataService) {}
+  constructor(private readonly duplicataService: DuplicataService) {}
 
   ngOnInit(): void {
     this.carregarDuplicatasDia();
@@ -53,6 +55,14 @@ export class RelatorioDiaComponent implements OnInit {
         this.carregandoVencidas = false;
       }
     });
+  }
+
+  abrirBaixa(duplicata: any): void {
+    this.duplicataSelecionada = duplicata;
+  }
+
+  fecharBaixa(): void {
+    this.duplicataSelecionada = null;
   }
 
     // ================= RELATORIO FORNECEDORES  =================

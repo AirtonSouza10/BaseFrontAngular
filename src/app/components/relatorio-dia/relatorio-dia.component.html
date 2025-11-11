@@ -18,6 +18,7 @@
         <th>Valor</th>
         <th>Vencimento</th>
         <th>Situação</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -28,6 +29,15 @@
         <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
         <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
         <td>{{ d.situacao }}</td>
+                <td>
+          <!-- Só mostra o botão se NÃO for prevista -->
+          <button *ngIf="!d.prevista"
+                  type="button"
+                  class="btn-baixar"
+                  (click)="abrirBaixa(d)">
+            Baixar
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -46,6 +56,7 @@
         <th>Valor</th>
         <th>Vencimento</th>
         <th>Situação</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -56,11 +67,27 @@
         <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
         <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
         <td>{{ d.situacao }}</td>
+        <td>
+          <button *ngIf="!d.prevista"
+                  type="button"
+                  class="btn-baixar"
+                  (click)="abrirBaixa(d)">
+            Baixar
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
   <div *ngIf="!carregandoVencidas && duplicatasVencidas.length === 0" class="mensagem-vazia">
     Nenhuma duplicata vencida.
+  </div>
+
+  <div class="modal-backdrop" *ngIf="duplicataSelecionada">
+    <div class="modal">
+      <h3>Baixar Parcela - {{ duplicataSelecionada.descricao }}</h3>
+      <app-baixar-parcela [duplicataSelecionada]="duplicataSelecionada"></app-baixar-parcela>
+      <button type="button" (click)="fecharBaixa()">Fechar</button>
+    </div>
   </div>
 
   <div *ngIf="erroMsg" class="erro-msg">{{ erroMsg }}</div>

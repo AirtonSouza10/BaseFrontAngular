@@ -1,0 +1,34 @@
+<div class="container">
+  <h2>Baixar Parcela</h2>
+
+  <form [formGroup]="form" (ngSubmit)="baixarParcela()">
+    <input type="hidden" formControlName="id">
+    <div class="form-group">
+      <label for="dtPagamento">Data de Pagamento *</label>
+      <input id="dtPagamento" type="date" formControlName="dtPagamento">
+    </div>
+
+    <div class="form-group">
+      <label for="valorPago">Valor Pago (R$) *</label>
+      <input id="valorPago" type="number" step="0.01" formControlName="valorPago" placeholder="0.00">
+    </div>
+
+    <div class="form-group">
+      <label for="observacao">Observação</label>
+      <textarea id="observacao" rows="2" formControlName="observacao" placeholder="Opcional"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoPagamentoId">Tipo de Pagamento</label>
+      <select id="tipoPagamentoId" formControlName="tipoPagamentoId">
+        <option value="">Selecione...</option>
+        <option *ngFor="let tipo of tiposPagamento" [value]="tipo.id">{{ tipo.descricao }}</option>
+      </select>
+    </div>
+
+    <button type="submit">Baixar Parcela</button>
+  </form>
+
+  <div *ngIf="mensagemSucesso" class="mensagem sucesso">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="mensagem erro">{{ mensagemErro }}</div>
+</div>
