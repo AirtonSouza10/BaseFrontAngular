@@ -15,7 +15,7 @@
         <!-- Cadastro -->
         <li>
           <button class="menu-header" type="button" (click)="toggleMenu('cadastro')">
-            <span class="icon">📝</span>
+            <span class="material-icons icon">library_add</span>
             <span class="label" *ngIf="!isSidebarClosed">Cadastro</span>
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'cadastro' ? '▼' : '▶' }}</span>
           </button>
@@ -32,7 +32,7 @@
         <!-- Financeiro -->
         <li>
           <button class="menu-header" type="button" (click)="toggleMenu('financeiro')">
-            <span class="icon">💰</span>
+            <span class="material-icons icon">payments</span>
             <span class="label" *ngIf="!isSidebarClosed">Financeiro</span>
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'financeiro' ? '▼' : '▶' }}</span>
           </button>
@@ -44,7 +44,7 @@
         <!-- Documentos -->
         <li>
           <button class="menu-header" type="button" (click)="toggleMenu('documentos')">
-            <span class="icon">🧾</span>
+            <span class="material-icons icon">receipt_long</span>
             <span class="label" *ngIf="!isSidebarClosed">Documentos</span>
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'documentos' ? '▼' : '▶' }}</span>
           </button>
@@ -56,21 +56,34 @@
         <!-- Relatórios -->
         <li>
           <button class="menu-header" type="button" (click)="toggleMenu('relatorios')">
-            <span class="icon">📊</span>
+            <span class="material-icons icon">analytics</span>
             <span class="label" *ngIf="!isSidebarClosed">Relatórios</span>
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'relatorios' ? '▼' : '▶' }}</span>
           </button>
           <ul *ngIf="expandedMenu === 'relatorios' && !isSidebarClosed" class="submenu">
             <li><a [routerLink]="['relatorio-dia']" routerLinkActive="active">Diário</a></li>
             <li><a [routerLink]="['relatorio-filial']" routerLinkActive="active">Contas a Pagar - Filial</a></li>
-            <li><a routerLink="/relatorios">Relatórios</a></li>
+            <li><a [routerLink]="['relatorio-filial']" routerLinkActive="active">Período</a></li>
+            <li><a [routerLink]="['relatorio-filial']" routerLinkActive="active">Personalizado</a></li>
+          </ul>
+        </li>
+
+        <!-- Consultas -->
+        <li>
+          <button class="menu-header" type="button" (click)="toggleMenu('consultas')">
+            <span class="material-icons icon">search</span>
+            <span class="label" *ngIf="!isSidebarClosed">Consultas</span>
+            <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'consultas' ? '▼' : '▶' }}</span>
+          </button>
+          <ul *ngIf="expandedMenu === 'consultas' && !isSidebarClosed" class="submenu">
+            <li><a [routerLink]="['relatorio-dia']" routerLinkActive="active">Consulta Parcela</a></li>
           </ul>
         </li>
 
         <!-- Segurança -->
         <li>
           <button class="menu-header" type="button" (click)="toggleMenu('seguranca')">
-            <span class="icon">🔑</span>
+            <span class="material-icons icon">admin_panel_settings</span>
             <span class="label" *ngIf="!isSidebarClosed">Segurança</span>
             <span class="arrow" *ngIf="!isSidebarClosed">{{ expandedMenu === 'seguranca' ? '▼' : '▶' }}</span>
           </button>
@@ -84,7 +97,7 @@
     <!-- Logout -->
     <div class="logout-container">
       <a (click)="logout()">
-        <span class="icon">🚪</span>
+        <span class="material-icons icon">logout</span>
         <span class="label" *ngIf="!isSidebarClosed">Sair</span>
       </a>
     </div>
