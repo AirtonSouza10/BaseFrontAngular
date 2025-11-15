@@ -97,4 +97,14 @@ export class NotaFiscalService {
       }
     });
   }
+
+  listarPorFilialEPeriodo(idFilial: number | null, dataInicial: string, dataFinal: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/por-filial-periodo`, {
+      params: {
+        ...(idFilial !== null ? { idFilial: idFilial.toString() } : {}),
+        dataInicial,
+        dataFinal
+      }
+    });
+  }
 }

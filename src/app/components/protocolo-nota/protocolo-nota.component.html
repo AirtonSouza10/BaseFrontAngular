@@ -1,0 +1,61 @@
+<div class="container-relatorio">
+  <!-- Cabeçalho -->
+  <div class="header-relatorio">
+    <h2>Protocolos de Notas Fiscais por Filial e Período</h2>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+
+    <label>Filial:</label>
+    <select [(ngModel)]="filialSelecionada">
+      <option [ngValue]="null">-- Escolha uma filial --</option>
+      <option *ngFor="let f of filiais" [ngValue]="f.id">
+        {{ f.nome }} - {{ f.identificacao }}
+      </option>
+    </select>
+
+    <label>Período:</label>
+    <input type="date" [(ngModel)]="dataInicial">
+    <input type="date" [(ngModel)]="dataFinal">
+
+    <button
+      class="btn"
+      (click)="gerarRelatorio()"
+      [disabled]="!dataInicial || !dataFinal || carregando"
+    >
+      {{ carregando ? 'Carregando...' : 'Gerar' }}
+    </button>
+
+    <button class="btn-relatorio" (click)="gerarRelatorioPDF()">
+      <i class="fa-regular fa-file-pdf"></i> PDF
+    </button>
+  </div>
+
+  <!-- Tabela -->
+  <div *ngIf="notas.length > 0" class="tabela-container">
+    <table class="tabela-relatorio">
+      <thead>
+        <tr>
+          <th>Fornecedor</th>
+          <th>Nota Fiscal</th>
+          <th>Valor</th>
+          <th>Emissão</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let n of notas">
+          <td>{{ n.fornecedorNome }}</td>
+          <td>{{ n.numero }}</td>
+          <td>{{ n.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td>{{ n.dtCompra | date:'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Sem dados -->
+  <div *ngIf="notas && notas.length === 0" class="sem-dados">
+    Nenhuma nota encontrada no período selecionado.
+  </div>
+</div>
