@@ -41,28 +41,46 @@ export class ProtocoloNotaComponent implements OnInit {
   }
 
   gerarRelatorio(): void {
-    this.carregando = true;
+      this.carregando = true;
+
+      this.notaFiscalService
+        .listarPorFilialEPeriodo(this.filialSelecionada, this.dataInicial, this.dataFinal)
+        .subscribe({
+          next: (res) => {
+
+            this.notas = res?.resposta?.notaFiscal ?? [];
+
+            this.carregando = false;
+          },
+          error: (err) => {
+            console.error("Erro ao buscar relatório:", err);
+            this.notas = [];
+            this.carregando = false;
+          }
+        });
+    }
+
+
+  gerarRelatorioPDF(): void {
+    if (!this.dataInicial || !this.dataFinal) {
+      alert('Selecione o período.');
+      return;
+    }
 
     this.notaFiscalService
-      .listarPorFilialEPeriodo(this.filialSelecionada, this.dataInicial, this.dataFinal)
+      .gerarRelatorioPDF(this.filialSelecionada, this.dataInicial, this.dataFinal)
       .subscribe({
-        next: (res) => {
+        next: (pdfBlob) => {
+          const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
 
-          this.notas = res?.resposta?.notaFiscal ?? [];
-
-          this.carregando = false;
+          window.open(url, '_blank');
         },
         error: (err) => {
-          console.error("Erro ao buscar relatório:", err);
-          this.notas = [];
-          this.carregando = false;
+          console.error('Erro ao gerar PDF:', err);
+          alert('Erro ao gerar relatório PDF.');
         }
       });
   }
 
-
-  gerarRelatorioPDF(): void {
-    // Ainda sem implementação
-    alert('Funcionalidade de PDF ainda não implementada.');
-  }
 }

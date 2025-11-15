@@ -107,4 +107,15 @@ export class NotaFiscalService {
       }
     });
   }
+
+  gerarRelatorioPDF(idFilial: number | null, dataInicial: string, dataFinal: string): Observable<Blob> {
+  return this.http.get(`${this.apiUrl}/relatorio-notas-filial-periodo`, {
+    params: {
+      ...(idFilial !== null ? { idFilial: idFilial.toString() } : {}),
+      dataInicial,
+      dataFinal
+    },
+    responseType: 'blob'
+  });
+}
 }
