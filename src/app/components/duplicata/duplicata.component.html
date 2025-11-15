@@ -40,6 +40,15 @@
           <label>Valor Total<span class="text-danger">*</span></label>
           <input type="text" formControlName="valorTotal" step="0.01" currencyMask [options]="currencyOptions" readonly />
         </div>
+        <div class="form-group flex-1">
+          <label>Tipo<span class="text-danger">*</span></label>
+          <select formControlName="tipoId">
+            <option [ngValue]="null">Selecione</option>
+            <option *ngFor="let t of tipos" [ngValue]="t.id">
+              {{ t.descricao }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div class="form-row">

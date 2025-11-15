@@ -9,6 +9,7 @@ import { FornecedorService, FornecedorDTO } from '../../services/fornecedor.serv
 import { NotaFiscalDTO, NotaFiscalService } from '../../services/nota-fiscal.service';
 import { NotaFiscalComponent } from "../nota-fiscal/nota-fiscal.component";
 import { FilialDTO, FilialService } from '../../services/filial.service';
+import { TipoDuplicataService } from '../../services/tipo-duplicata.service';
 
 @Component({
   selector: 'app-duplicata',
@@ -23,6 +24,7 @@ export class DuplicataComponent implements OnInit {
   formasPagamento: FormaPagamentoDTO[] = [];
   fornecedores: FornecedorDTO[] = [];
   filiais: FilialDTO[] = [];
+  tipos: any[] = [];
   sucessoMsg: string | null = null;
   erroMsg: string | null = null;
   editando: boolean = false;
@@ -60,6 +62,7 @@ export class DuplicataComponent implements OnInit {
     private readonly fornecedorService: FornecedorService,
     private readonly notaFiscalService: NotaFiscalService,
     private readonly filialService: FilialService,
+    private readonly tipoDuplicataService: TipoDuplicataService,
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -78,6 +81,7 @@ export class DuplicataComponent implements OnInit {
       filialId: [null, Validators.required],
       fornecedorInput: [''],
       intervaloDias: [30, [Validators.min(1)]],
+      tipoId: [null, Validators.required],
       parcelas: this.fb.array([])
     });
   }
@@ -85,6 +89,7 @@ export class DuplicataComponent implements OnInit {
   ngOnInit(): void {
     this.fornecedorService.listar().subscribe(res => this.fornecedores = res?.resposta || []);
     this.listarDuplicatas();
+    this.carregarTipos();
     this.formaPagamentoService.listar().subscribe((res: any) => this.formasPagamento = res?.resposta || []);
     this.filialService.listarFiliais().subscribe(res => this.filiais = res?.resposta || []);
 
@@ -98,6 +103,17 @@ export class DuplicataComponent implements OnInit {
     this.form.get('dtPrimeiraParcela')!.valueChanges.subscribe(() => this.gerarParcelas());
     this.form.get('formaPagamentoId')!.valueChanges.subscribe((formaId: number | null) => {
       if (formaId != null) this.onFormaPagamentoChange(formaId);
+    });
+  }
+
+  carregarTipos(): void {
+    this.tipoDuplicataService.listarTipos().subscribe({
+      next: (res) => {
+        this.tipos = res.resposta ?? [];
+      },
+      error: (err) => {
+        console.error('Erro ao carregar tipos:', err);
+      }
     });
   }
 
@@ -247,6 +263,7 @@ export class DuplicataComponent implements OnInit {
       filialId: d.filialId,
       fornecedorId: d.fornecedorId,
       fornecedorInput: this.getFornecedorNome(d.fornecedorId),
+      tipoId: d.tipoId,
     });
     const forma = this.formasPagamento.find(f => f.id === d.formaPagamentoId);
     this.form.get('quantidadeParcelas')!.setValue(forma?.qtdeParcelas || d.parcelas?.length || 1);

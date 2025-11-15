@@ -28,6 +28,7 @@ export interface DuplicataDTO {
   formaPagamentoId: number;
   parcelas?: ParcelaDTO[];
   notasFiscais?: NotaFiscalDTO[];
+  tipoId?: number;
 }
 
 export interface DuplicataDiaResponseDTO {
