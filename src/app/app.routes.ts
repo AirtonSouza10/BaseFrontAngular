@@ -13,6 +13,7 @@ import { DuplicataComponent } from './components/duplicata/duplicata.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { RelatorioDiaComponent } from './components/relatorio-dia/relatorio-dia.component';
 import { RelatorioFilialComponent } from './components/relatorio-filial/relatorio-filial.component';
+import { TipoDuplicataComponent } from './components/tipo-duplicata/tipo-duplicata.component';
 
 export const routes: Routes = [
   {
@@ -64,6 +65,10 @@ export const routes: Routes = [
       {
         path: 'usuarios',
         component: UsuarioComponent
+      },
+      {
+        path: 'tipo-duplicata',
+        component: TipoDuplicataComponent
       },
       {
         path: 'relatorio-dia',
