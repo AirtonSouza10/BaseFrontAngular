@@ -203,4 +203,13 @@ export class DuplicataService {
       });
     }
 
+    obterRelatorioCustomizado(filtro: any): Observable<any> {
+      const url = `${this.apiUrl}/relatorio-customizado`;
+      return this.http.post<any>(url, filtro);
+    }
+
+    gerarRelatorioCustomizadoPDF(filtro: any): Observable<Blob> {
+      const url = `${this.apiUrl}/relatorio-customizado/pdf`;
+      return this.http.post(url, filtro, { responseType: 'blob' });
+    }
 }

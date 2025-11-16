@@ -1,0 +1,120 @@
+<div class="container-relatorio">
+
+  <!-- Cabeçalho -->
+  <div class="header-relatorio">
+    <h2>Relatório Personalizado de Contas a Pagar</h2>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+
+    <!-- FILIAL -->
+    <div class="filtro">
+      <label for="filial">Filial:</label>
+      <select id="filial" [(ngModel)]="filtro.idFilial">
+        <option [ngValue]="null">-- Todas --</option>
+        <option *ngFor="let f of filiais" [value]="f.id">
+          {{ f.nome }} - {{ f.identificacao }}
+        </option>
+      </select>
+    </div>
+
+    <!-- FORNECEDOR -->
+    <div class="filtro">
+      <label for="fornecedor">Fornecedor:</label>
+      <select id="fornecedor" [(ngModel)]="filtro.idFornecedor">
+        <option [ngValue]="null">-- Todos --</option>
+        <option *ngFor="let forn of fornecedores" [value]="forn.id">
+          {{ forn.nome }} - {{ forn.identificacao }}
+        </option>
+      </select>
+    </div>
+
+    <!-- SITUAÇÃO -->
+    <div class="filtro">
+      <label for="status">Situação:</label>
+      <select id="status" [(ngModel)]="filtro.idStatusConta">
+        <option [ngValue]="null">-- Todas --</option>
+        <option *ngFor="let s of situacoes" [value]="s.id">
+          {{ s.descricao }}
+        </option>
+      </select>
+    </div>
+    <!-- TIPO DUP -->
+    <div class="filtro">
+      <label for="tipoDup">Tipo Duplicata:</label>
+      <select id="tipoDup" [(ngModel)]="filtro.idTipoDuplicata">
+        <option [ngValue]="null">-- Todos --</option>
+        <option *ngFor="let td of tiposDuplicata" [value]="td.id">
+          {{ td.descricao }}
+        </option>
+      </select>
+    </div>
+
+    <!-- TIPO PAG -->
+    <div class="filtro">
+      <label for="tipoPag">Tipo Pagamento:</label>
+      <select id="tipoPag" [(ngModel)]="filtro.idTipoPagamento">
+        <option [ngValue]="null">-- Todos --</option>
+        <option *ngFor="let tp of tiposPagamento" [value]="tp.id">
+          {{ tp.descricao }}
+        </option>
+      </select>
+    </div>
+
+    <!-- DATAS -->
+    <div class="filtro">
+      <label>Data Inicial:</label>
+      <input type="date" [(ngModel)]="filtro.dataInicial">
+    </div>
+
+    <div class="filtro">
+      <label>Data Final:</label>
+      <input type="date" [(ngModel)]="filtro.dataFinal">
+    </div>
+
+    <!-- Botões -->
+    <div class="botoes">
+      <button class="btn" (click)="gerarRelatorio()" [disabled]="carregando">
+        {{ carregando ? 'Gerando...' : 'Gerar Relatório' }}
+      </button>
+
+      <button class="btn-pdf" (click)="gerarPDF()" [disabled]="carregando">
+        <i class="fa-regular fa-file-pdf"></i> PDF
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Tabela -->
+  <div *ngIf="relatorio.length > 0" class="tabela-container">
+    <table class="tabela-relatorio">
+      <thead>
+        <tr>
+          <th>Loja</th>
+          <th>Fornecedor</th>
+          <th>Descrição</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of relatorio">
+          <td>{{ item.loja }}</td>
+          <td>{{ item.fornecedor }}</td>
+          <td>{{ item.numeroParcela }}</td>
+          <td>{{ item.valorParcelaFormatada }}</td>
+          <td>{{ item.dtVencimentoFormatada }}</td>
+          <td>{{ item.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Nenhum dado após clicar em gerar -->
+  <div *ngIf="mostrouResultado && relatorio.length === 0" class="sem-dados">
+    <p>Nenhum dado encontrado.</p>
+  </div>
+
+</div>

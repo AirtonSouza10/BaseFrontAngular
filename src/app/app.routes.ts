@@ -16,6 +16,7 @@ import { RelatorioFilialComponent } from './components/relatorio-filial/relatori
 import { TipoDuplicataComponent } from './components/tipo-duplicata/tipo-duplicata.component';
 import { ProtocoloNotaComponent } from './components/protocolo-nota/protocolo-nota.component';
 import { ProtocoloContaPagaComponent } from './components/protocolo-conta-paga/protocolo-conta-paga.component';
+import { RelatorioPersonalizadoComponent } from './components/relatorio-personalizado/relatorio-personalizado.component';
 
 export const routes: Routes = [
   {
@@ -87,6 +88,10 @@ export const routes: Routes = [
       {
         path: 'protocolo-conta-paga',
         component: ProtocoloContaPagaComponent
+      },
+      {
+        path: 'relatorio-personalizado',
+        component: RelatorioPersonalizadoComponent
       }
     ]
   }
