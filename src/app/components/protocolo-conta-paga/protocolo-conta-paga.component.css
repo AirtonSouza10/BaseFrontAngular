@@ -1,0 +1,131 @@
+.container-relatorio {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #222;
+}
+
+.header-relatorio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header-relatorio h2 {
+  margin: 0;
+  color: #222;
+}
+
+/* ---- FILTROS ---- */
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.filtros label {
+  font-weight: 500;
+  color: #333;
+}
+
+.filtros select,
+.filtros input[type="date"] {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 150px;
+}
+
+.btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background-color: #145ca1;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-relatorio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-relatorio:hover {
+  background-color: #b71c1c;
+}
+
+/* ---- GRUPO DE TIPO ---- */
+.grupo-container {
+  margin-top: 25px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+.titulo-grupo {
+  background: #ececec;
+  padding: 10px 14px;
+  font-size: 18px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border-left: 5px solid #007bff;
+}
+
+/* ---- TABELA ---- */
+.tabela-container {
+  margin-top: 20px;
+}
+
+.tabela-relatorio {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-relatorio th,
+.tabela-relatorio td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabela-relatorio th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ---- SEM DADOS ---- */
+.sem-dados {
+  text-align: center;
+  color: #888;
+  margin-top: 30px;
+  font-style: italic;
+}

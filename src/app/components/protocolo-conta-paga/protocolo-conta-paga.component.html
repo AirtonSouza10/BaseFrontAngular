@@ -1,0 +1,75 @@
+<div class="container-relatorio">
+
+  <!-- Cabeçalho -->
+  <div class="header-relatorio">
+    <h2>Relatório de Parcelas Pagas por Filial</h2>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+
+    <label>Filial: *</label>
+    <select [(ngModel)]="filialSelecionada">
+      <option [ngValue]="null">-- Escolha uma filial --</option>
+      <option *ngFor="let f of filiais" [ngValue]="f.id">
+        {{ f.nome }} - {{ f.identificacao }}
+      </option>
+    </select>
+
+    <label>Período:</label>
+    <input type="date" [(ngModel)]="dataInicial">
+    <input type="date" [(ngModel)]="dataFinal">
+
+    <button
+      class="btn"
+      (click)="gerarRelatorio()"
+      [disabled]="!filialSelecionada || !dataInicial || !dataFinal || carregando"
+    >
+      {{ carregando ? 'Carregando...' : 'Gerar' }}
+    </button>
+
+    <button
+      class="btn-relatorio"
+      (click)="gerarRelatorioPDF()"
+      [disabled]="!filialSelecionada || !dataInicial || !dataFinal"
+    >
+      <i class="fa-regular fa-file-pdf"></i> PDF
+    </button>
+  </div>
+
+  <!-- LISTA DE TIPOS + PARCELAS -->
+  <div *ngFor="let grupo of parcelas" class="grupo-container">
+
+    <!-- NOME DO TIPO -->
+    <h3 class="titulo-grupo">
+      {{ grupo.tipoTitulo }}
+    </h3>
+
+    <!-- TABELA DO GRUPO -->
+    <table class="tabela-relatorio">
+      <thead>
+        <tr>
+          <th>Fornecedor</th>
+          <th>Descrição</th>
+          <th>Valor Pago</th>
+          <th>Pagamento</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let p of grupo.parcelas">
+          <td>{{ p.fornecedor }}</td>
+          <td>{{ p.descricao }}</td>
+          <td>{{ p.valorPagoFormatado }}</td>
+          <td>{{ p.dataPagamentoFormatado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Sem dados -->
+  <div *ngIf="parcelas && parcelas.length === 0 && !carregando" class="sem-dados">
+    Nenhuma parcela encontrada no período selecionado.
+  </div>
+
+</div>

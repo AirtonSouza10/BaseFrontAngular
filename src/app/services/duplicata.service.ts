@@ -164,4 +164,43 @@ export class DuplicataService {
       const url = `${this.apiUrl}/buscar-parcela/${id}`;
       return this.http.get<any>(url);
     }
+
+    /**
+   * Obtém o relatório de parcelas pagas por tipo de título (JSON)
+   */
+  obterRelatorioParcelasPagasPorTipo(
+    idFilial: number,
+    dataInicial: string,
+    dataFinal: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/relatorio-parcelas-pagas`;
+
+    return this.http.get<any>(url, {
+      params: {
+        idFilial,
+        dataInicial,
+        dataFinal
+      }
+    });
+  }
+
+    /**
+     * Gera relatório de parcelas pagas por tipo (PDF)
+     */
+    gerarRelatorioParcelasPagasPorTipoPDF(
+      idFilial: number,
+      dataInicial: string,
+      dataFinal: string
+    ): Observable<Blob> {
+      const url = `${this.apiUrl}/relatorio-parcelas-pagas-por-tipo/${idFilial}`;
+
+      return this.http.get(url, {
+        params: {
+          dataInicial,
+          dataFinal
+        },
+        responseType: 'blob'
+      });
+    }
+
 }
