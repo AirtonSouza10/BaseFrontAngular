@@ -1,0 +1,67 @@
+<div class="relatorio-dia">
+
+  <!-- Cabeçalho -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <h2>Buscar Parcelas</h2>
+  </div>
+
+  <!-- Campo de busca -->
+  <div class="input-pesquisa">
+    <input type="text" [(ngModel)]="termo" placeholder="Número parcela, duplicata, fornecedor..." />
+    <button (click)="pesquisar()">Buscar</button>
+  </div>
+
+  <!-- Mensagem quando não encontrado -->
+  <div *ngIf="pesquisado && resultados.length === 0" class="mensagem-vazia">
+    Nenhuma parcela encontrada.
+  </div>
+
+  <!-- Container da tabela -->
+  <div class="table-container" *ngIf="resultados.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>ID Parcela</th>
+          <th>Parcela</th>
+          <th>Duplicata</th>
+          <th>Fornecedor</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of resultados">
+          <td data-label="ID Parcela">{{ p.parcelaId }}</td>
+          <td data-label="Parcela">{{ p.numeroParcela || '—' }}</td>
+          <td data-label="Duplicata">{{ p.descricaoDuplicata }}</td>
+          <td data-label="Fornecedor">{{ p.fornecedorNome }}</td>
+          <td data-label="Valor">{{ p.valorTotal | currency:'BRL' }}</td>
+          <td data-label="Vencimento">{{ p.dtVencimento | date:'dd/MM/yyyy' }}</td>
+          <td data-label="Status">{{ p.status || '—' }}</td>
+          <td data-label="Ações">
+            <button class="btn-baixar" (click)="abrirBaixa(p)">Baixar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginação -->
+  <div class="paginacao" *ngIf="totalPages > 1">
+    <button (click)="paginaAnterior()" [disabled]="pagina === 0">«</button>
+    <button *ngFor="let p of paginas" (click)="irParaPagina(p)" [class.active]="p === pagina">{{ p+1 }}</button>
+    <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">»</button>
+  </div>
+
+  <!-- MODAL BAIXAR PARCELA -->
+  <div class="modal-backdrop" *ngIf="parcelaSelecionada">
+    <div class="modal">
+      <h3>Baixar Parcela - {{ parcelaSelecionada.descricaoDuplicata }}</h3>
+      <app-baixar-parcela [duplicataSelecionada]="parcelaSelecionada"></app-baixar-parcela>
+      <button (click)="fecharBaixa()">Fechar</button>
+    </div>
+  </div>
+
+</div>

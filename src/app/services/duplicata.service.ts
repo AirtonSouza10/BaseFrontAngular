@@ -212,4 +212,25 @@ export class DuplicataService {
       const url = `${this.apiUrl}/relatorio-customizado/pdf`;
       return this.http.post(url, filtro, { responseType: 'blob' });
     }
+
+    buscarGeral(termo: string, pagina: number = 0, tamanho: number = 10): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/busca-geral`, {
+        params: {
+          termo,
+          pagina,
+          tamanho
+        }
+      });
+    }
+
+    buscarGeralAtivas(termo: string, pagina: number = 0, tamanho: number = 10): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/busca-geral-ativas`, {
+        params: {
+          termo,
+          pagina,
+          tamanho
+        }
+      });
+    }
+
 }

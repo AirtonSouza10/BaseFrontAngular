@@ -17,6 +17,8 @@ import { TipoDuplicataComponent } from './components/tipo-duplicata/tipo-duplica
 import { ProtocoloNotaComponent } from './components/protocolo-nota/protocolo-nota.component';
 import { ProtocoloContaPagaComponent } from './components/protocolo-conta-paga/protocolo-conta-paga.component';
 import { RelatorioPersonalizadoComponent } from './components/relatorio-personalizado/relatorio-personalizado.component';
+import { ConsultaGeralComponent } from './components/consulta-geral/consulta-geral.component';
+import { ConsultaGeralAtivasComponent } from './components/consulta-geral-ativas/consulta-geral-ativas.component';
 
 export const routes: Routes = [
   {
@@ -92,6 +94,14 @@ export const routes: Routes = [
       {
         path: 'relatorio-personalizado',
         component: RelatorioPersonalizadoComponent
+      },
+      {
+        path: 'consulta-geral',
+        component: ConsultaGeralComponent
+      },
+      {
+        path: 'consulta-geral-ativas',
+        component: ConsultaGeralAtivasComponent
       }
     ]
   }
