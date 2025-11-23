@@ -16,7 +16,7 @@ export class ConsultaNotaComponent implements OnInit {
   resultados: NotaFiscalDTO[] = [];
   pesquisado: boolean = false;
   pagina: number = 0;
-  size: number = 5;
+  size: number = 20;
   totalPages: number = 0;
 
   parcelasPrevistas: ParcelaPrevistaNotaDTO[] = [];
