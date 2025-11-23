@@ -32,6 +32,12 @@ export interface NotaFiscalDTO {
   parcelasPrevistas?: ParcelaPrevistaNotaDTO[];
 }
 
+export interface ParcelaPrevistaResponseDTO {
+  numeroNota: string;
+  valor: number;
+  dtVencimento: string | Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -141,6 +147,15 @@ export class NotaFiscalService {
    */
   listarParcelasPrevistas(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}/parcelas-previstas`);
+  }
+
+  listarParcelasPrevistasPaginadas(page: number = 0, size: number = 30): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/parcelas-previstas`, {
+      params: {
+        page: page.toString(),
+        size: size.toString()
+      }
+    });
   }
 
 }

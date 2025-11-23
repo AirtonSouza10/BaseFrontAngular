@@ -1,0 +1,37 @@
+<div class="relatorio-dia">
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <h2 style="margin: 0;">Parcelas Previstas</h2>
+  </div>
+
+  <div *ngIf="carregando" class="carregando">Carregando...</div>
+
+  <table *ngIf="!carregando && parcelasPrevistas.length > 0">
+    <thead>
+      <tr>
+        <th>Número Nota</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let parcela of parcelasPrevistas">
+        <td>{{ parcela.numeroNota }}</td>
+        <td>{{ parcela.valor | number:'1.2-2' }}</td>
+        <td>{{ parcela.dtVencimento | date:'dd/MM/yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!carregando && parcelasPrevistas.length === 0" class="mensagem-vazia">
+    Nenhuma parcela prevista encontrada.
+  </div>
+
+  <!-- Controles de paginação -->
+  <div *ngIf="!carregando && totalElementos > tamanho" style="margin-top: 10px; display:flex; gap:10px;">
+    <button type="button" (click)="paginaAnterior()" [disabled]="pagina === 0">Anterior</button>
+    <span>Página {{pagina + 1}}</span>
+    <button type="button" (click)="proximaPagina()" [disabled]="(pagina + 1) * tamanho >= totalElementos">Próxima</button>
+  </div>
+
+  <div *ngIf="erroMsg" class="erro-msg">{{ erroMsg }}</div>
+</div>

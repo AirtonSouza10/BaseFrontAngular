@@ -20,6 +20,7 @@ import { RelatorioPersonalizadoComponent } from './components/relatorio-personal
 import { ConsultaGeralComponent } from './components/consulta-geral/consulta-geral.component';
 import { ConsultaGeralAtivasComponent } from './components/consulta-geral-ativas/consulta-geral-ativas.component';
 import { ConsultaNotaComponent } from './components/consulta-nota/consulta-nota.component';
+import { ParcelasPrevistasComponent } from './components/parcelas-previstas/parcelas-previstas.component';
 
 export const routes: Routes = [
   {
@@ -107,6 +108,10 @@ export const routes: Routes = [
       {
         path: 'consulta-nota',
         component: ConsultaNotaComponent
+      },
+      {
+        path: 'parcelas-previstas',
+        component: ParcelasPrevistasComponent
       }
     ]
   }

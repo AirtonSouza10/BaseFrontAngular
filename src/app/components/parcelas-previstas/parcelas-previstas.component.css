@@ -1,0 +1,201 @@
+/* Fundo branco para todo o relatório */
+.relatorio-dia {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+/* Títulos do relatório */
+.relatorio-dia h2 {
+  font-weight: bold;
+  background-color: #e0e0e0; /* cinza claro */
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+/* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Cabeçalho das tabelas */
+table thead th {
+  font-weight: bold;
+  background-color: #e0e0e0; /* cinza claro */
+  padding: 8px;
+  text-align: left;
+  border-bottom: 2px solid #ccc;
+}
+
+/* Linhas da tabela */
+table tbody td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Valores em vermelho caso queira destacar */
+.tabela-vencidas tbody tr td {
+  color: #d32f2f; /* vermelho */
+}
+
+/* Carregando e mensagens */
+.carregando {
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.mensagem-vazia {
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.erro-msg {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Botões */
+button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Botão de paginação */
+button[disabled] {
+  background-color: #ccc;
+}
+
+button:not([disabled]) {
+  background-color: #2ecc71;
+  color: white;
+}
+
+button:not([disabled]):hover {
+  background-color: #27ae60;
+}
+
+/* Fundo semitransparente cobrindo toda a tela */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Janela do modal */
+.modal {
+  background-color: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  width: 450px;
+  max-width: 95%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  position: relative;
+  animation: fadeInScale 0.25s ease;
+}
+
+/* Animação de entrada do modal */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Botão Fechar no modal */
+.modal button {
+  margin-top: 15px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+.modal button:hover {
+  background-color: #b02a37;
+}
+
+/* Evita scroll quando o modal está aberto */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ======== RESPONSIVIDADE ======== */
+@media (max-width: 768px) {
+  .relatorio-dia {
+    padding: 12px;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+  }
+
+  table thead th,
+  table tbody td {
+    white-space: nowrap;
+  }
+
+  .modal {
+    width: 90%;
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .erro-msg {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .relatorio-dia {
+    padding: 10px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 12px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
