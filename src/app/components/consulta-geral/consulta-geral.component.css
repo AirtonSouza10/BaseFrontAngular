@@ -58,19 +58,16 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* Linhas alternadas */
 .table-container tbody tr:nth-child(even) {
   background-color: #fafafa;
 }
 
-/* Mensagem de tabela vazia */
 .mensagem-vazia {
   font-style: italic;
   margin: 10px 0;
   color: #555;
 }
 
-/* Botão baixar */
 .btn-baixar {
   background-color: #2ecc71;
   border: none;
@@ -149,10 +146,7 @@
     display: block;
   }
 
-  .table-container thead {
-    display: none; /* Esconde cabeçalho tradicional */
-  }
-
+  .table-container thead { display: none; }
   .table-container tbody tr {
     margin-bottom: 15px;
     border: 1px solid #ccc;
@@ -167,7 +161,6 @@
     border-bottom: none;
     white-space: normal;
   }
-
   .table-container tbody td::before {
     content: attr(data-label);
     position: absolute;
@@ -177,20 +170,11 @@
     text-align: left;
   }
 
-  .btn-baixar {
-    width: 100%;
-    margin-top: 8px;
-  }
+  .btn-baixar { width: 100%; margin-top: 8px; }
 }
 
 @media (max-width: 480px) {
-  .table-container tbody td::before {
-    font-size: 12px;
-  }
-  .input-pesquisa {
-    flex-direction: column;
-  }
-  .input-pesquisa input, .input-pesquisa button {
-    width: 100%;
-  }
+  .table-container tbody td::before { font-size: 12px; }
+  .input-pesquisa { flex-direction: column; }
+  .input-pesquisa input, .input-pesquisa button { width: 100%; }
 }

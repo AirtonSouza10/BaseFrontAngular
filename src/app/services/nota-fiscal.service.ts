@@ -109,13 +109,38 @@ export class NotaFiscalService {
   }
 
   gerarRelatorioPDF(idFilial: number | null, dataInicial: string, dataFinal: string): Observable<Blob> {
-  return this.http.get(`${this.apiUrl}/relatorio-notas-filial-periodo`, {
-    params: {
-      ...(idFilial !== null ? { idFilial: idFilial.toString() } : {}),
-      dataInicial,
-      dataFinal
-    },
-    responseType: 'blob'
-  });
-}
+    return this.http.get(`${this.apiUrl}/relatorio-notas-filial-periodo`, {
+      params: {
+        ...(idFilial !== null ? { idFilial: idFilial.toString() } : {}),
+        dataInicial,
+        dataFinal
+      },
+      responseType: 'blob'
+    });
+  }
+
+  /**
+   * Lista notas fiscais paginadas pelo número da nota
+   * @param numero número da nota a filtrar
+   * @param page número da página (0-based)
+   * @param size quantidade por página
+   */
+  listarPorNumero(numero: string, page: number = 0, size: number = 30): Observable<any> {
+    return this.http.get(`${this.apiUrl}/por-numero`, {
+      params: {
+        numero,
+        page: page.toString(),
+        size: size.toString()
+      }
+    });
+  }
+
+    /**
+   * Busca as parcelas previstas de uma nota fiscal pelo ID
+   * @param id ID da nota fiscal
+   */
+  listarParcelasPrevistas(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/parcelas-previstas`);
+  }
+
 }

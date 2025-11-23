@@ -1,0 +1,84 @@
+<div class="relatorio-dia">
+
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <h2>Consulta Notas Fiscais</h2>
+  </div>
+
+  <!-- Campo de busca -->
+  <div class="input-pesquisa">
+    <input type="text" [(ngModel)]="termo" placeholder="Número da nota fiscal..." />
+    <button (click)="pesquisar()">Buscar</button>
+  </div>
+
+  <!-- Mensagem quando não encontrado -->
+  <div *ngIf="pesquisado && resultados.length === 0" class="mensagem-vazia">
+    Nenhuma nota fiscal encontrada.
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="table-container" *ngIf="resultados.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Número</th>
+          <th>Série</th>
+          <th>Fornecedor</th>
+          <th>Valor Total</th>
+          <th>Compra</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let n of resultados">
+          <td data-label="ID">{{ n.id }}</td>
+          <td data-label="Número">{{ n.numero }}</td>
+          <td data-label="Série">{{ n.serie }}</td>
+          <td data-label="Fornecedor">{{ n.fornecedorNome }}</td>
+          <td data-label="Valor">{{ n.valorTotal | currency:'BRL' }}</td>
+          <td data-label="Compra">{{ n.dtCompra | date:'dd/MM/yyyy' }}</td>
+          <td data-label="Ações">
+            <button class="btn-ver" *ngIf="n.parcelasPrevistas?.length" (click)="verPrevistas(n)">Ver Previstas</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginação -->
+  <div class="paginacao" *ngIf="totalPages > 1">
+    <button (click)="paginaAnterior()" [disabled]="pagina === 0">«</button>
+    
+    <button *ngFor="let p of getPaginasVisiveis()" 
+            (click)="irParaPagina(p)" 
+            [class.active]="p === pagina">{{ p+1 }}</button>
+    
+    <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">»</button>
+  </div>
+
+  <!-- Modal Parcelas Previstas -->
+  <div class="modal-backdrop" *ngIf="notaSelecionada">
+    <div class="modal">
+      <h3>Parcelas Previstas - Nota {{ notaSelecionada.numero }}</h3>
+      <table *ngIf="parcelasPrevistas.length > 0">
+        <thead>
+          <tr>
+            <th>Vencimento</th>
+            <th>Valor Previsto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of parcelasPrevistas">
+            <td>{{ p.dtVencimentoPrevisto | date:'dd/MM/yyyy' }}</td>
+            <td>{{ p.valorPrevisto | currency:'BRL' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="parcelasPrevistas.length === 0" class="mensagem-vazia">
+        Nenhuma parcela prevista encontrada.
+      </div>
+      <button (click)="fecharPrevistas()">Fechar</button>
+    </div>
+  </div>
+
+</div>

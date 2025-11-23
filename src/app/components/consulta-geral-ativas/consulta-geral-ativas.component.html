@@ -2,7 +2,7 @@
 
   <!-- Cabeçalho -->
   <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-    <h2>Buscar Parcelas</h2>
+    <h2>Parcelas Ativas</h2>
   </div>
 
   <!-- Campo de busca -->
@@ -51,7 +51,18 @@
   <!-- Paginação -->
   <div class="paginacao" *ngIf="totalPages > 1">
     <button (click)="paginaAnterior()" [disabled]="pagina === 0">«</button>
-    <button *ngFor="let p of paginas" (click)="irParaPagina(p)" [class.active]="p === pagina">{{ p+1 }}</button>
+
+    <button *ngIf="getPaginasVisiveis()[0] > 0" (click)="irParaPagina(0)">1</button>
+    <span *ngIf="getPaginasVisiveis()[0] > 1">...</span>
+
+    <button *ngFor="let p of getPaginasVisiveis()"
+            (click)="irParaPagina(p)"
+            [class.active]="p === pagina">{{ p + 1 }}</button>
+
+    <span *ngIf="getPaginasVisiveis()[getPaginasVisiveis().length - 1] < totalPages - 2">...</span>
+    <button *ngIf="getPaginasVisiveis()[getPaginasVisiveis().length - 1] < totalPages - 1"
+            (click)="irParaPagina(totalPages - 1)">{{ totalPages }}</button>
+
     <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">»</button>
   </div>
 

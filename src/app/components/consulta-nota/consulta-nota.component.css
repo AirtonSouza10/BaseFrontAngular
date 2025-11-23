@@ -1,4 +1,3 @@
-/* ================= ESTILO BASE ================= */
 .relatorio-dia {
   background-color: #ffffff;
   color: #000;
@@ -37,13 +36,50 @@
 .input-pesquisa button:hover { background-color: #0069d9; }
 
 /* ================= TABELA RESPONSIVA ================= */
-.table-container { width: 100%; }
-.table-container table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-.table-container thead th { font-weight: bold; background-color: #f2f2f2; padding: 8px; text-align: left; }
-.table-container tbody td { padding: 6px 8px; border-bottom: 1px solid #ccc; }
-.table-container tbody tr:nth-child(even) { background-color: #fafafa; }
-.mensagem-vazia { font-style: italic; margin: 10px 0; color: #555; }
-.btn-baixar { background-color: #2ecc71; border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+.table-container {
+  width: 100%;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table-container thead th {
+  font-weight: bold;
+  background-color: #f2f2f2;
+  padding: 8px;
+  text-align: left;
+}
+
+.table-container tbody td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Linhas alternadas */
+.table-container tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Mensagem de tabela vazia */
+.mensagem-vazia {
+  font-style: italic;
+  margin: 10px 0;
+  color: #555;
+}
+
+/* Botão baixar */
+.btn-baixar {
+  background-color: #2ecc71;
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 .btn-baixar:hover { background-color: #27ae60; }
 
 /* Modal */
@@ -52,14 +88,17 @@
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   background-color: rgba(0,0,0,0.6);
-  display: flex; justify-content: center; align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 .modal {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 450px; max-width: 95%;
+  width: 450px;
+  max-width: 95%;
   box-shadow: 0 5px 20px rgba(0,0,0,0.3);
   animation: fadeInScale 0.25s ease;
 }
@@ -101,18 +140,69 @@
 
 /* ================= RESPONSIVIDADE ================= */
 @media (max-width: 768px) {
-  .table-container table, .table-container thead, .table-container tbody,
-  .table-container th, .table-container td, .table-container tr { display: block; }
-  .table-container thead { display: none; }
-  .table-container tbody tr { margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; padding: 10px; }
-  .table-container tbody td {
-    padding: 6px 10px; text-align: right; position: relative; border-bottom: none; white-space: normal;
+  .table-container table,
+  .table-container thead,
+  .table-container tbody,
+  .table-container th,
+  .table-container td,
+  .table-container tr {
+    display: block;
   }
-  .table-container tbody td::before { content: attr(data-label); position: absolute; left: 10px; width: 50%; font-weight: bold; text-align: left; }
-  .btn-baixar { width: 100%; margin-top: 8px; }
+
+  .table-container thead {
+    display: none; /* Esconde cabeçalho tradicional */
+  }
+
+  .table-container tbody tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .table-container tbody td {
+    padding: 6px 10px;
+    text-align: right;
+    position: relative;
+    border-bottom: none;
+    white-space: normal;
+  }
+
+  .table-container tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 50%;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .btn-baixar {
+    width: 100%;
+    margin-top: 8px;
+  }
 }
+
 @media (max-width: 480px) {
-  .table-container tbody td::before { font-size: 12px; }
-  .input-pesquisa { flex-direction: column; }
-  .input-pesquisa input, .input-pesquisa button { width: 100%; }
+  .table-container tbody td::before {
+    font-size: 12px;
+  }
+  .input-pesquisa {
+    flex-direction: column;
+  }
+  .input-pesquisa input, .input-pesquisa button {
+    width: 100%;
+  }
 }
+
+.btn-ver {
+  background-color: #3498db;
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-ver:hover { background-color: #2980b9; }
+

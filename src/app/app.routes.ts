@@ -19,6 +19,7 @@ import { ProtocoloContaPagaComponent } from './components/protocolo-conta-paga/p
 import { RelatorioPersonalizadoComponent } from './components/relatorio-personalizado/relatorio-personalizado.component';
 import { ConsultaGeralComponent } from './components/consulta-geral/consulta-geral.component';
 import { ConsultaGeralAtivasComponent } from './components/consulta-geral-ativas/consulta-geral-ativas.component';
+import { ConsultaNotaComponent } from './components/consulta-nota/consulta-nota.component';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,10 @@ export const routes: Routes = [
       {
         path: 'consulta-geral-ativas',
         component: ConsultaGeralAtivasComponent
+      },
+      {
+        path: 'consulta-nota',
+        component: ConsultaNotaComponent
       }
     ]
   }

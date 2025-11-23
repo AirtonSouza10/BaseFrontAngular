@@ -7,9 +7,9 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-consulta-geral-ativas',
   standalone: true,
-  imports: [CommonModule, FormsModule,BaixarParcelaComponent],
+  imports: [CommonModule, FormsModule, BaixarParcelaComponent],
   templateUrl: './consulta-geral-ativas.component.html',
-  styleUrl: './consulta-geral-ativas.component.css'
+  styleUrls: ['./consulta-geral-ativas.component.css']
 })
 export class ConsultaGeralAtivasComponent {
   termo: string = '';
@@ -20,7 +20,6 @@ export class ConsultaGeralAtivasComponent {
   tamanho = 10;
   totalPages = 0;
   totalElements = 0;
-  paginas: number[] = [];
 
   pesquisado = false;
 
@@ -47,14 +46,12 @@ export class ConsultaGeralAtivasComponent {
           this.resultados = page?.content || [];
           this.totalPages = page?.totalPages || 0;
           this.totalElements = page?.totalElements || 0;
-          this.paginas = Array.from({ length: this.totalPages }, (_, i) => i);
           this.pesquisado = true;
         },
         error: () => {
           this.resultados = [];
           this.totalPages = 0;
           this.totalElements = 0;
-          this.paginas = [];
           this.pesquisado = true;
         }
       });
@@ -71,14 +68,20 @@ export class ConsultaGeralAtivasComponent {
     this.pagina = 0;
     this.totalPages = 0;
     this.totalElements = 0;
-    this.paginas = [];
     this.pesquisado = false;
   }
 
+  // Páginas visíveis limitadas
   getPaginasVisiveis(): number[] {
     const paginas: number[] = [];
-    const inicio = Math.max(0, this.pagina - 2);
-    const fim = Math.min(this.totalPages - 1, this.pagina + 2);
+    const maxVisiveis = 5;
+    let inicio = Math.max(0, this.pagina - 2);
+    let fim = Math.min(this.totalPages - 1, inicio + maxVisiveis - 1);
+
+    if (fim - inicio < maxVisiveis - 1) {
+      inicio = Math.max(0, fim - maxVisiveis + 1);
+    }
+
     for (let i = inicio; i <= fim; i++) paginas.push(i);
     return paginas;
   }
@@ -87,9 +90,12 @@ export class ConsultaGeralAtivasComponent {
   abrirBaixa(parcela: any) {
     this.parcelaSelecionada = {
       ...parcela,
-      id: parcela.parcelaId,           // cria o id esperado pelo modal
-      descricao: parcela.descricaoDuplicata // opcional: padroniza descrição
+      id: parcela.parcelaId,
+      descricao: parcela.descricaoDuplicata
     };
   }
-  fecharBaixa() { this.parcelaSelecionada = null; this.buscar(); }
+  fecharBaixa() {
+    this.parcelaSelecionada = null;
+    this.buscar();
+  }
 }

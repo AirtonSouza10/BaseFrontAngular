@@ -75,10 +75,17 @@ export class ConsultaGeralComponent {
     this.pesquisado = false;
   }
 
+  // Retorna apenas páginas visíveis
   getPaginasVisiveis(): number[] {
     const paginas: number[] = [];
-    const inicio = Math.max(0, this.pagina - 2);
-    const fim = Math.min(this.totalPages - 1, this.pagina + 2);
+    const maxVisiveis = 5;
+    let inicio = Math.max(0, this.pagina - 2);
+    let fim = Math.min(this.totalPages - 1, inicio + maxVisiveis - 1);
+
+    if (fim - inicio < maxVisiveis - 1) {
+      inicio = Math.max(0, fim - maxVisiveis + 1);
+    }
+
     for (let i = inicio; i <= fim; i++) paginas.push(i);
     return paginas;
   }
@@ -87,9 +94,12 @@ export class ConsultaGeralComponent {
   abrirBaixa(parcela: any) {
     this.parcelaSelecionada = {
       ...parcela,
-      id: parcela.parcelaId,           // cria o id esperado pelo modal
-      descricao: parcela.descricaoDuplicata // opcional: padroniza descrição
+      id: parcela.parcelaId,
+      descricao: parcela.descricaoDuplicata
     };
   }
-  fecharBaixa() { this.parcelaSelecionada = null; this.buscar(); }
+  fecharBaixa() {
+    this.parcelaSelecionada = null;
+    this.buscar();
+  }
 }
