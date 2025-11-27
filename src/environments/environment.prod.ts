@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.seusite.com/api'
+  apiUrl: 'https://brasilcash-1-0.onrender.com/api'
 };
