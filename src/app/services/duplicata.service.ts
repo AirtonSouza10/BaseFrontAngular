@@ -53,6 +53,17 @@ export interface BaixaParcelaRequestDTO {
   tipoPagamentoId?: number;
 }
 
+export interface ParcelaUpdateRequestDTO {
+  statusId?: number;
+  tipoPagamentoId?: number;
+  numeroParcela?: string;
+  valorTotal?: number;
+  dtVencimento?: string | Date;
+  dtPagamento?: string | Date;
+  observacao?: string;
+  valorPago?: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -232,5 +243,16 @@ export class DuplicataService {
         }
       });
     }
+
+    /**
+     * Atualiza dados de uma parcela
+     * @param id ID da parcela
+     * @param dto dados para atualização
+     */
+    atualizarParcela(id: number, dto: any): Observable<any> {
+      const url = `${this.apiUrl}/parcela/${id}`;
+      return this.http.put<any>(url, dto);
+    }
+
 
 }

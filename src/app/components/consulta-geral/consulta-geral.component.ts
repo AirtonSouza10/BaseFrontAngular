@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DuplicataService } from '../../services/duplicata.service';
 import { BaixarParcelaComponent } from '../baixar-parcela/baixar-parcela.component';
+import { SituacaoService } from '../../services/situacao.service';
+import { TipoPagamentoService } from '../../services/tipo-pagamento.service';
 
 @Component({
   selector: 'app-consulta-geral',
@@ -12,52 +14,43 @@ import { BaixarParcelaComponent } from '../baixar-parcela/baixar-parcela.compone
   styleUrls: ['./consulta-geral.component.css']
 })
 export class ConsultaGeralComponent {
-  termo: string = '';
+
+  termo = '';
   resultados: any[] = [];
 
-  // Paginação
   pagina = 0;
   tamanho = 10;
   totalPages = 0;
-  totalElements = 0;
-  paginas: number[] = [];
 
   pesquisado = false;
-
-  // Modal de baixar
   parcelaSelecionada: any = null;
+  parcelaEdicao: any = null;
 
-  constructor(private readonly duplicataService: DuplicataService) {}
+  situacoes: any[] = [];
+  tiposPagamento: any[] = [];
+
+  form: any = {};
+
+  constructor(
+    private duplicataService: DuplicataService,
+    private situacaoService: SituacaoService,
+    private tipoPagamentoService: TipoPagamentoService
+  ) {}
 
   pesquisar() {
-    if (!this.termo.trim()) {
-      this.limpar();
-      this.pesquisado = true;
-      return;
-    }
     this.pagina = 0;
     this.buscar();
   }
 
   private buscar() {
-    this.duplicataService.buscarGeral(this.termo, this.pagina, this.tamanho)
-      .subscribe({
-        next: res => {
-          const page = res?.resposta;
-          this.resultados = page?.content || [];
-          this.totalPages = page?.totalPages || 0;
-          this.totalElements = page?.totalElements || 0;
-          this.paginas = Array.from({ length: this.totalPages }, (_, i) => i);
-          this.pesquisado = true;
-        },
-        error: () => {
-          this.resultados = [];
-          this.totalPages = 0;
-          this.totalElements = 0;
-          this.paginas = [];
-          this.pesquisado = true;
-        }
-      });
+    this.duplicataService.buscarGeral(this.termo, this.pagina, this.tamanho).subscribe({
+      next: res => {
+        const page = res?.resposta;
+        this.resultados = page?.content || [];
+        this.totalPages = page?.totalPages || 0;
+        this.pesquisado = true;
+      }
+    });
   }
 
   // PAGINAÇÃO
@@ -65,32 +58,11 @@ export class ConsultaGeralComponent {
   proximaPagina() { if (this.pagina < this.totalPages - 1) { this.pagina++; this.buscar(); } }
   irParaPagina(p: number) { this.pagina = p; this.buscar(); }
 
-  limpar() {
-    this.termo = '';
-    this.resultados = [];
-    this.pagina = 0;
-    this.totalPages = 0;
-    this.totalElements = 0;
-    this.paginas = [];
-    this.pesquisado = false;
-  }
-
-  // Retorna apenas páginas visíveis
   getPaginasVisiveis(): number[] {
-    const paginas: number[] = [];
-    const maxVisiveis = 5;
-    let inicio = Math.max(0, this.pagina - 2);
-    let fim = Math.min(this.totalPages - 1, inicio + maxVisiveis - 1);
-
-    if (fim - inicio < maxVisiveis - 1) {
-      inicio = Math.max(0, fim - maxVisiveis + 1);
-    }
-
-    for (let i = inicio; i <= fim; i++) paginas.push(i);
-    return paginas;
+    return Array.from({ length: this.totalPages }, (_, i) => i);
   }
 
-  // MODAL BAIXAR
+  // BAIXA
   abrirBaixa(parcela: any) {
     this.parcelaSelecionada = {
       ...parcela,
@@ -98,8 +70,57 @@ export class ConsultaGeralComponent {
       descricao: parcela.descricaoDuplicata
     };
   }
+
   fecharBaixa() {
     this.parcelaSelecionada = null;
     this.buscar();
   }
+
+  // EDIÇÃO
+  abrirEdicao(parcela: any) {
+    this.parcelaEdicao = parcela;
+
+    this.form = {
+      numeroParcela: parcela.numeroParcela,
+      valorTotal: parcela.valorTotal,
+      dtVencimento: parcela.dtVencimento?.substring(0, 10),
+      dtPagamento: parcela.dtPagamento?.substring(0, 10),
+      observacao: parcela.observacao,
+      valorPago: parcela.valorPago,
+      statusId: parcela.statusId,
+      tipoPagamentoId: parcela.tipoPagamentoId
+    };
+
+    this.carregarStatus();
+    this.carregarTipos();
+  }
+
+  fecharEdicao() {
+    this.parcelaEdicao = null;
+  }
+
+  salvarEdicao() {
+    this.duplicataService.atualizarParcela(this.parcelaEdicao.parcelaId, this.form).subscribe({
+      next: () => {
+        alert('Parcela atualizada com sucesso');
+        this.fecharEdicao();
+        this.buscar();
+      },
+      error: () => alert('Erro ao atualizar parcela')
+    });
+  }
+
+  // LOADERS
+  carregarStatus() {
+    this.situacaoService.listarSituacoes().subscribe(res => {
+      this.situacoes = res?.resposta || res || [];
+    });
+  }
+
+  carregarTipos() {
+    this.tipoPagamentoService.listarTiposPagamento().subscribe(res => {
+      this.tiposPagamento = res?.resposta || res || [];
+    });
+  }
+
 }

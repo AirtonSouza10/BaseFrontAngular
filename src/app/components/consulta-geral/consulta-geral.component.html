@@ -39,9 +39,10 @@
           <td data-label="Fornecedor">{{ p.fornecedorNome }}</td>
           <td data-label="Valor">{{ p.valorTotal | currency:'BRL' }}</td>
           <td data-label="Vencimento">{{ p.dtVencimento | date:'dd/MM/yyyy' }}</td>
-          <td data-label="Status">{{ p.status || '—' }}</td>
-          <td data-label="Ações">
+          <td>{{ p.status || '—' }}</td>
+          <td>
             <button class="btn-baixar" (click)="abrirBaixa(p)">Baixar</button>
+            <button class="btn-alterar" (click)="abrirEdicao(p)">Alterar</button>
           </td>
         </tr>
       </tbody>
@@ -51,27 +52,73 @@
   <!-- Paginação -->
   <div class="paginacao" *ngIf="totalPages > 1">
     <button (click)="paginaAnterior()" [disabled]="pagina === 0">«</button>
-    
-    <button *ngIf="getPaginasVisiveis()[0] > 0" (click)="irParaPagina(0)">1</button>
-    <span *ngIf="getPaginasVisiveis()[0] > 1">...</span>
 
-    <button *ngFor="let p of getPaginasVisiveis()" 
-            (click)="irParaPagina(p)" 
-            [class.active]="p === pagina">{{ p+1 }}</button>
-
-    <span *ngIf="getPaginasVisiveis()[getPaginasVisiveis().length - 1] < totalPages - 2">...</span>
-    <button *ngIf="getPaginasVisiveis()[getPaginasVisiveis().length - 1] < totalPages - 1" 
-            (click)="irParaPagina(totalPages - 1)">{{ totalPages }}</button>
+    <button *ngFor="let pg of getPaginasVisiveis()"
+            (click)="irParaPagina(pg)"
+            [class.active]="pg === pagina">
+      {{ pg + 1 }}
+    </button>
 
     <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">»</button>
   </div>
 
-  <!-- MODAL BAIXAR PARCELA -->
+  <!-- MODAL BAIXA -->
   <div class="modal-backdrop" *ngIf="parcelaSelecionada">
     <div class="modal">
-      <h3>Baixar Parcela - {{ parcelaSelecionada.descricaoDuplicata }}</h3>
+      <h3>Baixar Parcela</h3>
       <app-baixar-parcela [duplicataSelecionada]="parcelaSelecionada"></app-baixar-parcela>
-      <button (click)="fecharBaixa()">Fechar</button>
+      <button (click)="fecharBaixa()" class="btn-fechar">Fechar</button>
+    </div>
+  </div>
+
+  <!-- MODAL EDIÇÃO -->
+  <div class="modal-backdrop" *ngIf="parcelaEdicao">
+    <div class="modal">
+
+      <h3>Alterar Parcela</h3>
+
+      <div class="form-group">
+        <label>Número Parcela</label>
+        <input [(ngModel)]="form.numeroParcela" />
+      </div>
+
+      <div class="form-group">
+        <label>Valor Total</label>
+        <input type="number" [(ngModel)]="form.valorTotal" />
+      </div>
+
+      <div class="form-group">
+        <label>Vencimento</label>
+        <input type="date" [(ngModel)]="form.dtVencimento" />
+      </div>
+
+      <div class="form-group">
+        <label>Data de Pagamento</label>
+        <input type="date" [(ngModel)]="form.dtPagamento" />
+      </div>
+
+      <div class="form-group">
+        <label>Observação</label>
+        <textarea [(ngModel)]="form.observacao"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="form.statusId">
+          <option *ngFor="let s of situacoes" [value]="s.id">{{ s.descricao }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tipo Pagamento</label>
+        <select [(ngModel)]="form.tipoPagamentoId">
+          <option *ngFor="let t of tiposPagamento" [value]="t.id">{{ t.descricao }}</option>
+        </select>
+      </div>
+
+      <button (click)="salvarEdicao()">Salvar</button>
+      <button (click)="fecharEdicao()" class="btn-fechar">Cancelar</button>
+
     </div>
   </div>
 

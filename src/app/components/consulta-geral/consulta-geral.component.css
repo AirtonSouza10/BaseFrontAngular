@@ -68,6 +68,7 @@
   color: #555;
 }
 
+/* Botões */
 .btn-baixar {
   background-color: #2ecc71;
   border: none;
@@ -78,6 +79,20 @@
   transition: 0.3s;
 }
 .btn-baixar:hover { background-color: #27ae60; }
+
+.btn-alterar {
+  background-color: #f1c40f;
+  border: none;
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: 0.2s;
+}
+.btn-alterar:hover {
+  background-color: #d4ac0d;
+}
 
 /* Modal */
 .modal-backdrop {
@@ -103,6 +118,8 @@
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* Modal default buttons (ex: fechar) */
 .modal button {
   margin-top: 15px;
   background-color: #dc3545;
@@ -114,6 +131,35 @@
   float: right;
 }
 .modal button:hover { background-color: #b02a37; }
+
+/* Form layout inside modal */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.form-group textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* Botão cancelar/fechar do modal (estilo alternativo) */
+.btn-fechar {
+  background-color: #999 !important;
+  color: #fff !important;
+}
 
 /* Paginação */
 .paginacao {
@@ -170,7 +216,12 @@
     text-align: left;
   }
 
-  .btn-baixar { width: 100%; margin-top: 8px; }
+  /* Em telas menores, empilha botões e garante largura */
+  .btn-baixar, .btn-alterar {
+    width: 100%;
+    margin-top: 8px;
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -178,3 +229,12 @@
   .input-pesquisa { flex-direction: column; }
   .input-pesquisa input, .input-pesquisa button { width: 100%; }
 }
+
+/* pequenas melhorias visuais */
+.table-container thead th:first-child,
+.table-container tbody td:first-child { width: 90px; }
+.table-container tbody td:last-child { white-space: nowrap; }
+
+/* utilitários */
+.text-muted { color: #666; font-size: 13px; }
+.small { font-size: 12px; }

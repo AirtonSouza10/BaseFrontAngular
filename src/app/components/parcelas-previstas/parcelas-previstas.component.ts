@@ -18,8 +18,9 @@ export class ParcelasPrevistasComponent implements OnInit {
 
   // Controle de paginação
   pagina = 0;
-  tamanho = 30;
+  tamanho = 20;
   totalElementos = 0;
+  totalPaginas = 0;
 
   constructor(private readonly notaFiscalService: NotaFiscalService) {}
 
@@ -31,8 +32,12 @@ export class ParcelasPrevistasComponent implements OnInit {
     this.carregando = true;
     this.notaFiscalService.listarParcelasPrevistasPaginadas(this.pagina, this.tamanho).subscribe({
       next: res => {
-        this.parcelasPrevistas = res?.content || []; // ajusta para o padrão Page do Spring
-        this.totalElementos = res?.totalElements || 0;
+        const page = res?.resposta;
+
+        this.parcelasPrevistas = page?.content || [];
+        this.totalElementos = page?.totalElements || 0;
+        this.totalPaginas = page?.totalPages || 0;
+
         this.carregando = false;
       },
       error: err => {
@@ -44,7 +49,7 @@ export class ParcelasPrevistasComponent implements OnInit {
 
   // Avançar página
   proximaPagina(): void {
-    if ((this.pagina + 1) * this.tamanho < this.totalElementos) {
+    if (this.pagina + 1 < this.totalPaginas) {
       this.pagina++;
       this.carregarParcelasPrevistas();
     }

@@ -1,4 +1,5 @@
 <div class="relatorio-dia">
+
   <div style="display: flex; align-items: center; gap: 10px;">
     <h2 style="margin: 0;">Parcelas Previstas</h2>
   </div>
@@ -26,12 +27,32 @@
     Nenhuma parcela prevista encontrada.
   </div>
 
-  <!-- Controles de paginação -->
-  <div *ngIf="!carregando && totalElementos > tamanho" style="margin-top: 10px; display:flex; gap:10px;">
-    <button type="button" (click)="paginaAnterior()" [disabled]="pagina === 0">Anterior</button>
-    <span>Página {{pagina + 1}}</span>
-    <button type="button" (click)="proximaPagina()" [disabled]="(pagina + 1) * tamanho >= totalElementos">Próxima</button>
+  <!-- Paginação -->
+  <div *ngIf="!carregando && totalPaginas > 1"
+       style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+
+    <button type="button"
+            (click)="paginaAnterior()"
+            [disabled]="pagina === 0">
+      Anterior
+    </button>
+
+    <span>
+      Página {{ pagina + 1 }} de {{ totalPaginas }}
+    </span>
+
+    <button type="button"
+            (click)="proximaPagina()"
+            [disabled]="pagina + 1 >= totalPaginas">
+      Próxima
+    </button>
+  </div>
+
+  <!-- Total registros -->
+  <div *ngIf="!carregando" style="margin-top:6px; font-size:13px; color:gray;">
+    Total de registros: {{ totalElementos }}
   </div>
 
   <div *ngIf="erroMsg" class="erro-msg">{{ erroMsg }}</div>
+
 </div>
