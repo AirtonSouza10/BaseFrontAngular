@@ -40,7 +40,7 @@ export class ParcelasPrevistasComponent implements OnInit {
 
         this.carregando = false;
       },
-      error: err => {
+      error: () => {
         this.erroMsg = 'Erro ao carregar parcelas previstas';
         this.carregando = false;
       }
@@ -49,7 +49,7 @@ export class ParcelasPrevistasComponent implements OnInit {
 
   // Avançar página
   proximaPagina(): void {
-    if (this.pagina + 1 < this.totalPaginas) {
+    if (this.pagina < this.totalPaginas - 1) {
       this.pagina++;
       this.carregarParcelasPrevistas();
     }
@@ -61,5 +61,37 @@ export class ParcelasPrevistasComponent implements OnInit {
       this.pagina--;
       this.carregarParcelasPrevistas();
     }
+  }
+
+  // Ir direto para página
+  irParaPagina(p: number): void {
+    this.pagina = p;
+    this.carregarParcelasPrevistas();
+  }
+
+  // JANELA DE PAGINAÇÃO
+  getPaginasVisiveis(): number[] {
+    const maxPaginas = 5;
+    const metade = Math.floor(maxPaginas / 2);
+
+    let inicio = this.pagina - metade;
+    let fim = this.pagina + metade;
+
+    if (inicio < 0) {
+      inicio = 0;
+      fim = maxPaginas - 1;
+    }
+
+    if (fim >= this.totalPaginas) {
+      fim = this.totalPaginas - 1;
+      inicio = Math.max(0, fim - maxPaginas + 1);
+    }
+
+    const paginas: number[] = [];
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
   }
 }

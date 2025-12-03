@@ -58,8 +58,30 @@ export class ConsultaGeralComponent {
   proximaPagina() { if (this.pagina < this.totalPages - 1) { this.pagina++; this.buscar(); } }
   irParaPagina(p: number) { this.pagina = p; this.buscar(); }
 
+  //  PAGINAÇÃO COM JANELA (ANTI-ESTOURO)
   getPaginasVisiveis(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
+    const maxPaginas = 5;
+    const metade = Math.floor(maxPaginas / 2);
+
+    let inicio = this.pagina - metade;
+    let fim = this.pagina + metade;
+
+    if (inicio < 0) {
+      inicio = 0;
+      fim = maxPaginas - 1;
+    }
+
+    if (fim >= this.totalPages) {
+      fim = this.totalPages - 1;
+      inicio = Math.max(0, fim - maxPaginas + 1);
+    }
+
+    const paginas: number[] = [];
+    for (let i = inicio; i <= fim; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
   }
 
   // BAIXA
@@ -122,5 +144,4 @@ export class ConsultaGeralComponent {
       this.tiposPagamento = res?.resposta || res || [];
     });
   }
-
 }

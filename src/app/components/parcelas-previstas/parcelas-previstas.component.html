@@ -27,29 +27,30 @@
     Nenhuma parcela prevista encontrada.
   </div>
 
-  <!-- Paginação -->
-  <div *ngIf="!carregando && totalPaginas > 1"
-       style="margin-top: 10px; display:flex; gap:10px; align-items:center;">
+  <!-- PAGINAÇÃO PROFISSIONAL -->
+  <div class="paginacao" *ngIf="!carregando && totalPaginas > 1">
 
-    <button type="button"
-            (click)="paginaAnterior()"
-            [disabled]="pagina === 0">
-      Anterior
+    <button (click)="irParaPagina(0)" [disabled]="pagina === 0">« Primeiro</button>
+
+    <button (click)="paginaAnterior()" [disabled]="pagina === 0">‹</button>
+
+    <button *ngFor="let pg of getPaginasVisiveis()"
+            (click)="irParaPagina(pg)"
+            [class.active]="pg === pagina">
+      {{ pg + 1 }}
     </button>
 
-    <span>
-      Página {{ pagina + 1 }} de {{ totalPaginas }}
-    </span>
+    <button (click)="proximaPagina()" [disabled]="pagina === totalPaginas - 1">›</button>
 
-    <button type="button"
-            (click)="proximaPagina()"
-            [disabled]="pagina + 1 >= totalPaginas">
-      Próxima
+    <button (click)="irParaPagina(totalPaginas - 1)"
+            [disabled]="pagina === totalPaginas - 1">
+      Último »
     </button>
+
   </div>
 
   <!-- Total registros -->
-  <div *ngIf="!carregando" style="margin-top:6px; font-size:13px; color:gray;">
+  <div *ngIf="!carregando" class="total-registros">
     Total de registros: {{ totalElementos }}
   </div>
 

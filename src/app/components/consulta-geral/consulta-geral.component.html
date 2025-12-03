@@ -7,7 +7,7 @@
 
   <!-- Campo de busca -->
   <div class="input-pesquisa">
-    <input type="text" [(ngModel)]="termo" placeholder="Número parcela, duplicata, fornecedor..." />
+    <input type="text" [(ngModel)]="termo" placeholder="Número parcela, duplicata" />
     <button (click)="pesquisar()">Buscar</button>
   </div>
 
@@ -49,9 +49,12 @@
     </table>
   </div>
 
-  <!-- Paginação -->
+  <!-- PAGINAÇÃO CORRIGIDA -->
   <div class="paginacao" *ngIf="totalPages > 1">
-    <button (click)="paginaAnterior()" [disabled]="pagina === 0">«</button>
+
+    <button (click)="irParaPagina(0)" [disabled]="pagina === 0">« Primeiro</button>
+
+    <button (click)="paginaAnterior()" [disabled]="pagina === 0">‹</button>
 
     <button *ngFor="let pg of getPaginasVisiveis()"
             (click)="irParaPagina(pg)"
@@ -59,7 +62,12 @@
       {{ pg + 1 }}
     </button>
 
-    <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">»</button>
+    <button (click)="proximaPagina()" [disabled]="pagina === totalPages - 1">›</button>
+
+    <button (click)="irParaPagina(totalPages - 1)" [disabled]="pagina === totalPages - 1">
+      Último »
+    </button>
+
   </div>
 
   <!-- MODAL BAIXA -->
