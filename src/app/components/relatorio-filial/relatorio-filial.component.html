@@ -6,7 +6,8 @@
 
   <!-- Filtros -->
   <div class="filtros">
-    <label for="filial">Selecione a filial:</label>
+    <!-- FILIAL -->
+    <label for="filial">Filial:</label>
     <select id="filial" [(ngModel)]="filialSelecionada">
       <option [ngValue]="null">-- Escolha uma filial --</option>
       <option *ngFor="let f of filiais" [value]="f.id">
@@ -14,11 +15,24 @@
       </option>
     </select>
 
-    <button class="btn" (click)="gerarRelatorio()" [disabled]="!filialSelecionada || carregando">
+    <!-- TIPO -->
+    <label for="tipo">Tipo:</label>
+    <select id="tipo" [(ngModel)]="tipoSelecionado">
+      <option [ngValue]="null">-- Todos os tipos --</option>
+      <option *ngFor="let t of tipos" [value]="t.id">
+        {{ t.descricao }}
+      </option>
+    </select>
+
+    <!-- BOTÕES -->
+    <button class="btn" (click)="gerarRelatorio()"
+            [disabled]="!filialSelecionada || carregando">
       {{ carregando ? 'Gerando...' : 'Gerar Relatório' }}
     </button>
 
-    <button type="button" class="btn-relatorio" (click)="gerarRelatorioPDF()" [disabled]="!filialSelecionada">
+    <button type="button" class="btn-relatorio"
+            (click)="gerarRelatorioPDF()"
+            [disabled]="!filialSelecionada">
       <i class="fa-regular fa-file-pdf"></i> PDF
     </button>
   </div>
