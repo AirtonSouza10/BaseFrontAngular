@@ -36,6 +36,10 @@ export interface ParcelaPrevistaResponseDTO {
   numeroNota: string;
   valor: number;
   dtVencimento: string | Date;
+
+  id?: number;
+  numeroParcela?: string;
+  notaFiscalId?: number;
 }
 
 @Injectable({
@@ -156,6 +160,34 @@ export class NotaFiscalService {
         size: size.toString()
       }
     });
+  }
+
+    /**
+   * Busca parcela prevista pelo ID da parcela
+   */
+  buscarParcelaPrevistaPorId(parcelaId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/parcelas-previstas/${parcelaId}`
+    );
+  }
+
+  /**
+   * Exclui uma parcela prevista pelo ID
+   */
+  excluirParcelaPrevista(parcelaId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/parcelas-previstas/${parcelaId}`
+    );
+  }
+
+    /**
+   * Converte todas as parcelas previstas da nota em uma duplicata
+   */
+  converterParcelasPrevistasEmDuplicata(notaId: number): Observable<any> {
+    return this.http.post<any>(
+      `${this.apiUrl}/${notaId}/converter-duplicata`,
+      null
+    );
   }
 
 }

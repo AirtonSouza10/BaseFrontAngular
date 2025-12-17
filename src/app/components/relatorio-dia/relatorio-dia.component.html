@@ -7,81 +7,126 @@
       PDF
     </button>
   </div>
+  <div class="table-wrapper">
+    <div *ngIf="carregandoDia" class="carregando">Carregando...</div>
 
-  <div *ngIf="carregandoDia" class="carregando">Carregando...</div>
-  <table *ngIf="!carregandoDia && duplicatasDia.length > 0" class="tabela-dia">
-    <thead>
-      <tr>
-        <th>Filial</th>
-        <th>Descrição</th>
-        <th>Fornecedor</th>
-        <th>Valor</th>
-        <th>Vencimento</th>
-        <th>Situação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let d of duplicatasDia">
-        <td>{{ d.filial }}</td>
-        <td>{{ d.descricao }}</td>
-        <td>{{ d.fornecedor }}</td>
-        <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
-        <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
-        <td>{{ d.situacao }}</td>
-                <td>
-          <!-- Só mostra o botão se NÃO for prevista -->
-          <button *ngIf="!d.prevista"
-                  type="button"
-                  class="btn-baixar"
-                  (click)="abrirBaixa(d)">
-            Baixar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="!carregandoDia && duplicatasDia.length === 0" class="mensagem-vazia">
-    Nenhuma duplicata encontrada para hoje.
+    <table *ngIf="!carregandoDia && duplicatasDia.length > 0" class="tabela-dia">
+      <thead>
+        <tr>
+          <th>Filial</th>
+          <th>Descrição</th>
+          <th>Fornecedor</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Situação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let d of duplicatasDia">
+          <td>{{ d.filial }}</td>
+          <td>{{ d.descricao }}</td>
+          <td>{{ d.fornecedor }}</td>
+          <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
+          <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
+          <td>{{ d.situacao }}</td>
+
+          <td>
+            <!-- NÃO prevista -->
+            <button *ngIf="!d.prevista"
+                    type="button"
+                    class="btn-baixar"
+                    (click)="abrirBaixa(d)">
+              Baixar
+            </button>
+
+            <!-- PREVISTA -->
+            <ng-container *ngIf="d.prevista">
+              <div class="acoes-prevista">
+                <button type="button"
+                        class="btn-excluir"
+                        (click)="confirmarExclusaoParcela(d)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+
+                <button type="button"
+                        class="btn-converter"
+                        title="Converte a parcela prevista em duplicata"
+                        (click)="confirmarConversaoParcela(d)">
+                  <i class="fa-solid fa-rotate"></i>
+                </button>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!carregandoDia && duplicatasDia.length === 0" class="mensagem-vazia">
+      Nenhuma duplicata encontrada para hoje.
+    </div>
   </div>
 
   <h2>Contas a pagar Vencidas</h2>
-  <div *ngIf="carregandoVencidas" class="carregando">Carregando...</div>
-  <table *ngIf="!carregandoVencidas && duplicatasVencidas.length > 0" class="tabela-vencidas">
-    <thead>
-      <tr>
-        <th>Filial</th>
-        <th>Descrição</th>
-        <th>Fornecedor</th>
-        <th>Valor</th>
-        <th>Vencimento</th>
-        <th>Situação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let d of duplicatasVencidas">
-        <td>{{ d.filial }}</td>
-        <td>{{ d.descricao }}</td>
-        <td>{{ d.fornecedor }}</td>
-        <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
-        <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
-        <td>{{ d.situacao }}</td>
-        <td>
-          <button *ngIf="!d.prevista"
-                  type="button"
-                  class="btn-baixar"
-                  (click)="abrirBaixa(d)">
-            Baixar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="!carregandoVencidas && duplicatasVencidas.length === 0" class="mensagem-vazia">
-    Nenhuma duplicata vencida.
-  </div>
+  <div class="table-wrapper">
+    <div *ngIf="carregandoVencidas" class="carregando">Carregando...</div>
 
+    <table *ngIf="!carregandoVencidas && duplicatasVencidas.length > 0" class="tabela-vencidas">
+      <thead>
+        <tr>
+          <th>Filial</th>
+          <th>Descrição</th>
+          <th>Fornecedor</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Situação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let d of duplicatasVencidas">
+          <td>{{ d.filial }}</td>
+          <td>{{ d.descricao }}</td>
+          <td>{{ d.fornecedor }}</td>
+          <td>{{ d.valorFormatado || (d.valor | number:'1.2-2') }}</td>
+          <td>{{ d.dtVendimentoFormatada || (d.dtVencimento | date:'dd/MM/yyyy') }}</td>
+          <td>{{ d.situacao }}</td>
+
+          <td>
+            <button *ngIf="!d.prevista"
+                    type="button"
+                    class="btn-baixar"
+                    (click)="abrirBaixa(d)">
+              Baixar
+            </button>
+
+            <ng-container *ngIf="d.prevista">
+              <div class="acoes-prevista">
+                <button type="button"
+                        class="btn-excluir"
+                        (click)="confirmarExclusaoParcela(d)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+
+                <button type="button"
+                        class="btn-converter"
+                        title="Converte a parcela prevista em duplicata"
+                        (click)="confirmarConversaoParcela(d)">
+                  <i class="fa-solid fa-rotate"></i>
+                </button>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!carregandoVencidas && duplicatasVencidas.length === 0" class="mensagem-vazia">
+      Nenhuma duplicata vencida.
+    </div>
+  </div>
   <div class="modal-backdrop" *ngIf="duplicataSelecionada">
     <div class="modal">
       <h3>Baixar Parcela - {{ duplicataSelecionada.descricao }}</h3>

@@ -1,4 +1,3 @@
-/* Fundo branco para todo o relatório */
 .relatorio-dia {
   background-color: #ffffff;
   color: #000000;
@@ -7,15 +6,13 @@
   font-family: Arial, sans-serif;
 }
 
-/* Títulos do relatório */
 .relatorio-dia h2 {
   font-weight: bold;
-  background-color: #e0e0e0; /* cinza claro */
+  background-color: #e0e0e0;
   padding: 8px 12px;
   border-radius: 4px;
 }
 
-/* Tabelas */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -23,31 +20,23 @@ table {
   margin-bottom: 20px;
 }
 
-/* Cabeçalho das tabelas */
 table thead th {
   font-weight: bold;
-  background-color: #e0e0e0; /* cinza claro */
+  background-color: #e0e0e0;
   padding: 8px;
   text-align: left;
 }
 
-/* Linhas da tabela */
 table tbody td {
   padding: 6px 8px;
   border-bottom: 1px solid #ccc;
 }
 
-/* Tabela de vencidas em vermelho */
 .tabela-vencidas tbody tr td {
-  color: #d32f2f; /* vermelho */
+  color: #d32f2f;
 }
 
-/* Carregando e mensagens */
-.carregando {
-  font-style: italic;
-  margin: 10px 0;
-}
-
+.carregando,
 .mensagem-vazia {
   font-style: italic;
   margin: 10px 0;
@@ -66,14 +55,33 @@ table tbody td {
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
-  transition: 0.3s;
+  margin-right: 4px;
 }
 
-.btn-baixar:hover {
-  background-color: #27ae60;
+.btn-excluir {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
 }
 
-/* Fundo semitransparente cobrindo toda a tela */
+.btn-converter {
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-baixar:hover { background-color: #27ae60; }
+.btn-excluir:hover { background-color: #b02a37; }
+.btn-converter:hover { background-color: #0b5ed7; }
+
+/* Modal */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -84,35 +92,17 @@ table tbody td {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* garante que fica acima da tabela */
+  z-index: 1000;
 }
 
-/* Janela do modal */
 .modal {
   background-color: #fff;
   padding: 20px 25px;
   border-radius: 8px;
   width: 450px;
   max-width: 95%;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  z-index: 1001;
-  position: relative;
-  animation: fadeInScale 0.25s ease;
 }
 
-/* Animação de entrada */
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Botão Fechar */
 .modal button {
   margin-top: 15px;
   background-color: #dc3545;
@@ -124,63 +114,14 @@ table tbody td {
   float: right;
 }
 
-.modal button:hover {
-  background-color: #b02a37;
+.acoes-prevista {
+  display: flex;
+  gap: 6px; /* 👈 espaço entre os ícones */
+  align-items: center;
 }
 
-/* Evita que o conteúdo da página role quando o modal estiver aberto */
-body.modal-open {
-  overflow: hidden;
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
 
-/* ======== RESPONSIVIDADE ======== */
-@media (max-width: 768px) {
-  .relatorio-dia {
-    padding: 12px;
-  }
-
-  table {
-    display: block;
-    width: 100%;
-    overflow-x: auto; /* 👈 permite rolar horizontalmente */
-    border: 1px solid #ddd;
-  }
-
-  table thead th,
-  table tbody td {
-    white-space: nowrap;
-  }
-
-  .modal {
-    width: 90%;
-    padding: 15px;
-  }
-
-  .btn-baixar {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .erro-msg {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .relatorio-dia {
-    padding: 10px;
-  }
-
-  table {
-    font-size: 13px;
-  }
-
-  .modal {
-    width: 95%;
-    padding: 12px;
-  }
-
-  .btn-baixar {
-    font-size: 14px;
-  }
-}

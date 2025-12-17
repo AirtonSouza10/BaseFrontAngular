@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { DuplicataService, DuplicataDiaResponseDTO } from '../../services/duplicata.service';
 import { NgForOf } from '@angular/common';
-import { DecimalPipe, DatePipe } from '@angular/common';
 import { BaixarParcelaComponent } from "../baixar-parcela/baixar-parcela.component";
+import { NotaFiscalService } from '../../services/nota-fiscal.service';
 
 @Component({
   selector: 'app-relatorio-dia',
@@ -13,14 +13,20 @@ import { BaixarParcelaComponent } from "../baixar-parcela/baixar-parcela.compone
   styleUrls: ['./relatorio-dia.component.css']
 })
 export class RelatorioDiaComponent implements OnInit {
+
   duplicatasDia: DuplicataDiaResponseDTO[] = [];
   duplicatasVencidas: DuplicataDiaResponseDTO[] = [];
+
   carregandoDia = true;
   carregandoVencidas = true;
   erroMsg: string | null = null;
+
   duplicataSelecionada: any = null;
 
-  constructor(private readonly duplicataService: DuplicataService) {}
+constructor(
+  private readonly duplicataService: DuplicataService,
+  private readonly notaFiscalService: NotaFiscalService
+) {}
 
   ngOnInit(): void {
     this.carregarDuplicatasDia();
@@ -31,11 +37,10 @@ export class RelatorioDiaComponent implements OnInit {
     this.carregandoDia = true;
     this.duplicataService.obterContasPagarDia().subscribe({
       next: res => {
-        // Corrigido para pegar o array dentro de "resposta"
         this.duplicatasDia = res?.resposta || [];
         this.carregandoDia = false;
       },
-      error: err => {
+      error: () => {
         this.erroMsg = 'Erro ao carregar duplicatas do dia';
         this.carregandoDia = false;
       }
@@ -46,11 +51,10 @@ export class RelatorioDiaComponent implements OnInit {
     this.carregandoVencidas = true;
     this.duplicataService.obterContasPagarVencida().subscribe({
       next: res => {
-        // Corrigido para pegar o array dentro de "resposta"
         this.duplicatasVencidas = res?.resposta || [];
         this.carregandoVencidas = false;
       },
-      error: err => {
+      error: () => {
         this.erroMsg = 'Erro ao carregar duplicatas vencidas';
         this.carregandoVencidas = false;
       }
@@ -63,18 +67,51 @@ export class RelatorioDiaComponent implements OnInit {
 
   fecharBaixa(): void {
     this.duplicataSelecionada = null;
-    this.carregarDuplicatasDia();
-    this.carregarDuplicatasVencidas();
+    this.recarregarRelatorio();
   }
 
-    // ================= RELATORIO FORNECEDORES  =================
-  abrirPDF() {
+  abrirPDF(): void {
     this.duplicataService.gerarRelatorioDia().subscribe({
       next: (blob: Blob) => {
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
       },
-      error: (err) => console.error('Erro ao gerar PDF', err)
+      error: err => console.error('Erro ao gerar PDF', err)
     });
+  }
+
+  // ===== NOVAS FUNCIONALIDADES =====
+
+  confirmarExclusaoParcela(d: any): void {
+    if (!confirm('Deseja realmente excluir esta parcela prevista?')) {
+      return;
+    }
+
+    this.notaFiscalService.excluirParcelaPrevista(d.id).subscribe({
+      next: () => this.recarregarRelatorio(),
+      error: () => alert('Erro ao excluir parcela prevista')
+    });
+  }
+
+  confirmarConversaoParcela(d: any): void {
+    if (!confirm('Deseja realmente converter esta parcela prevista em duplicata?')) {
+      return;
+    }
+
+    this.notaFiscalService
+      .converterParcelasPrevistasEmDuplicata(d.id)
+      .subscribe({
+        next: () => {
+          alert('Parcela convertida em duplicata com sucesso!');
+          this.recarregarRelatorio();
+        },
+        error: () => alert('Erro ao converter parcela')
+      });
+  }
+
+
+  private recarregarRelatorio(): void {
+    this.carregarDuplicatasDia();
+    this.carregarDuplicatasVencidas();
   }
 }
