@@ -172,7 +172,7 @@ export class DuplicataComponent implements OnInit {
         id: [null],
         numeroParcela: [''],
         dtVencimento: [vencimento.toISOString().substring(0, 10)],
-        valorTotal: [{ value: valor, disabled: true }]
+        valorTotal: [valor, Validators.required]
       }));
     }
   }
